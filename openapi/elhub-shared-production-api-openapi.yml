@@ -1,0 +1,1709 @@
+openapi: 3.2.0
+info:
+  title: Virtual Calculations Shared Production API
+  version: 1.0.0
+  description: 'The Virtual Calculations API lets market participants manage shared-production
+
+    virtual calculations on behalf of end customers, and read versions of virtual calculations
+
+    of any template type.'
+servers:
+- url: https://api.elhub.no
+  description: Server
+tags:
+- name: Shared Production
+paths:
+  /settlement/v0/virtual-calculations/{udcId}/versions/{versionNumber}:
+    patch:
+      operationId: updateSharedProductionVersion
+      tags:
+      - Shared Production
+      summary: Update a shared production version
+      description: 'Partially updates an existing shared production version identified by UDC ID and
+
+        version number. Supports updating participants, status, template, settlement level,
+
+        resolution, formula types, and effective dates. Only `Draft` versions can be updated.
+
+        Setting `status` to `Active` will activate the version (runs full activation
+
+        validation). An empty PATCH body is rejected.
+
+
+        **Path:** `PATCH /settlement/v0/virtual-calculations/{udcId}/versions/{versionNumber}`'
+      parameters:
+      - name: udcId
+        in: path
+        description: The UUID of the virtual calculation owning this version
+        required: true
+        schema:
+          type: string
+        example: 9348adce-4574-4009-9af9-5b11ddc0259f
+      - name: versionNumber
+        in: path
+        description: The version number to update
+        required: true
+        schema:
+          type: string
+        example: '1'
+      - name: SenderGLN
+        in: header
+        description: GLN identifying the party making the request.
+        required: true
+        schema:
+          type: string
+        example: '7080000000001'
+      - name: OnBehalfOfGLN
+        in: header
+        description: GLN of the grid owner the request is made on behalf of. Required when the token was issued with the `elhub:serviceprovider` scope, ignored otherwise.
+        schema:
+          type: string
+        example: '7080000000002'
+      requestBody:
+        description: 'A JSON:API document with a partial set of version attributes to update. The `data.type` must be `SharedProduction`. At least one attribute must be provided. Supported attributes: participants, status, template, settlementLevel, resolution, recipientFormulaType, contributorFormulaType, startDate, endDate.'
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/SharedProductionVersionPatchRequestDto'
+            examples:
+              activate:
+                summary: Activate a draft version
+                value:
+                  data:
+                    type: SharedProduction
+                    id: 9348adce-4574-4009-9af9-5b11ddc0259f
+                    attributes:
+                      status: Active
+        required: true
+      responses:
+        '200':
+          description: The updated shared production version as a JSON:API document.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/SharedProductionVersionResponseDto'
+              examples:
+                default:
+                  summary: An updated shared production version
+                  value:
+                    data:
+                      type: SharedProduction
+                      id: 9348adce-4574-4009-9af9-5b11ddc0259f
+                      attributes:
+                        versionNumber: 1
+                        status: Active
+                        template: SharedProduction
+                        settlementLevel: Participant
+                        resolution: PT60M
+                        recipientFormulaType: EquallyDistributed
+                        contributorFormulaType: Manual
+                        startDate: '2025-01-01'
+                        endDate: null
+                        participants:
+                        - meteringPointId: '707057500012345678'
+                          role: Recipient
+                          share: null
+                        - meteringPointId: '707057500087654321'
+                          role: Contributor
+                          share: 0.5
+                        - meteringPointId: '707057500011223344'
+                          role: Contributor
+                          share: 0.5
+        '400':
+          description: 'Invalid request: wrong JSON:API type, malformed body, or validation failure.'
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                MISSING_SENDER_GLN_HEADER:
+                  summary: Required header 'SenderGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_SENDER_GLN_HEADER
+                      title: MISSING_SENDER_GLN_HEADER
+                      detail: Required header 'SenderGLN' is missing.
+                MISSING_ON_BEHALF_OF_GLN_HEADER:
+                  summary: Required header 'OnBehalfOfGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      title: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      detail: Required header 'OnBehalfOfGLN' is missing.
+                IDENTIFIER_MISMATCH:
+                  summary: UDC ID ({udcId}) does not match id in request body ({bodyId})
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: IDENTIFIER_MISMATCH
+                      title: IDENTIFIER_MISMATCH
+                      detail: UDC ID ({udcId}) does not match id in request body ({bodyId})
+                INVALID_DATA_TYPE:
+                  summary: 'Invalid type: {type}, expected: {expectedType}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: INVALID_DATA_TYPE
+                      title: INVALID_DATA_TYPE
+                      detail: 'Invalid type: {type}, expected: {expectedType}'
+                EMPTY_UPDATE_REQUEST:
+                  summary: 'Received empty PATCH request for virtual calculation: {udcId} version: {versionNumber}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: EMPTY_UPDATE_REQUEST
+                      title: EMPTY_UPDATE_REQUEST
+                      detail: 'Received empty PATCH request for virtual calculation: {udcId} version: {versionNumber}'
+                VERSION_UPDATE_FAILED:
+                  summary: Cannot update a version that already has an end date.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: VERSION_UPDATE_FAILED
+                      title: VERSION_UPDATE_FAILED
+                      detail: Cannot update a version that already has an end date.
+                DESERIALIZATION_ERROR:
+                  summary: The request body could not be deserialized.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: DESERIALIZATION_ERROR
+                      title: DeserializationError
+                      detail: The request body could not be deserialized.
+                TEMPLATE_TYPE_EXCEPTION:
+                  summary: 'Invalid template type: {type}, expected: SharedProduction'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: TEMPLATE_TYPE_EXCEPTION
+                      title: TEMPLATE_TYPE_EXCEPTION
+                      detail: 'Invalid template type: {type}, expected: SharedProduction'
+                SETTLEMENT_LEVEL_EXCEPTION:
+                  summary: 'Invalid settlement level: {level}, expected: Participant'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: SETTLEMENT_LEVEL_EXCEPTION
+                      title: SETTLEMENT_LEVEL_EXCEPTION
+                      detail: 'Invalid settlement level: {level}, expected: Participant'
+                TOO_MANY_PARTICIPANTS_EXCEPTION:
+                  summary: The number of participants exceeds the limit of {max}
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: TOO_MANY_PARTICIPANTS_EXCEPTION
+                      title: TOO_MANY_PARTICIPANTS_EXCEPTION
+                      detail: The number of participants exceeds the limit of {max}
+                NEGATIVE_SHARE_EXCEPTION:
+                  summary: Participant shares must be non-negative.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: NEGATIVE_SHARE_EXCEPTION
+                      title: NEGATIVE_SHARE_EXCEPTION
+                      detail: Participant shares must be non-negative.
+                SHARE_NOT_DEFINED_EXCEPTION:
+                  summary: All recipients must have a share defined for MANUAL formula type.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: SHARE_NOT_DEFINED_EXCEPTION
+                      title: SHARE_NOT_DEFINED_EXCEPTION
+                      detail: All recipients must have a share defined for MANUAL formula type.
+                SUM_OF_SHARE_NOT_ONE_EXCEPTION:
+                  summary: The sum of {role} shares for MANUAL {role} formula type must equal 1 but was {sum}.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: SUM_OF_SHARE_NOT_ONE_EXCEPTION
+                      title: SUM_OF_SHARE_NOT_ONE_EXCEPTION
+                      detail: The sum of {role} shares for MANUAL {role} formula type must equal 1 but was {sum}.
+                SHARE_DEFINED_EXCEPTION:
+                  summary: Recipients must not have a share defined for CONSUMPTION_BASED or EQUALLY_DISTRIBUTED formula types.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: SHARE_DEFINED_EXCEPTION
+                      title: SHARE_DEFINED_EXCEPTION
+                      detail: Recipients must not have a share defined for CONSUMPTION_BASED or EQUALLY_DISTRIBUTED formula types.
+                MISSING_MANDATORY_ROLE_EXCEPTION:
+                  summary: At least one participant must have role {role}
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_MANDATORY_ROLE_EXCEPTION
+                      title: MISSING_MANDATORY_ROLE_EXCEPTION
+                      detail: At least one participant must have role {role}
+                DUPLICATE_VERSION_EXCEPTION:
+                  summary: The updated version is identical to the current active version.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: DUPLICATE_VERSION_EXCEPTION
+                      title: DUPLICATE_VERSION_EXCEPTION
+                      detail: The updated version is identical to the current active version.
+                PARTICIPANT_UPDATE_EXCEPTION:
+                  summary: When updating participants recipientFormulaType, contributorFormulaType and startDate must be provided.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: PARTICIPANT_UPDATE_EXCEPTION
+                      title: PARTICIPANT_UPDATE_EXCEPTION
+                      detail: When updating participants recipientFormulaType, contributorFormulaType and startDate must be provided.
+                INVALID_END_DATE_EXCEPTION:
+                  summary: End date ({endDate}) must be on or after start date ({startDate})
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: INVALID_END_DATE_EXCEPTION
+                      title: INVALID_END_DATE_EXCEPTION
+                      detail: End date ({endDate}) must be on or after start date ({startDate})
+                INVALID_START_DATE_EXCEPTION:
+                  summary: 'Cannot activate version with start date in the past: ({startDate})'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: INVALID_START_DATE_EXCEPTION
+                      title: INVALID_START_DATE_EXCEPTION
+                      detail: 'Cannot activate version with start date in the past: ({startDate})'
+                ROLE_IN_SHARED_PRODUCTION_EXCEPTION:
+                  summary: 'Role Totalizer is not allowed in Shared Production for metering point: {meteringPointId}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: ROLE_IN_SHARED_PRODUCTION_EXCEPTION
+                      title: ROLE_IN_SHARED_PRODUCTION_EXCEPTION
+                      detail: 'Role Totalizer is not allowed in Shared Production for metering point: {meteringPointId}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                DUPLICATE_PARTICIPANTS_EXCEPTION:
+                  summary: 'Duplicate metering point IDs found: [{meteringPointIds}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: DUPLICATE_PARTICIPANTS_EXCEPTION
+                      title: DUPLICATE_PARTICIPANTS_EXCEPTION
+                      detail: 'Duplicate metering point IDs found: [{meteringPointIds}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+        '415':
+          description: Unsupported request content type. Only JSON:API request bodies are accepted.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                UNSUPPORTED_MEDIA_TYPE:
+                  summary: The request content type must be application/vnd.api+json.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '415'
+                      code: UNSUPPORTED_MEDIA_TYPE
+                      title: UNSUPPORTED_MEDIA_TYPE
+                      detail: The request content type must be application/vnd.api+json.
+        '404':
+          description: The requested version was not found, or the virtual calculation is not managed by the caller.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                VERSION_NOT_FOUND:
+                  summary: 'Version not found: vcUdcId={udcId}, version={versionNumber}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '404'
+                      code: VERSION_NOT_FOUND
+                      title: VERSION_NOT_FOUND
+                      detail: 'Version not found: vcUdcId={udcId}, version={versionNumber}'
+                VIRTUAL_CALCULATION_NOT_FOUND:
+                  summary: Cannot find Virtual Calculation with id {udcId}
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '404'
+                      code: VIRTUAL_CALCULATION_NOT_FOUND
+                      title: VIRTUAL_CALCULATION_NOT_FOUND
+                      detail: Cannot find Virtual Calculation with id {udcId}
+        '409':
+          description: A conflicting EIP process is in progress for this virtual calculation.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                PENDING_PROCESS_EXCEPTION:
+                  summary: Cannot update EIP data while there are unresolved EIP processes for this virtual calculation - blocking traceId [{traceId}].
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '409'
+                      code: PENDING_PROCESS_EXCEPTION
+                      title: PENDING_PROCESS_EXCEPTION
+                      detail: Cannot update EIP data while there are unresolved EIP processes for this virtual calculation - blocking traceId [{traceId}].
+        '422':
+          description: Semantic validation failed during activation (e.g. overlapping versions, invalid metering points).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                OVERLAPPING_VERSION_EXCEPTION:
+                  summary: Participants in this version participate in overlapping active versions.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: OVERLAPPING_VERSION_EXCEPTION
+                      title: OVERLAPPING_VERSION_EXCEPTION
+                      detail: Participants in this version participate in overlapping active versions.
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                METERING_POINT_TYPE_EXCEPTION:
+                  summary: 'Unsupported MeteringPointType value: {value}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: METERING_POINT_TYPE_EXCEPTION
+                      title: METERING_POINT_TYPE_EXCEPTION
+                      detail: 'Unsupported MeteringPointType value: {value}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                SETTLEMENT_METHOD_EXCEPTION:
+                  summary: 'Unsupported SettlementMethod for metering points: [{meteringPointIds}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: SETTLEMENT_METHOD_EXCEPTION
+                      title: SETTLEMENT_METHOD_EXCEPTION
+                      detail: 'Unsupported SettlementMethod for metering points: [{meteringPointIds}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                NOT_ACTIVE_EXCEPTION:
+                  summary: 'Metering points not active: [{meteringPointIds}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: NOT_ACTIVE_EXCEPTION
+                      title: NOT_ACTIVE_EXCEPTION
+                      detail: 'Metering points not active: [{meteringPointIds}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                PARTICIPANTS_NOT_IN_SAME_GRID_AREA_EXCEPTION:
+                  summary: 'Participants are not in the same metering grid area: [{meteringPointIds}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: PARTICIPANTS_NOT_IN_SAME_GRID_AREA_EXCEPTION
+                      title: PARTICIPANTS_NOT_IN_SAME_GRID_AREA_EXCEPTION
+                      detail: 'Participants are not in the same metering grid area: [{meteringPointIds}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                INVALID_ACCOUNTING_POINTS_EXCEPTION:
+                  summary: 'Invalid accounting points found: [{details}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: INVALID_ACCOUNTING_POINTS_EXCEPTION
+                      title: INVALID_ACCOUNTING_POINTS_EXCEPTION
+                      detail: 'Invalid accounting points found: [{details}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                ACCOUNTING_POINT_NOT_FOUND_EXCEPTION:
+                  summary: No metering points found
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: ACCOUNTING_POINT_NOT_FOUND_EXCEPTION
+                      title: ACCOUNTING_POINT_NOT_FOUND_EXCEPTION
+                      detail: No metering points found
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                NO_METERING_POINTS_FOUND:
+                  summary: No metering points found.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: NO_METERING_POINTS_FOUND
+                      title: NO_METERING_POINTS_FOUND
+                      detail: No metering points found.
+                MEASUREMENT_DEFINITION_EXCEPTION:
+                  summary: 'Measurement definition validation failed for metering point: {meteringPointId}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: MEASUREMENT_DEFINITION_EXCEPTION
+                      title: MEASUREMENT_DEFINITION_EXCEPTION
+                      detail: 'Measurement definition validation failed for metering point: {meteringPointId}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                STATUS_TYPE_EXCEPTION:
+                  summary: 'Unsupported MeteringPointStatus value: {value}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: STATUS_TYPE_EXCEPTION
+                      title: STATUS_TYPE_EXCEPTION
+                      detail: 'Unsupported MeteringPointStatus value: {value}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                METER_READING_OCCURRENCE_EXCEPTION:
+                  summary: 'Unsupported MeterReadingOccurrence value: {value}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: METER_READING_OCCURRENCE_EXCEPTION
+                      title: METER_READING_OCCURRENCE_EXCEPTION
+                      detail: 'Unsupported MeterReadingOccurrence value: {value}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                CONTRIBUTOR_FORMULA_TYPE_EXCEPTION:
+                  summary: 'Unsupported contributor formula type for metering point: {meteringPointId}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: CONTRIBUTOR_FORMULA_TYPE_EXCEPTION
+                      title: CONTRIBUTOR_FORMULA_TYPE_EXCEPTION
+                      detail: 'Unsupported contributor formula type for metering point: {meteringPointId}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                EIP_SERVICE_EXCEPTION:
+                  summary: An error occurred during EIP validation.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: EIP_SERVICE_EXCEPTION
+                      title: EIP_SERVICE_EXCEPTION
+                      detail: An error occurred during EIP validation.
+        '502':
+          description: An upstream service (e.g. metering points service) returned an error.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                METERING_POINTS_SERVICE_EXCEPTION:
+                  summary: An error occurred while trying to fetch the metering points
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '502'
+                      code: METERING_POINTS_SERVICE_EXCEPTION
+                      title: METERING_POINTS_SERVICE_EXCEPTION
+                      detail: An error occurred while trying to fetch the metering points
+        '401':
+          description: Missing or invalid authentication credentials.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Unauthorized:
+                  summary: Authentication failed. The provided token may be expired, invalid, or missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: Unauthorized
+                      title: Unauthorized
+                      detail: Authentication failed. The provided token may be expired, invalid, or missing.
+                FAILED_AUTHORIZATION_EXCEPTION:
+                  summary: Missing or invalid authentication credentials.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: FAILED_AUTHORIZATION_EXCEPTION
+                      title: FAILED_AUTHORIZATION_EXCEPTION
+                      detail: Missing or invalid authentication credentials.
+        '403':
+          description: The token does not grant access to the requested resource (failed scope check or PDP denial).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Forbidden:
+                  summary: The authenticated caller does not have sufficient access to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: Forbidden
+                      title: Forbidden
+                      detail: The authenticated caller does not have sufficient access to perform this action.
+                INVALID_TOKEN_SCOPE:
+                  summary: The token scope is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_SCOPE
+                      title: INVALID_TOKEN_SCOPE
+                      detail: The token scope is not authorized to perform this action.
+                INVALID_TOKEN_TYPE:
+                  summary: The token type used is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_TYPE
+                      title: INVALID_TOKEN_TYPE
+                      detail: The token type used is not authorized to perform this action.
+                UNVERIFIED_SENDER:
+                  summary: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNVERIFIED_SENDER
+                      title: UNVERIFIED_SENDER
+                      detail: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                UNAUTHORIZED_METERING_POINTS:
+                  summary: The authenticated caller is not authorized to access one or more of the specified metering points.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNAUTHORIZED_METERING_POINTS
+                      title: UNAUTHORIZED_METERING_POINTS
+                      detail: The authenticated caller is not authorized to access one or more of the specified metering points.
+        '429':
+          description: Per-client rate limit exceeded. Retry after the period indicated by the `Retry-After` header.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                '429':
+                  summary: Too many requests. Wait for {retryAfter} seconds.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '429'
+                      code: '429'
+                      title: Too Many Requests
+                      detail: Too many requests. Wait for {retryAfter} seconds.
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                500 Internal Server Error:
+                  summary: An unexpected error occurred while processing the request.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '500'
+                      code: 500 Internal Server Error
+                      title: 500 Internal Server Error
+                      detail: An unexpected error occurred while processing the request.
+      security:
+      - maskinporten: []
+  /settlement/v0/virtual-calculations/{udcId}/versions:
+    post:
+      operationId: createSharedProductionVersion
+      tags:
+      - Shared Production
+      summary: Create a new shared production version
+      description: 'Creates a new version for an existing virtual calculation identified by UDC ID.
+
+        The request body must contain participants, template, settlement level, resolution,
+
+        formula types, and effective dates. The request body `data.id` must match the UDC
+
+        ID path parameter and `data.type` must be `SharedProduction`.
+
+
+        The optional `status` field controls activation: omitting it or setting it to
+
+        `Draft` creates a Draft version; setting it to `Active` creates the version and
+
+        immediately activates it (runs full activation validation).
+
+
+        **Path:** `POST /settlement/v0/virtual-calculations/{udcId}/versions`'
+      parameters:
+      - name: udcId
+        in: path
+        description: The UUID of the virtual calculation to add a version to
+        required: true
+        schema:
+          type: string
+        example: 9348adce-4574-4009-9af9-5b11ddc0259f
+      - name: SenderGLN
+        in: header
+        description: GLN identifying the party making the request.
+        required: true
+        schema:
+          type: string
+        example: '7080000000001'
+      - name: OnBehalfOfGLN
+        in: header
+        description: GLN of the grid owner the request is made on behalf of. Required when the token was issued with the `elhub:serviceprovider` scope, ignored otherwise.
+        schema:
+          type: string
+        example: '7080000000002'
+      requestBody:
+        description: 'A JSON:API document containing the new version data. The `data.id` must match the udcId path parameter and `data.type` must be `SharedProduction`. Required attributes: `participants` (list with `meteringPointId`, `role`, `share`), `template`, `settlementLevel`, `resolution` (ISO 8601 duration), `recipientFormulaType`, `contributorFormulaType`, `startDate`. Optional: `endDate`, `status` (`Draft` or `Active`; defaults to `Draft`).'
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: '#/components/schemas/SharedProductionVersionPostRequestDto'
+            examples:
+              draft:
+                summary: Create a draft with equal distribution (no share needed)
+                value:
+                  data:
+                    type: SharedProduction
+                    id: 9348adce-4574-4009-9af9-5b11ddc0259f
+                    attributes:
+                      participants:
+                      - meteringPointId: '707057500012345678'
+                        role: Recipient
+                        share: null
+                      - meteringPointId: '707057500087654321'
+                        role: Contributor
+                        share: null
+                      template: SharedProduction
+                      settlementLevel: Participant
+                      resolution: PT60M
+                      recipientFormulaType: EquallyDistributed
+                      contributorFormulaType: EquallyDistributed
+                      startDate: '2025-01-01'
+                      endDate: null
+                      status: Draft
+              manual-distribution:
+                summary: Create with manual distribution for both recipients and contributors
+                value:
+                  data:
+                    type: SharedProduction
+                    id: a1b2c3d4-5678-90ab-cdef-1234567890ab
+                    attributes:
+                      participants:
+                      - meteringPointId: '707057500012345678'
+                        role: Recipient
+                        share: 0.6
+                      - meteringPointId: '707057500055667788'
+                        role: Recipient
+                        share: 0.4
+                      - meteringPointId: '707057500087654321'
+                        role: Contributor
+                        share: 0.5
+                      - meteringPointId: '707057500011223344'
+                        role: Contributor
+                        share: 0.5
+                      template: SharedProduction
+                      settlementLevel: Participant
+                      resolution: PT60M
+                      recipientFormulaType: Manual
+                      contributorFormulaType: Manual
+                      startDate: '2025-01-01'
+                      endDate: null
+                      status: Draft
+              active:
+                summary: Create a shared production and immediately activate it
+                value:
+                  data:
+                    type: SharedProduction
+                    id: b2c3d4e5-6789-01ab-cdef-234567890abc
+                    attributes:
+                      participants:
+                      - meteringPointId: '707057500012345678'
+                        role: Recipient
+                        share: null
+                      - meteringPointId: '707057500087654321'
+                        role: Contributor
+                        share: null
+                      template: SharedProduction
+                      settlementLevel: Participant
+                      resolution: PT60M
+                      recipientFormulaType: EquallyDistributed
+                      contributorFormulaType: EquallyDistributed
+                      startDate: '2025-01-01'
+                      endDate: null
+                      status: Active
+        required: true
+      responses:
+        '201':
+          description: The newly created shared production version as a JSON:API document.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/SharedProductionVersionResponseDto'
+              examples:
+                default:
+                  summary: A newly created shared production version
+                  value:
+                    data:
+                      type: SharedProduction
+                      id: 9348adce-4574-4009-9af9-5b11ddc0259f
+                      attributes:
+                        versionNumber: 1
+                        status: Active
+                        template: SharedProduction
+                        settlementLevel: Participant
+                        resolution: PT60M
+                        recipientFormulaType: EquallyDistributed
+                        contributorFormulaType: Manual
+                        startDate: '2025-01-01'
+                        endDate: null
+                        participants:
+                        - meteringPointId: '707057500012345678'
+                          role: Recipient
+                          share: null
+                        - meteringPointId: '707057500087654321'
+                          role: Contributor
+                          share: 0.5
+                        - meteringPointId: '707057500011223344'
+                          role: Contributor
+                          share: 0.5
+        '400':
+          description: 'Invalid request: malformed body, validation failure, or authorization error.'
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                MISSING_SENDER_GLN_HEADER:
+                  summary: Required header 'SenderGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_SENDER_GLN_HEADER
+                      title: MISSING_SENDER_GLN_HEADER
+                      detail: Required header 'SenderGLN' is missing.
+                MISSING_ON_BEHALF_OF_GLN_HEADER:
+                  summary: Required header 'OnBehalfOfGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      title: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      detail: Required header 'OnBehalfOfGLN' is missing.
+                IDENTIFIER_MISMATCH:
+                  summary: UDC ID ({udcId}) does not match id in request body ({bodyId})
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: IDENTIFIER_MISMATCH
+                      title: IDENTIFIER_MISMATCH
+                      detail: UDC ID ({udcId}) does not match id in request body ({bodyId})
+                INVALID_DATA_TYPE:
+                  summary: 'Invalid type: {type}, expected: {expectedType}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: INVALID_DATA_TYPE
+                      title: INVALID_DATA_TYPE
+                      detail: 'Invalid type: {type}, expected: {expectedType}'
+                DESERIALIZATION_ERROR:
+                  summary: The request body could not be deserialized.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: DESERIALIZATION_ERROR
+                      title: DeserializationError
+                      detail: The request body could not be deserialized.
+                TEMPLATE_TYPE_EXCEPTION:
+                  summary: 'Invalid template type: {type}, expected: SharedProduction'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: TEMPLATE_TYPE_EXCEPTION
+                      title: TEMPLATE_TYPE_EXCEPTION
+                      detail: 'Invalid template type: {type}, expected: SharedProduction'
+                SETTLEMENT_LEVEL_EXCEPTION:
+                  summary: 'Invalid settlement level: {level}, expected: Participant'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: SETTLEMENT_LEVEL_EXCEPTION
+                      title: SETTLEMENT_LEVEL_EXCEPTION
+                      detail: 'Invalid settlement level: {level}, expected: Participant'
+                INVALID_VERSION_STATUS_EXCEPTION:
+                  summary: 'Invalid status for POST: {status}. Only Draft and Active are allowed.'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: INVALID_VERSION_STATUS_EXCEPTION
+                      title: INVALID_VERSION_STATUS_EXCEPTION
+                      detail: 'Invalid status for POST: {status}. Only Draft and Active are allowed.'
+                TOO_MANY_PARTICIPANTS_EXCEPTION:
+                  summary: The number of participants exceeds the limit of {max}
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: TOO_MANY_PARTICIPANTS_EXCEPTION
+                      title: TOO_MANY_PARTICIPANTS_EXCEPTION
+                      detail: The number of participants exceeds the limit of {max}
+                NEGATIVE_SHARE_EXCEPTION:
+                  summary: Participant shares must be non-negative.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: NEGATIVE_SHARE_EXCEPTION
+                      title: NEGATIVE_SHARE_EXCEPTION
+                      detail: Participant shares must be non-negative.
+                SHARE_NOT_DEFINED_EXCEPTION:
+                  summary: All recipients must have a share defined for MANUAL formula type.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: SHARE_NOT_DEFINED_EXCEPTION
+                      title: SHARE_NOT_DEFINED_EXCEPTION
+                      detail: All recipients must have a share defined for MANUAL formula type.
+                SUM_OF_SHARE_NOT_ONE_EXCEPTION:
+                  summary: The sum of {role} shares for MANUAL {role} formula type must equal 1 but was {sum}.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: SUM_OF_SHARE_NOT_ONE_EXCEPTION
+                      title: SUM_OF_SHARE_NOT_ONE_EXCEPTION
+                      detail: The sum of {role} shares for MANUAL {role} formula type must equal 1 but was {sum}.
+                SHARE_DEFINED_EXCEPTION:
+                  summary: Recipients must not have a share defined for CONSUMPTION_BASED or EQUALLY_DISTRIBUTED formula types.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: SHARE_DEFINED_EXCEPTION
+                      title: SHARE_DEFINED_EXCEPTION
+                      detail: Recipients must not have a share defined for CONSUMPTION_BASED or EQUALLY_DISTRIBUTED formula types.
+                MISSING_MANDATORY_ROLE_EXCEPTION:
+                  summary: At least one participant must have role {role}
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_MANDATORY_ROLE_EXCEPTION
+                      title: MISSING_MANDATORY_ROLE_EXCEPTION
+                      detail: At least one participant must have role {role}
+                INVALID_END_DATE_EXCEPTION:
+                  summary: End date ({endDate}) must be on or after start date ({startDate})
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: INVALID_END_DATE_EXCEPTION
+                      title: INVALID_END_DATE_EXCEPTION
+                      detail: End date ({endDate}) must be on or after start date ({startDate})
+                INVALID_START_DATE_EXCEPTION:
+                  summary: 'Cannot activate version with start date in the past: ({startDate})'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: INVALID_START_DATE_EXCEPTION
+                      title: INVALID_START_DATE_EXCEPTION
+                      detail: 'Cannot activate version with start date in the past: ({startDate})'
+                ROLE_IN_SHARED_PRODUCTION_EXCEPTION:
+                  summary: 'Role Totalizer is not allowed in Shared Production for metering point: {meteringPointId}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: ROLE_IN_SHARED_PRODUCTION_EXCEPTION
+                      title: ROLE_IN_SHARED_PRODUCTION_EXCEPTION
+                      detail: 'Role Totalizer is not allowed in Shared Production for metering point: {meteringPointId}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                DUPLICATE_PARTICIPANTS_EXCEPTION:
+                  summary: 'Duplicate metering point IDs found: [{meteringPointIds}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: DUPLICATE_PARTICIPANTS_EXCEPTION
+                      title: DUPLICATE_PARTICIPANTS_EXCEPTION
+                      detail: 'Duplicate metering point IDs found: [{meteringPointIds}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+        '415':
+          description: Unsupported request content type. Only JSON:API request bodies are accepted.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                UNSUPPORTED_MEDIA_TYPE:
+                  summary: The request content type must be application/vnd.api+json.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '415'
+                      code: UNSUPPORTED_MEDIA_TYPE
+                      title: UNSUPPORTED_MEDIA_TYPE
+                      detail: The request content type must be application/vnd.api+json.
+        '404':
+          description: The virtual calculation was not found, or it is not managed by the caller.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                VIRTUAL_CALCULATION_NOT_FOUND:
+                  summary: Cannot find Virtual Calculation with id {udcId}
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '404'
+                      code: VIRTUAL_CALCULATION_NOT_FOUND
+                      title: VIRTUAL_CALCULATION_NOT_FOUND
+                      detail: Cannot find Virtual Calculation with id {udcId}
+        '409':
+          description: A conflicting EIP process is in progress for this virtual calculation. Only returned when activating (status=Active).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                PENDING_PROCESS_EXCEPTION:
+                  summary: Cannot update EIP data while there are unresolved EIP processes for this virtual calculation - blocking traceId [{traceId}].
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '409'
+                      code: PENDING_PROCESS_EXCEPTION
+                      title: PENDING_PROCESS_EXCEPTION
+                      detail: Cannot update EIP data while there are unresolved EIP processes for this virtual calculation - blocking traceId [{traceId}].
+        '422':
+          description: Semantic validation failed during activation (e.g. overlapping versions, invalid metering points). Only returned when activating (status=Active).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                OVERLAPPING_VERSION_EXCEPTION:
+                  summary: Participants in this version participate in overlapping active versions.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: OVERLAPPING_VERSION_EXCEPTION
+                      title: OVERLAPPING_VERSION_EXCEPTION
+                      detail: Participants in this version participate in overlapping active versions.
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                METERING_POINT_TYPE_EXCEPTION:
+                  summary: 'Unsupported MeteringPointType value: {value}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: METERING_POINT_TYPE_EXCEPTION
+                      title: METERING_POINT_TYPE_EXCEPTION
+                      detail: 'Unsupported MeteringPointType value: {value}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                SETTLEMENT_METHOD_EXCEPTION:
+                  summary: 'Unsupported SettlementMethod for metering points: [{meteringPointIds}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: SETTLEMENT_METHOD_EXCEPTION
+                      title: SETTLEMENT_METHOD_EXCEPTION
+                      detail: 'Unsupported SettlementMethod for metering points: [{meteringPointIds}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                NOT_ACTIVE_EXCEPTION:
+                  summary: 'Metering points not active: [{meteringPointIds}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: NOT_ACTIVE_EXCEPTION
+                      title: NOT_ACTIVE_EXCEPTION
+                      detail: 'Metering points not active: [{meteringPointIds}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                PARTICIPANTS_NOT_IN_SAME_GRID_AREA_EXCEPTION:
+                  summary: 'Participants are not in the same metering grid area: [{meteringPointIds}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: PARTICIPANTS_NOT_IN_SAME_GRID_AREA_EXCEPTION
+                      title: PARTICIPANTS_NOT_IN_SAME_GRID_AREA_EXCEPTION
+                      detail: 'Participants are not in the same metering grid area: [{meteringPointIds}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                INVALID_ACCOUNTING_POINTS_EXCEPTION:
+                  summary: 'Invalid accounting points found: [{details}]'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: INVALID_ACCOUNTING_POINTS_EXCEPTION
+                      title: INVALID_ACCOUNTING_POINTS_EXCEPTION
+                      detail: 'Invalid accounting points found: [{details}]'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                ACCOUNTING_POINT_NOT_FOUND_EXCEPTION:
+                  summary: No metering points found
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: ACCOUNTING_POINT_NOT_FOUND_EXCEPTION
+                      title: ACCOUNTING_POINT_NOT_FOUND_EXCEPTION
+                      detail: No metering points found
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                NO_METERING_POINTS_FOUND:
+                  summary: No metering points found.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: NO_METERING_POINTS_FOUND
+                      title: NO_METERING_POINTS_FOUND
+                      detail: No metering points found.
+                MEASUREMENT_DEFINITION_EXCEPTION:
+                  summary: 'Measurement definition validation failed for metering point: {meteringPointId}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: MEASUREMENT_DEFINITION_EXCEPTION
+                      title: MEASUREMENT_DEFINITION_EXCEPTION
+                      detail: 'Measurement definition validation failed for metering point: {meteringPointId}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                STATUS_TYPE_EXCEPTION:
+                  summary: 'Unsupported MeteringPointStatus value: {value}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: STATUS_TYPE_EXCEPTION
+                      title: STATUS_TYPE_EXCEPTION
+                      detail: 'Unsupported MeteringPointStatus value: {value}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                METER_READING_OCCURRENCE_EXCEPTION:
+                  summary: 'Unsupported MeterReadingOccurrence value: {value}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: METER_READING_OCCURRENCE_EXCEPTION
+                      title: METER_READING_OCCURRENCE_EXCEPTION
+                      detail: 'Unsupported MeterReadingOccurrence value: {value}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                CONTRIBUTOR_FORMULA_TYPE_EXCEPTION:
+                  summary: 'Unsupported contributor formula type for metering point: {meteringPointId}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: CONTRIBUTOR_FORMULA_TYPE_EXCEPTION
+                      title: CONTRIBUTOR_FORMULA_TYPE_EXCEPTION
+                      detail: 'Unsupported contributor formula type for metering point: {meteringPointId}'
+                      meta:
+                        InvalidParticipants:
+                        - '707057500012345678'
+                EIP_SERVICE_EXCEPTION:
+                  summary: An error occurred during EIP validation.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '422'
+                      code: EIP_SERVICE_EXCEPTION
+                      title: EIP_SERVICE_EXCEPTION
+                      detail: An error occurred during EIP validation.
+        '502':
+          description: An upstream service (e.g. metering points service) returned an error. Only returned when activating (status=Active).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                METERING_POINTS_SERVICE_EXCEPTION:
+                  summary: An error occurred while trying to fetch the metering points
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '502'
+                      code: METERING_POINTS_SERVICE_EXCEPTION
+                      title: METERING_POINTS_SERVICE_EXCEPTION
+                      detail: An error occurred while trying to fetch the metering points
+        '401':
+          description: Missing or invalid authentication credentials.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Unauthorized:
+                  summary: Authentication failed. The provided token may be expired, invalid, or missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: Unauthorized
+                      title: Unauthorized
+                      detail: Authentication failed. The provided token may be expired, invalid, or missing.
+                FAILED_AUTHORIZATION_EXCEPTION:
+                  summary: Missing or invalid authentication credentials.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: FAILED_AUTHORIZATION_EXCEPTION
+                      title: FAILED_AUTHORIZATION_EXCEPTION
+                      detail: Missing or invalid authentication credentials.
+        '403':
+          description: The token does not grant access to the requested resource (failed scope check or PDP denial).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Forbidden:
+                  summary: The authenticated caller does not have sufficient access to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: Forbidden
+                      title: Forbidden
+                      detail: The authenticated caller does not have sufficient access to perform this action.
+                INVALID_TOKEN_SCOPE:
+                  summary: The token scope is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_SCOPE
+                      title: INVALID_TOKEN_SCOPE
+                      detail: The token scope is not authorized to perform this action.
+                INVALID_TOKEN_TYPE:
+                  summary: The token type used is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_TYPE
+                      title: INVALID_TOKEN_TYPE
+                      detail: The token type used is not authorized to perform this action.
+                UNVERIFIED_SENDER:
+                  summary: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNVERIFIED_SENDER
+                      title: UNVERIFIED_SENDER
+                      detail: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                UNAUTHORIZED_METERING_POINTS:
+                  summary: The authenticated caller is not authorized to access one or more of the specified metering points.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNAUTHORIZED_METERING_POINTS
+                      title: UNAUTHORIZED_METERING_POINTS
+                      detail: The authenticated caller is not authorized to access one or more of the specified metering points.
+        '429':
+          description: Per-client rate limit exceeded. Retry after the period indicated by the `Retry-After` header.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                '429':
+                  summary: Too many requests. Wait for {retryAfter} seconds.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '429'
+                      code: '429'
+                      title: Too Many Requests
+                      detail: Too many requests. Wait for {retryAfter} seconds.
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                500 Internal Server Error:
+                  summary: An unexpected error occurred while processing the request.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '500'
+                      code: 500 Internal Server Error
+                      title: 500 Internal Server Error
+                      detail: An unexpected error occurred while processing the request.
+      security:
+      - maskinporten: []
+components:
+  schemas:
+    VersionParticipantResponseDto:
+      type: object
+      title: VersionParticipantResponseDto
+      required:
+      - meteringPointId
+      - role
+      - channelType
+      properties:
+        meteringPointId:
+          type: string
+        role:
+          type: string
+          enum:
+          - Contributor
+          - Recipient
+          - Totalizer
+        share:
+          type:
+          - number
+          - 'null'
+        channelType:
+          type: string
+          enum:
+          - EH.ELECTRIC.KWH.1.3
+          - EH.ELECTRIC.KWH.1.32
+          - EH.ELECTRIC.KWH.1.4
+          - EH.ELECTRIC.KWH.1.7
+          - EH.ELECTRIC.KWH.1.8
+          - EH.ELECTRIC.KWH.1.9
+          - EH.ELECTRIC.KWH.1.10
+          - EH.ELECTRIC.KWH.1.11
+          - EH.ELECTRIC.KWH.1.12
+          - EH.ELECTRIC.KWH.11.1
+          - EH.ELECTRIC.KWH.11.2
+          - EH.ELECTRIC.KWH.11.3
+          - EH.ELECTRIC.KWH.11.4
+          - EH.ELECTRIC.KWH.11.5
+          - EH.ELECTRIC.KWH.11.6
+          - EH.ELECTRIC.KWH.11.7
+          - EH.ELECTRIC.KWH.11.8
+    JsonApiErrorDocument:
+      type: object
+      title: JsonApiErrorDocument
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonApiError'
+    SharedProductionVersionPostRequestDto:
+      type: object
+      title: SharedProductionVersionPostRequestDto
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/SharedProductionVersionPostDataDto'
+    JsonElement:
+      type: object
+      title: JsonElement
+    SharedProductionVersionPatchDataDto:
+      type: object
+      title: SharedProductionVersionPatchDataDto
+      required:
+      - type
+      - attributes
+      properties:
+        type:
+          type: string
+        id:
+          type:
+          - string
+          - 'null'
+        attributes:
+          $ref: '#/components/schemas/SharedProductionVersionPatchAttributesDto'
+    JsonApiError:
+      type: object
+      title: JsonApiError
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        detail:
+          type:
+          - string
+          - 'null'
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+    SharedProductionVersionPatchRequestDto:
+      type: object
+      title: SharedProductionVersionPatchRequestDto
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/SharedProductionVersionPatchDataDto'
+    SharedProductionVersionResponseDataDto:
+      type: object
+      title: SharedProductionVersionResponseDataDto
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/VersionResponseAttributesDto'
+        links:
+          $ref: '#/components/schemas/JsonApiResourceLink'
+    VersionResponseAttributesDto:
+      type: object
+      title: VersionResponseAttributesDto
+      required:
+      - versionNumber
+      - participants
+      - status
+      - template
+      - settlementLevel
+      - resolution
+      - recipientFormulaType
+      - contributorFormulaType
+      - startDate
+      properties:
+        versionNumber:
+          type: integer
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionParticipantResponseDto'
+        status:
+          type: string
+          enum:
+          - Draft
+          - Active
+        template:
+          type: string
+          enum:
+          - NetMetering
+          - GrossMetering
+          - NetConsLargeCustomer
+          - SharedProduction
+          - SharedConsumption
+        settlementLevel:
+          type: string
+          enum:
+          - Contributor
+          - Totalizer
+          - Participant
+        resolution:
+          type: string
+          format: duration
+        recipientFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ConsumptionBased
+          - Manual
+        contributorFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ProductionBased
+          - Manual
+          - NoDistribution
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type:
+          - string
+          - 'null'
+          format: date
+    JsonApiResourceLink:
+      type:
+      - object
+      - 'null'
+      title: JsonApiResourceLink
+      required:
+      - self
+      properties:
+        self:
+          type: string
+    VersionParticipantDto:
+      type: object
+      title: VersionParticipantDto
+      required:
+      - meteringPointId
+      - role
+      properties:
+        meteringPointId:
+          type: string
+        role:
+          type: string
+          enum:
+          - Contributor
+          - Recipient
+          - Totalizer
+        share:
+          type:
+          - number
+          - 'null'
+    SharedProductionVersionPostAttributesDto:
+      type: object
+      title: SharedProductionVersionPostAttributesDto
+      required:
+      - participants
+      - template
+      - settlementLevel
+      - resolution
+      - recipientFormulaType
+      - contributorFormulaType
+      - startDate
+      - status
+      properties:
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionParticipantDto'
+        template:
+          type: string
+          enum:
+          - NetMetering
+          - GrossMetering
+          - NetConsLargeCustomer
+          - SharedProduction
+          - SharedConsumption
+        settlementLevel:
+          type: string
+          enum:
+          - Contributor
+          - Totalizer
+          - Participant
+        resolution:
+          type: string
+          format: duration
+        recipientFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ConsumptionBased
+          - Manual
+        contributorFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ProductionBased
+          - Manual
+          - NoDistribution
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type:
+          - string
+          - 'null'
+          format: date
+        status:
+          type: string
+          enum:
+          - Draft
+          - Active
+    JsonApiDocumentLinks:
+      type:
+      - object
+      - 'null'
+      title: JsonApiDocumentLinks
+      properties:
+        self:
+          type:
+          - string
+          - 'null'
+        first:
+          type:
+          - string
+          - 'null'
+        prev:
+          type:
+          - string
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+        last:
+          type:
+          - string
+          - 'null'
+    SharedProductionVersionResponseDto:
+      type: object
+      title: SharedProductionVersionResponseDto
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/SharedProductionVersionResponseDataDto'
+        links:
+          $ref: '#/components/schemas/JsonApiDocumentLinks'
+    SharedProductionVersionPatchAttributesDto:
+      type: object
+      title: SharedProductionVersionPatchAttributesDto
+      properties:
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionParticipantDto'
+        status:
+          type: string
+          enum:
+          - Draft
+          - Active
+        template:
+          type: string
+          enum:
+          - NetMetering
+          - GrossMetering
+          - NetConsLargeCustomer
+          - SharedProduction
+          - SharedConsumption
+        settlementLevel:
+          type: string
+          enum:
+          - Contributor
+          - Totalizer
+          - Participant
+        resolution:
+          type: string
+          format: duration
+        recipientFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ConsumptionBased
+          - Manual
+        contributorFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ProductionBased
+          - Manual
+          - NoDistribution
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+    SharedProductionVersionPostDataDto:
+      type: object
+      title: SharedProductionVersionPostDataDto
+      required:
+      - type
+      - attributes
+      properties:
+        type:
+          type: string
+        id:
+          type:
+          - string
+          - 'null'
+        attributes:
+          $ref: '#/components/schemas/SharedProductionVersionPostAttributesDto'
+  securitySchemes:
+    maskinporten:
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Maskinporten access token. Obtain a token from Maskinporten using your client credentials, then submit it as `Authorization: Bearer <token>`. See https://docs.digdir.no/docs/Maskinporten/maskinporten_overordnet for details.'
+      type: http

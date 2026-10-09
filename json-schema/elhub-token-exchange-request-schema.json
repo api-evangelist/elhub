@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-token-exchange-request-schema.json",
+  "title": "token_exchange_request",
+  "description": "Token exchange body",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-flex-information-system-auth-api-openapi.yml#/components/schemas/token_exchange_request",
+  "type": "object",
+  "properties": {
+    "grant_type": {
+      "type": "string",
+      "enum": [
+        "urn:ietf:params:oauth:grant-type:token-exchange"
+      ],
+      "description": "The grant type of the request signals which step of the login process we want to use."
+    },
+    "actor_token": {
+      "type": "string",
+      "format": "jwt",
+      "description": "The token to exchange, given in the client credentials step of the login process."
+    },
+    "actor_token_type": {
+      "type": "string",
+      "enum": [
+        "urn:ietf:params:oauth:token-type:jwt"
+      ],
+      "description": "The type of the token to exchange. Always JWT."
+    },
+    "scope": {
+      "type": "string",
+      "pattern": "assume:party:[0-9]+",
+      "description": "The party the client wants to assume."
+    }
+  },
+  "required": [
+    "grant_type",
+    "actor_token",
+    "actor_token_type",
+    "scope"
+  ]
+}

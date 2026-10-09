@@ -1,0 +1,1181 @@
+{
+  "@context": {
+    "@vocab": "https://elhub.no/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "elhub": "https://elhub.no/schema#",
+    "V1AuthorizationRequestSubmission": "elhub:V1AuthorizationRequestSubmission",
+    "data": {
+      "@id": "elhub:data"
+    },
+    "V1AuthorizationRequestSubmissionAttributes": "elhub:V1AuthorizationRequestSubmissionAttributes",
+    "requestType": {
+      "@id": "elhub:requestType",
+      "@type": "xsd:string"
+    },
+    "appliesTo": {
+      "@id": "elhub:appliesTo",
+      "@type": "@id"
+    },
+    "allowedChanges": {
+      "@id": "elhub:allowedChanges",
+      "@type": "@id"
+    },
+    "externalReference": {
+      "@id": "elhub:externalReference",
+      "@type": "@id"
+    },
+    "V1AuthorizationRequestMeta": "elhub:V1AuthorizationRequestMeta",
+    "language": {
+      "@id": "elhub:language",
+      "@type": "@id"
+    },
+    "redirectURI": {
+      "@id": "elhub:redirectURI",
+      "@type": "@id"
+    },
+    "V1AuthorizationRequestResource": "elhub:V1AuthorizationRequestResource",
+    "V1AuthorizationDocumentSubmission": "elhub:V1AuthorizationDocumentSubmission",
+    "V1AuthorizationDocumentSubmissionData": "elhub:V1AuthorizationDocumentSubmissionData",
+    "type": {
+      "@id": "elhub:type",
+      "@type": "xsd:string"
+    },
+    "attributes": {
+      "@id": "elhub:attributes",
+      "@type": "@id"
+    },
+    "meta": {
+      "@id": "elhub:meta",
+      "@type": "@id"
+    },
+    "V1AuthorizationDocumentSubmissionAttributes": "elhub:V1AuthorizationDocumentSubmissionAttributes",
+    "documentType": {
+      "@id": "elhub:documentType",
+      "@type": "xsd:string"
+    },
+    "V1AppliesTo": "elhub:V1AppliesTo",
+    "meteringPointId": {
+      "@id": "elhub:meteringPointId",
+      "@container": "@list"
+    },
+    "V1AllowedChanges": "elhub:V1AllowedChanges",
+    "validFrom": {
+      "@id": "elhub:validFrom",
+      "@container": "@list"
+    },
+    "V1AuthorizationDocumentMeta": "elhub:V1AuthorizationDocumentMeta",
+    "requestedFrom": {
+      "@id": "elhub:requestedFrom",
+      "@type": "xsd:string"
+    },
+    "requestedTo": {
+      "@id": "elhub:requestedTo",
+      "@type": "xsd:string"
+    },
+    "V1AuthorizationDocumentResource": "elhub:V1AuthorizationDocumentResource",
+    "V1AuthorizationDocumentRelationships": "elhub:V1AuthorizationDocumentRelationships",
+    "requestedBy": {
+      "@id": "elhub:requestedBy",
+      "@type": "@id"
+    },
+    "signedBy": {
+      "@id": "elhub:signedBy",
+      "@type": "@id"
+    },
+    "authorizationGrant": {
+      "@id": "elhub:authorizationGrant",
+      "@type": "@id"
+    },
+    "V1AgentRelationship": "elhub:V1AgentRelationship",
+    "V1SignedByRelationship": "elhub:V1SignedByRelationship",
+    "V1AuthorizationGrantRelationship": "elhub:V1AuthorizationGrantRelationship",
+    "V1AuthorizationGrantResource": "elhub:V1AuthorizationGrantResource",
+    "V1AuthorizationGrant": "elhub:V1AuthorizationGrant",
+    "id": {
+      "@id": "elhub:id",
+      "@type": "xsd:string"
+    },
+    "relationships": {
+      "@id": "elhub:relationships",
+      "@type": "@id"
+    },
+    "links": {
+      "@id": "elhub:links",
+      "@type": "@id"
+    },
+    "V1AuthorizationGrantAttributes": "elhub:V1AuthorizationGrantAttributes",
+    "status": {
+      "@id": "elhub:status",
+      "@type": "xsd:string"
+    },
+    "grantedAt": {
+      "@id": "elhub:grantedAt",
+      "@type": "xsd:dateTime"
+    },
+    "validTo": {
+      "@id": "elhub:validTo",
+      "@type": "xsd:dateTime"
+    },
+    "createdAt": {
+      "@id": "elhub:createdAt",
+      "@type": "xsd:dateTime"
+    },
+    "updatedAt": {
+      "@id": "elhub:updatedAt",
+      "@type": "xsd:dateTime"
+    },
+    "scopes": {
+      "@id": "elhub:scopes",
+      "@container": "@list"
+    },
+    "V1AuthorizationScope": "elhub:V1AuthorizationScope",
+    "capability": {
+      "@id": "elhub:capability",
+      "@type": "xsd:string"
+    },
+    "resourceType": {
+      "@id": "elhub:resourceType",
+      "@type": "xsd:string"
+    },
+    "V1AuthorizationScopeConstraint": "elhub:V1AuthorizationScopeConstraint",
+    "attribute": {
+      "@id": "elhub:attribute",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "elhub:value",
+      "@container": "@list"
+    },
+    "V1AuthorizationGrantRelationships": "elhub:V1AuthorizationGrantRelationships",
+    "grantedFor": {
+      "@id": "elhub:grantedFor",
+      "@type": "@id"
+    },
+    "grantedBy": {
+      "@id": "elhub:grantedBy",
+      "@type": "@id"
+    },
+    "grantedTo": {
+      "@id": "elhub:grantedTo",
+      "@type": "@id"
+    },
+    "source": {
+      "@id": "elhub:source",
+      "@type": "@id"
+    },
+    "V1AuthorizationGrantSourceRelationship": "elhub:V1AuthorizationGrantSourceRelationship",
+    "V1AuthorizationGrantLinks": "elhub:V1AuthorizationGrantLinks",
+    "self": {
+      "@id": "elhub:self",
+      "@type": "xsd:string"
+    },
+    "jsonapi.Links": "elhub:jsonapi.Links",
+    "members": {
+      "@id": "elhub:members"
+    },
+    "jsonapi.Link.LinkObject": "elhub:jsonapi.Link.LinkObject",
+    "describedBy": {
+      "@id": "elhub:describedBy"
+    },
+    "href": {
+      "@id": "elhub:href",
+      "@type": "xsd:string"
+    },
+    "hreflang": {
+      "@id": "elhub:hreflang"
+    },
+    "rel": {
+      "@id": "elhub:rel"
+    },
+    "title": {
+      "@id": "elhub:title"
+    },
+    "jsonapi.Meta": "elhub:jsonapi.Meta",
+    "jsonapi.Link.URI": "elhub:jsonapi.Link.URI",
+    "jsonapi.Error.Source": "elhub:jsonapi.Error.Source",
+    "header": {
+      "@id": "elhub:header"
+    },
+    "parameter": {
+      "@id": "elhub:parameter"
+    },
+    "pointer": {
+      "@id": "elhub:pointer"
+    },
+    "jsonapi.Error": "elhub:jsonapi.Error",
+    "code": {
+      "@id": "elhub:code"
+    },
+    "detail": {
+      "@id": "elhub:detail"
+    },
+    "no.elhub.ds.energy.data.models.File": "elhub:no.elhub.ds.energy.data.models.File",
+    "filename": {
+      "@id": "elhub:filename"
+    },
+    "location": {
+      "@id": "elhub:location"
+    },
+    "no.elhub.ds.energy.data.models.DataExportJob": "elhub:no.elhub.ds.energy.data.models.DataExportJob",
+    "files": {
+      "@id": "elhub:files"
+    },
+    "jobId": {
+      "@id": "elhub:jobId"
+    },
+    "no.elhub.ds.energy.data.models.Status": "elhub:no.elhub.ds.energy.data.models.Status",
+    "no.elhub.ds.energy.data.models.response.DataExportResponse": "elhub:no.elhub.ds.energy.data.models.response.DataExportResponse",
+    "creationTime": {
+      "@id": "elhub:creationTime",
+      "@type": "xsd:string"
+    },
+    "currentLink": {
+      "@id": "elhub:currentLink",
+      "@type": "xsd:string"
+    },
+    "file": {
+      "@id": "elhub:file"
+    },
+    "job": {
+      "@id": "elhub:job"
+    },
+    "no.elhub.ds.energy.data.models.EntityMeta": "elhub:no.elhub.ds.energy.data.models.EntityMeta",
+    "datasets": {
+      "@id": "elhub:datasets"
+    },
+    "description": {
+      "@id": "elhub:description"
+    },
+    "noOfDataSets": {
+      "@id": "elhub:noOfDataSets"
+    },
+    "no.elhub.ds.energy.data.models.DataSetMeta": "elhub:no.elhub.ds.energy.data.models.DataSetMeta",
+    "audiences": {
+      "@id": "elhub:audiences",
+      "@container": "@list"
+    },
+    "columns": {
+      "@id": "elhub:columns",
+      "@container": "@list"
+    },
+    "datePolicyWithId": {
+      "@id": "elhub:datePolicyWithId"
+    },
+    "datePolicyWithoutId": {
+      "@id": "elhub:datePolicyWithoutId"
+    },
+    "exportable": {
+      "@id": "elhub:exportable",
+      "@type": "xsd:boolean"
+    },
+    "filters": {
+      "@id": "elhub:filters"
+    },
+    "maxDateRange": {
+      "@id": "elhub:maxDateRange",
+      "@type": "xsd:string"
+    },
+    "name": {
+      "@id": "elhub:name"
+    },
+    "openDataSet": {
+      "@id": "elhub:openDataSet"
+    },
+    "resolution": {
+      "@id": "elhub:resolution",
+      "@type": "xsd:string"
+    },
+    "routeAvailability": {
+      "@id": "elhub:routeAvailability",
+      "@type": "@id"
+    },
+    "topics": {
+      "@id": "elhub:topics",
+      "@container": "@list"
+    },
+    "no.elhub.ds.energy.data.models.DatasetAttributes": "elhub:no.elhub.ds.energy.data.models.DatasetAttributes",
+    "no.elhub.ds.energy.data.models.DataSetFilter": "elhub:no.elhub.ds.energy.data.models.DataSetFilter",
+    "defaultValue": {
+      "@id": "elhub:defaultValue"
+    },
+    "values": {
+      "@id": "elhub:values"
+    },
+    "no.elhub.ds.energy.data.models.RouteAvailability": "elhub:no.elhub.ds.energy.data.models.RouteAvailability",
+    "no.elhub.ds.energy.data.models.response.MetaResponse": "elhub:no.elhub.ds.energy.data.models.response.MetaResponse",
+    "entity": {
+      "@id": "elhub:entity"
+    },
+    "lastUpdatedTime": {
+      "@id": "elhub:lastUpdatedTime",
+      "@type": "xsd:string"
+    },
+    "no.elhub.ds.energy.data.models.Party": "elhub:no.elhub.ds.energy.data.models.Party",
+    "gln": {
+      "@id": "elhub:gln",
+      "@type": "xsd:string"
+    },
+    "gridArea": {
+      "@id": "elhub:gridArea"
+    },
+    "organisationNumber": {
+      "@id": "elhub:organisationNumber"
+    },
+    "partyTypes": {
+      "@id": "elhub:partyTypes",
+      "@container": "@list"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.GridArea": "elhub:no.elhub.ds.energy.data.models.gridarea.GridArea",
+    "completenessDailyPerBalanceSupplierMga": {
+      "@id": "elhub:completenessDailyPerBalanceSupplierMga"
+    },
+    "completenessDailyPerMga": {
+      "@id": "elhub:completenessDailyPerMga"
+    },
+    "consumptionPerBalanceSupplierMgaHour": {
+      "@id": "elhub:consumptionPerBalanceSupplierMgaHour"
+    },
+    "consumptionPerGroupMgaHour": {
+      "@id": "elhub:consumptionPerGroupMgaHour"
+    },
+    "consumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode": {
+      "@id": "elhub:consumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode"
+    },
+    "costPerMgaMonth": {
+      "@id": "elhub:costPerMgaMonth"
+    },
+    "costPerMgaMunicipalityGroupTypeMonth": {
+      "@id": "elhub:costPerMgaMunicipalityGroupTypeMonth"
+    },
+    "eic": {
+      "@id": "elhub:eic"
+    },
+    "endTime": {
+      "@id": "elhub:endTime"
+    },
+    "exchangePerMgaHour": {
+      "@id": "elhub:exchangePerMgaHour"
+    },
+    "gridOwner": {
+      "@id": "elhub:gridOwner"
+    },
+    "lossPerMgaHour": {
+      "@id": "elhub:lossPerMgaHour"
+    },
+    "missingReadsPerMeteringPointPerMgaDaily": {
+      "@id": "elhub:missingReadsPerMeteringPointPerMgaDaily"
+    },
+    "priceArea": {
+      "@id": "elhub:priceArea"
+    },
+    "productionPerBalanceSupplierMeteringPointTypeMgaHour": {
+      "@id": "elhub:productionPerBalanceSupplierMeteringPointTypeMgaHour"
+    },
+    "productionPerHourBalanceSupplierGroupMeteringPointTypeMga": {
+      "@id": "elhub:productionPerHourBalanceSupplierGroupMeteringPointTypeMga"
+    },
+    "startTime": {
+      "@id": "elhub:startTime"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerBalanceSupplierMga": "elhub:no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerBalanceSupplierMga",
+    "actualIntervalCount": {
+      "@id": "elhub:actualIntervalCount"
+    },
+    "balanceSupplier": {
+      "@id": "elhub:balanceSupplier"
+    },
+    "combinedConsumptionActualIntervalCount": {
+      "@id": "elhub:combinedConsumptionActualIntervalCount"
+    },
+    "combinedConsumptionExpectedIntervalCount": {
+      "@id": "elhub:combinedConsumptionExpectedIntervalCount"
+    },
+    "combinedProductionActualIntervalCount": {
+      "@id": "elhub:combinedProductionActualIntervalCount"
+    },
+    "combinedProductionExpectedIntervalCount": {
+      "@id": "elhub:combinedProductionExpectedIntervalCount"
+    },
+    "consumptionFifteenActualIntervalCount": {
+      "@id": "elhub:consumptionFifteenActualIntervalCount"
+    },
+    "consumptionFifteenExpectedIntervalCount": {
+      "@id": "elhub:consumptionFifteenExpectedIntervalCount"
+    },
+    "consumptionSixtyActualIntervalCount": {
+      "@id": "elhub:consumptionSixtyActualIntervalCount"
+    },
+    "consumptionSixtyExpectedIntervalCount": {
+      "@id": "elhub:consumptionSixtyExpectedIntervalCount"
+    },
+    "estimatedAnnualConsumptionAll": {
+      "@id": "elhub:estimatedAnnualConsumptionAll"
+    },
+    "estimatedAnnualConsumptionCompleted": {
+      "@id": "elhub:estimatedAnnualConsumptionCompleted"
+    },
+    "estimatedIntervalCount": {
+      "@id": "elhub:estimatedIntervalCount"
+    },
+    "expectedIntervalCount": {
+      "@id": "elhub:expectedIntervalCount"
+    },
+    "finalEstimatedIntervalCount": {
+      "@id": "elhub:finalEstimatedIntervalCount"
+    },
+    "installedCapacityAll": {
+      "@id": "elhub:installedCapacityAll"
+    },
+    "installedCapacityCompleted": {
+      "@id": "elhub:installedCapacityCompleted"
+    },
+    "largeProductionActualIntervalCount": {
+      "@id": "elhub:largeProductionActualIntervalCount"
+    },
+    "largeProductionExpectedIntervalCount": {
+      "@id": "elhub:largeProductionExpectedIntervalCount"
+    },
+    "loadLimitAll": {
+      "@id": "elhub:loadLimitAll"
+    },
+    "loadLimitCompleted": {
+      "@id": "elhub:loadLimitCompleted"
+    },
+    "meteredIntervalCount": {
+      "@id": "elhub:meteredIntervalCount"
+    },
+    "meteringPointCount": {
+      "@id": "elhub:meteringPointCount"
+    },
+    "notCompleteMeteringPointCount": {
+      "@id": "elhub:notCompleteMeteringPointCount"
+    },
+    "temporaryIntervalCount": {
+      "@id": "elhub:temporaryIntervalCount"
+    },
+    "usageDateId": {
+      "@id": "elhub:usageDateId"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerMga": "elhub:no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerMga",
+    "actualWithAdjacentExchangeIntervalCount": {
+      "@id": "elhub:actualWithAdjacentExchangeIntervalCount"
+    },
+    "adjacentExchangeActualIntervalCount": {
+      "@id": "elhub:adjacentExchangeActualIntervalCount"
+    },
+    "adjacentExchangeExpectedIntervalCount": {
+      "@id": "elhub:adjacentExchangeExpectedIntervalCount"
+    },
+    "exchangeActualIntervalCount": {
+      "@id": "elhub:exchangeActualIntervalCount"
+    },
+    "exchangeExpectedIntervalCount": {
+      "@id": "elhub:exchangeExpectedIntervalCount"
+    },
+    "expectedWithAdjacentExchangeIntervalCount": {
+      "@id": "elhub:expectedWithAdjacentExchangeIntervalCount"
+    },
+    "notCompleteAdjacentExchangePointCount": {
+      "@id": "elhub:notCompleteAdjacentExchangePointCount"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.ConsumptionPerBalanceSupplierMgaHour": "elhub:no.elhub.ds.energy.data.models.gridarea.ConsumptionPerBalanceSupplierMgaHour",
+    "quantityKwh": {
+      "@id": "elhub:quantityKwh"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.ConsumptionPerGroupMgaHour": "elhub:no.elhub.ds.energy.data.models.gridarea.ConsumptionPerGroupMgaHour",
+    "consumptionGroup": {
+      "@id": "elhub:consumptionGroup"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode": "elhub:no.elhub.ds.energy.data.models.gridarea.ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode",
+    "consumptionTypeCode": {
+      "@id": "elhub:consumptionTypeCode"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth": "elhub:no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth",
+    "consumptionKwh": {
+      "@id": "elhub:consumptionKwh"
+    },
+    "consumptionKwhNorwayPrice": {
+      "@id": "elhub:consumptionKwhNorwayPrice"
+    },
+    "consumptionKwhSpotPrice": {
+      "@id": "elhub:consumptionKwhSpotPrice"
+    },
+    "consumptionKwhSupportPrice": {
+      "@id": "elhub:consumptionKwhSupportPrice"
+    },
+    "costNorwayPrice": {
+      "@id": "elhub:costNorwayPrice"
+    },
+    "costSpotPrice": {
+      "@id": "elhub:costSpotPrice"
+    },
+    "costSupportPrice": {
+      "@id": "elhub:costSupportPrice"
+    },
+    "countEligibleForNorwayPrice": {
+      "@id": "elhub:countEligibleForNorwayPrice"
+    },
+    "countEligibleForSupportPrice": {
+      "@id": "elhub:countEligibleForSupportPrice"
+    },
+    "countNorwayPriceContract": {
+      "@id": "elhub:countNorwayPriceContract"
+    },
+    "countNorwayPriceContractEndOfMonth": {
+      "@id": "elhub:countNorwayPriceContractEndOfMonth"
+    },
+    "countSupportPriceContract": {
+      "@id": "elhub:countSupportPriceContract"
+    },
+    "countSupportPriceContractEndOfMonth": {
+      "@id": "elhub:countSupportPriceContractEndOfMonth"
+    },
+    "supportNorwayPrice": {
+      "@id": "elhub:supportNorwayPrice"
+    },
+    "supportSupportPrice": {
+      "@id": "elhub:supportSupportPrice"
+    },
+    "totalCost": {
+      "@id": "elhub:totalCost"
+    },
+    "yearMonth": {
+      "@id": "elhub:yearMonth"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth": "elhub:no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth",
+    "countEligibleForNorwayPriceEndOfMonth": {
+      "@id": "elhub:countEligibleForNorwayPriceEndOfMonth"
+    },
+    "countEligibleForSupportPriceEndOfMonth": {
+      "@id": "elhub:countEligibleForSupportPriceEndOfMonth"
+    },
+    "diffCompSpotMinusSupportPrice": {
+      "@id": "elhub:diffCompSpotMinusSupportPrice"
+    },
+    "diffCompSupportMinusNorwayPrice": {
+      "@id": "elhub:diffCompSupportMinusNorwayPrice"
+    },
+    "groupType": {
+      "@id": "elhub:groupType"
+    },
+    "meteringPointCountEndOfMonth": {
+      "@id": "elhub:meteringPointCountEndOfMonth"
+    },
+    "municipalityId": {
+      "@id": "elhub:municipalityId"
+    },
+    "municipalityName": {
+      "@id": "elhub:municipalityName"
+    },
+    "naceCode": {
+      "@id": "elhub:naceCode"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.ExchangePerMgaHour": "elhub:no.elhub.ds.energy.data.models.gridarea.ExchangePerMgaHour",
+    "adjacentGridArea": {
+      "@id": "elhub:adjacentGridArea"
+    },
+    "adjacentPriceArea": {
+      "@id": "elhub:adjacentPriceArea"
+    },
+    "exchangeInQuantityKwh": {
+      "@id": "elhub:exchangeInQuantityKwh"
+    },
+    "exchangeOutQuantityKwh": {
+      "@id": "elhub:exchangeOutQuantityKwh"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.LossPerMgaHour": "elhub:no.elhub.ds.energy.data.models.gridarea.LossPerMgaHour",
+    "calculatedLossFraction": {
+      "@id": "elhub:calculatedLossFraction",
+      "@type": "xsd:decimal"
+    },
+    "calculatedLossQuantityKwh": {
+      "@id": "elhub:calculatedLossQuantityKwh"
+    },
+    "netInfeedQuantityKwh": {
+      "@id": "elhub:netInfeedQuantityKwh"
+    },
+    "no.elhub.ds.energy.data.models.gridarea.MeteringPointMissingReadsPerMgaDaily": "elhub:no.elhub.ds.energy.data.models.gridarea.MeteringPointMissingReadsPerMgaDaily",
+    "direction": {
+      "@id": "elhub:direction",
+      "@type": "xsd:string"
+    },
+    "estimatedAnnualConsumption": {
+      "@id": "elhub:estimatedAnnualConsumption"
+    },
+    "installedCapacity": {
+      "@id": "elhub:installedCapacity"
+    },
+    "loadLimit": {
+      "@id": "elhub:loadLimit"
+    },
+    "meteringPointTypeCode": {
+      "@id": "elhub:meteringPointTypeCode",
+      "@type": "xsd:string"
+    },
+    "no.elhub.ds.energy.data.models.pricearea.PriceArea": "elhub:no.elhub.ds.energy.data.models.pricearea.PriceArea",
+    "completenessDailyPerBalanceSupplierMba": {
+      "@id": "elhub:completenessDailyPerBalanceSupplierMba"
+    },
+    "completenessDailyPerMba": {
+      "@id": "elhub:completenessDailyPerMba"
+    },
+    "consumptionPerBalanceResponsibleMbaHour": {
+      "@id": "elhub:consumptionPerBalanceResponsibleMbaHour"
+    },
+    "consumptionPerBalanceSupplierMbaHour": {
+      "@id": "elhub:consumptionPerBalanceSupplierMbaHour"
+    },
+    "consumptionPerGroupMbaHour": {
+      "@id": "elhub:consumptionPerGroupMbaHour"
+    },
+    "country": {
+      "@id": "elhub:country"
+    },
+    "exchangePerMba15Min": {
+      "@id": "elhub:exchangePerMba15Min"
+    },
+    "exchangePerMbaHour": {
+      "@id": "elhub:exchangePerMbaHour"
+    },
+    "installedCapacityPerMeteringPointTypeGroupMbaDaily": {
+      "@id": "elhub:installedCapacityPerMeteringPointTypeGroupMbaDaily"
+    },
+    "lossPerMbaHour": {
+      "@id": "elhub:lossPerMbaHour"
+    },
+    "meteringValueComparisonEacPerMonth": {
+      "@id": "elhub:meteringValueComparisonEacPerMonth"
+    },
+    "norgesprisConsumptionPerGroupEacMba": {
+      "@id": "elhub:norgesprisConsumptionPerGroupEacMba"
+    },
+    "productionPerBalanceResponsibleMeteringPointTypeCodeMbaHour": {
+      "@id": "elhub:productionPerBalanceResponsibleMeteringPointTypeCodeMbaHour"
+    },
+    "productionPerBalanceSupplierMeteringPointTypeCodeMbaHour": {
+      "@id": "elhub:productionPerBalanceSupplierMeteringPointTypeCodeMbaHour"
+    },
+    "productionPerGroupMba15Min": {
+      "@id": "elhub:productionPerGroupMba15Min"
+    },
+    "productionPerGroupMbaHour": {
+      "@id": "elhub:productionPerGroupMbaHour"
+    },
+    "productionPerMba15Min": {
+      "@id": "elhub:productionPerMba15Min"
+    },
+    "no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerBalanceSupplierMba": "elhub:no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerBalanceSupplierMba",
+    "no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerMba": "elhub:no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerMba",
+    "no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceResponsibleMbaHour": "elhub:no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceResponsibleMbaHour",
+    "balanceResponsible": {
+      "@id": "elhub:balanceResponsible"
+    },
+    "no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceSupplierMbaHour": "elhub:no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceSupplierMbaHour",
+    "no.elhub.ds.energy.data.models.pricearea.ConsumptionPerGroupMbaHour": "elhub:no.elhub.ds.energy.data.models.pricearea.ConsumptionPerGroupMbaHour",
+    "no.elhub.ds.energy.data.models.pricearea.ExchangePerMba15Min": "elhub:no.elhub.ds.energy.data.models.pricearea.ExchangePerMba15Min",
+    "no.elhub.ds.energy.data.models.pricearea.ExchangePerMbaHour": "elhub:no.elhub.ds.energy.data.models.pricearea.ExchangePerMbaHour",
+    "no.elhub.ds.energy.data.models.pricearea.InstalledCapacityPerMeteringPointTypeGroupMbaDaily": "elhub:no.elhub.ds.energy.data.models.pricearea.InstalledCapacityPerMeteringPointTypeGroupMbaDaily",
+    "priceAreaId": {
+      "@id": "elhub:priceAreaId"
+    },
+    "productionGroup": {
+      "@id": "elhub:productionGroup"
+    },
+    "no.elhub.ds.energy.data.models.pricearea.LossPerMbaHour": "elhub:no.elhub.ds.energy.data.models.pricearea.LossPerMbaHour",
+    "calculateLossFraction": {
+      "@id": "elhub:calculateLossFraction",
+      "@type": "xsd:decimal"
+    },
+    "consumptionQuantityKwh": {
+      "@id": "elhub:consumptionQuantityKwh"
+    },
+    "productionQuantityKwh": {
+      "@id": "elhub:productionQuantityKwh"
+    },
+    "no.elhub.ds.energy.data.models.pricearea.MeteringValueComparisonEacPerMonth": "elhub:no.elhub.ds.energy.data.models.pricearea.MeteringValueComparisonEacPerMonth",
+    "no.elhub.ds.energy.data.models.pricearea.NorgesprisConsumptionPerGroupEacMba": "elhub:no.elhub.ds.energy.data.models.pricearea.NorgesprisConsumptionPerGroupEacMba",
+    "estimatedAnnualConsumptionFrom": {
+      "@id": "elhub:estimatedAnnualConsumptionFrom"
+    },
+    "estimatedAnnualConsumptionTo": {
+      "@id": "elhub:estimatedAnnualConsumptionTo"
+    },
+    "meteringPointCountNorwayPrice": {
+      "@id": "elhub:meteringPointCountNorwayPrice"
+    },
+    "meteringPointCountNotNorwayPrice": {
+      "@id": "elhub:meteringPointCountNotNorwayPrice"
+    },
+    "quantityKwhNorwayPrice": {
+      "@id": "elhub:quantityKwhNorwayPrice"
+    },
+    "quantityKwhNotNorwayPrice": {
+      "@id": "elhub:quantityKwhNotNorwayPrice"
+    },
+    "totalMeteringPointCount": {
+      "@id": "elhub:totalMeteringPointCount"
+    },
+    "totalQuantityKwh": {
+      "@id": "elhub:totalQuantityKwh"
+    },
+    "no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour": "elhub:no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour",
+    "no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour": "elhub:no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour",
+    "no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMba15Min": "elhub:no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMba15Min",
+    "no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMbaHour": "elhub:no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMbaHour",
+    "no.elhub.ds.energy.data.models.pricearea.ProductionPerMba15Min": "elhub:no.elhub.ds.energy.data.models.pricearea.ProductionPerMba15Min",
+    "no.elhub.ds.energy.data.models.gridarea.ProductionPerBalanceSupplierMeteringPointTypeMgaHour": "elhub:no.elhub.ds.energy.data.models.gridarea.ProductionPerBalanceSupplierMeteringPointTypeMgaHour",
+    "no.elhub.ds.energy.data.models.gridarea.ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga": "elhub:no.elhub.ds.energy.data.models.gridarea.ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga",
+    "no.elhub.ds.energy.data.models.response.PartyResponse": "elhub:no.elhub.ds.energy.data.models.response.PartyResponse",
+    "parties": {
+      "@id": "elhub:parties",
+      "@container": "@list"
+    },
+    "no.elhub.ds.energy.data.models.response.PriceAreaResponse": "elhub:no.elhub.ds.energy.data.models.response.PriceAreaResponse",
+    "priceAreas": {
+      "@id": "elhub:priceAreas"
+    },
+    "no.elhub.ds.energy.data.models.response.GridAreaResponse": "elhub:no.elhub.ds.energy.data.models.response.GridAreaResponse",
+    "gridAreas": {
+      "@id": "elhub:gridAreas",
+      "@container": "@list"
+    },
+    "no.elhub.ds.energy.data.models.municipality.Municipality": "elhub:no.elhub.ds.energy.data.models.municipality.Municipality",
+    "consumptionPerBalanceSupplierMunicipalityHour": {
+      "@id": "elhub:consumptionPerBalanceSupplierMunicipalityHour"
+    },
+    "consumptionPerGroupMunicipalityBasicStatisticalUnitHour": {
+      "@id": "elhub:consumptionPerGroupMunicipalityBasicStatisticalUnitHour"
+    },
+    "consumptionPerGroupMunicipalityHour": {
+      "@id": "elhub:consumptionPerGroupMunicipalityHour"
+    },
+    "consumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour": {
+      "@id": "elhub:consumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour"
+    },
+    "consumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour": {
+      "@id": "elhub:consumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour"
+    },
+    "installedCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily": {
+      "@id": "elhub:installedCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily"
+    },
+    "installedCapacityPerMeteringPointTypeGroupMunicipalityDaily": {
+      "@id": "elhub:installedCapacityPerMeteringPointTypeGroupMunicipalityDaily"
+    },
+    "maxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth": {
+      "@id": "elhub:maxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth"
+    },
+    "meteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality": {
+      "@id": "elhub:meteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality"
+    },
+    "municipalityNumber": {
+      "@id": "elhub:municipalityNumber",
+      "@type": "xsd:string"
+    },
+    "nameNo": {
+      "@id": "elhub:nameNo",
+      "@type": "xsd:string"
+    },
+    "productionPerBalanceSupplierMeteringPointTypeCodeMunicipalityHour": {
+      "@id": "elhub:productionPerBalanceSupplierMeteringPointTypeCodeMunicipalityHour"
+    },
+    "productionPerMeteringPointTypeMunicipalityHour": {
+      "@id": "elhub:productionPerMeteringPointTypeMunicipalityHour"
+    },
+    "no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityHour": "elhub:no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityHour",
+    "no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour": "elhub:no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour",
+    "basicStatisticalUnit": {
+      "@id": "elhub:basicStatisticalUnit"
+    },
+    "no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour": "elhub:no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour",
+    "consumptionCode": {
+      "@id": "elhub:consumptionCode"
+    },
+    "no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour": "elhub:no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour",
+    "no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily": "elhub:no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily",
+    "no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily": "elhub:no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily",
+    "no.elhub.ds.energy.data.models.municipality.MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth": "elhub:no.elhub.ds.energy.data.models.municipality.MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth",
+    "basicStatisticalUnitId": {
+      "@id": "elhub:basicStatisticalUnitId"
+    },
+    "dailyConsumption": {
+      "@id": "elhub:dailyConsumption"
+    },
+    "highestHourlyConsumption": {
+      "@id": "elhub:highestHourlyConsumption"
+    },
+    "no.elhub.ds.energy.data.models.municipality.MeteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality": "elhub:no.elhub.ds.energy.data.models.municipality.MeteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality",
+    "gridOwnerGln": {
+      "@id": "elhub:gridOwnerGln"
+    },
+    "gridOwnerOrgName": {
+      "@id": "elhub:gridOwnerOrgName"
+    },
+    "gridOwnerOrgNumber": {
+      "@id": "elhub:gridOwnerOrgNumber"
+    },
+    "lastDayOfMonth": {
+      "@id": "elhub:lastDayOfMonth",
+      "@type": "xsd:string"
+    },
+    "lastUpdateTime": {
+      "@id": "elhub:lastUpdateTime",
+      "@type": "xsd:string"
+    },
+    "no.elhub.ds.energy.data.models.municipality.ProductionPerMeteringPointTypeMunicipalityHour": "elhub:no.elhub.ds.energy.data.models.municipality.ProductionPerMeteringPointTypeMunicipalityHour",
+    "no.elhub.ds.energy.data.models.response.MunicipalityResponse": "elhub:no.elhub.ds.energy.data.models.response.MunicipalityResponse",
+    "municipalities": {
+      "@id": "elhub:municipalities",
+      "@container": "@list"
+    },
+    "no.elhub.ds.energy.data.models.ConsumptionGroup": "elhub:no.elhub.ds.energy.data.models.ConsumptionGroup",
+    "no.elhub.ds.energy.data.models.response.ConsumptionGroupResponse": "elhub:no.elhub.ds.energy.data.models.response.ConsumptionGroupResponse",
+    "consumptionGroups": {
+      "@id": "elhub:consumptionGroups"
+    },
+    "no.elhub.ds.energy.data.models.meteringpoints.MeteringPointEntity": "elhub:no.elhub.ds.energy.data.models.meteringpoints.MeteringPointEntity",
+    "comparisionNorgespris": {
+      "@id": "elhub:comparisionNorgespris"
+    },
+    "installedCapacityPerMeteringPointDaily": {
+      "@id": "elhub:installedCapacityPerMeteringPointDaily"
+    },
+    "meteringPointCoordinate": {
+      "@id": "elhub:meteringPointCoordinate"
+    },
+    "meteringValuesHour": {
+      "@id": "elhub:meteringValuesHour"
+    },
+    "meteringValuesPerDirectionDay": {
+      "@id": "elhub:meteringValuesPerDirectionDay"
+    },
+    "meteringValuesPerDirectionMonth": {
+      "@id": "elhub:meteringValuesPerDirectionMonth"
+    },
+    "meteringValuesPerDirectionYear": {
+      "@id": "elhub:meteringValuesPerDirectionYear"
+    },
+    "productionRevenuePerYear": {
+      "@id": "elhub:productionRevenuePerYear"
+    },
+    "no.elhub.ds.energy.data.models.ComparisonNorgespris": "elhub:no.elhub.ds.energy.data.models.ComparisonNorgespris",
+    "hasExceededMonthlyNorwayThreshold": {
+      "@id": "elhub:hasExceededMonthlyNorwayThreshold"
+    },
+    "hasExceededMonthlySupportThreshold": {
+      "@id": "elhub:hasExceededMonthlySupportThreshold"
+    },
+    "norwayPrice": {
+      "@id": "elhub:norwayPrice"
+    },
+    "spotPrice": {
+      "@id": "elhub:spotPrice"
+    },
+    "supportPrice": {
+      "@id": "elhub:supportPrice"
+    },
+    "no.elhub.ds.energy.data.models.InstalledCapacityPerMeteringPointDaily": "elhub:no.elhub.ds.energy.data.models.InstalledCapacityPerMeteringPointDaily",
+    "gridAreaId": {
+      "@id": "elhub:gridAreaId"
+    },
+    "gridAreaName": {
+      "@id": "elhub:gridAreaName"
+    },
+    "gridOwnerId": {
+      "@id": "elhub:gridOwnerId"
+    },
+    "gridOwnerName": {
+      "@id": "elhub:gridOwnerName"
+    },
+    "latitude": {
+      "@id": "elhub:latitude"
+    },
+    "longitude": {
+      "@id": "elhub:longitude"
+    },
+    "postalCode": {
+      "@id": "elhub:postalCode"
+    },
+    "productionStartDate": {
+      "@id": "elhub:productionStartDate"
+    },
+    "usageDate": {
+      "@id": "elhub:usageDate"
+    },
+    "no.elhub.ds.energy.data.models.MeteringPointCoordinate": "elhub:no.elhub.ds.energy.data.models.MeteringPointCoordinate",
+    "cadastreAddressId": {
+      "@id": "elhub:cadastreAddressId"
+    },
+    "cadastreLatitude": {
+      "@id": "elhub:cadastreLatitude"
+    },
+    "cadastreLongitude": {
+      "@id": "elhub:cadastreLongitude"
+    },
+    "cadastreMatchStatusCode": {
+      "@id": "elhub:cadastreMatchStatusCode"
+    },
+    "distanceCadastreToPostal": {
+      "@id": "elhub:distanceCadastreToPostal"
+    },
+    "distanceMpToCadastre": {
+      "@id": "elhub:distanceMpToCadastre"
+    },
+    "distanceMpToPostal": {
+      "@id": "elhub:distanceMpToPostal"
+    },
+    "distancePosToCadastre": {
+      "@id": "elhub:distancePosToCadastre"
+    },
+    "distancePosToMp": {
+      "@id": "elhub:distancePosToMp"
+    },
+    "distancePosToPostal": {
+      "@id": "elhub:distancePosToPostal"
+    },
+    "insertTime": {
+      "@id": "elhub:insertTime",
+      "@type": "xsd:string"
+    },
+    "meteringPointLatitude": {
+      "@id": "elhub:meteringPointLatitude"
+    },
+    "meteringPointLongitude": {
+      "@id": "elhub:meteringPointLongitude"
+    },
+    "positionDerivedFrom": {
+      "@id": "elhub:positionDerivedFrom"
+    },
+    "postalCodeLatitude": {
+      "@id": "elhub:postalCodeLatitude"
+    },
+    "postalCodeLongitude": {
+      "@id": "elhub:postalCodeLongitude"
+    },
+    "no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesHour": "elhub:no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesHour",
+    "endUserId": {
+      "@id": "elhub:endUserId"
+    },
+    "insertDateTime": {
+      "@id": "elhub:insertDateTime"
+    },
+    "measurementName": {
+      "@id": "elhub:measurementName"
+    },
+    "productCode": {
+      "@id": "elhub:productCode"
+    },
+    "no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionDay": "elhub:no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionDay",
+    "maxInsertTime": {
+      "@id": "elhub:maxInsertTime",
+      "@type": "xsd:string"
+    },
+    "thirdParty": {
+      "@id": "elhub:thirdParty",
+      "@type": "xsd:string"
+    },
+    "thirdPartyOrgNumber": {
+      "@id": "elhub:thirdPartyOrgNumber",
+      "@type": "xsd:string"
+    },
+    "no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionMonth": "elhub:no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionMonth",
+    "maxUsageDateId": {
+      "@id": "elhub:maxUsageDateId"
+    },
+    "minUsageDateId": {
+      "@id": "elhub:minUsageDateId"
+    },
+    "numberOfDays": {
+      "@id": "elhub:numberOfDays"
+    },
+    "no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionYear": "elhub:no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionYear",
+    "year": {
+      "@id": "elhub:year"
+    },
+    "no.elhub.ds.energy.data.models.meteringpoints.ProductionRevenuePerYear": "elhub:no.elhub.ds.energy.data.models.meteringpoints.ProductionRevenuePerYear",
+    "productionPlantId": {
+      "@id": "elhub:productionPlantId"
+    },
+    "productionTypeCode": {
+      "@id": "elhub:productionTypeCode"
+    },
+    "revenueNok": {
+      "@id": "elhub:revenueNok"
+    },
+    "no.elhub.ds.energy.data.models.response.MeteringPointResponse": "elhub:no.elhub.ds.energy.data.models.response.MeteringPointResponse",
+    "meteringPoints": {
+      "@id": "elhub:meteringPoints",
+      "@container": "@list"
+    },
+    "no.elhub.ds.energy.data.models.ProductionGroup": "elhub:no.elhub.ds.energy.data.models.ProductionGroup",
+    "no.elhub.ds.energy.data.models.response.ProductionGroupResponse": "elhub:no.elhub.ds.energy.data.models.response.ProductionGroupResponse",
+    "productionGroups": {
+      "@id": "elhub:productionGroups"
+    },
+    "no.elhub.ds.energy.data.models.Update": "elhub:no.elhub.ds.energy.data.models.Update",
+    "dataset": {
+      "@id": "elhub:dataset"
+    },
+    "endDateTime": {
+      "@id": "elhub:endDateTime"
+    },
+    "startDateTime": {
+      "@id": "elhub:startDateTime"
+    },
+    "updateTime": {
+      "@id": "elhub:updateTime"
+    },
+    "no.elhub.ds.energy.data.models.response.UpdatesResponse": "elhub:no.elhub.ds.energy.data.models.response.UpdatesResponse",
+    "updates": {
+      "@id": "elhub:updates"
+    },
+    "flex_role": "elhub:flex_role",
+    "oauth_error_message": "elhub:oauth_error_message",
+    "error": {
+      "@id": "elhub:error",
+      "@type": "xsd:string"
+    },
+    "error_description": {
+      "@id": "elhub:error_description",
+      "@type": "xsd:string"
+    },
+    "error_uri": {
+      "@id": "elhub:error_uri",
+      "@type": "xsd:string"
+    },
+    "scope": {
+      "@id": "elhub:scope",
+      "@type": "xsd:string"
+    },
+    "error_message": "elhub:error_message",
+    "details": {
+      "@id": "elhub:details",
+      "@type": "xsd:string"
+    },
+    "hint": {
+      "@id": "elhub:hint",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "elhub:message",
+      "@type": "xsd:string"
+    },
+    "client_credentials_request": "elhub:client_credentials_request",
+    "grant_type": {
+      "@id": "elhub:grant_type",
+      "@type": "xsd:string"
+    },
+    "client_id": {
+      "@id": "elhub:client_id",
+      "@type": "xsd:string"
+    },
+    "client_secret": {
+      "@id": "elhub:client_secret",
+      "@type": "xsd:string"
+    },
+    "jwt_bearer_request": "elhub:jwt_bearer_request",
+    "assertion": {
+      "@id": "elhub:assertion",
+      "@type": "xsd:string"
+    },
+    "token_exchange_request": "elhub:token_exchange_request",
+    "actor_token": {
+      "@id": "elhub:actor_token",
+      "@type": "xsd:string"
+    },
+    "actor_token_type": {
+      "@id": "elhub:actor_token_type",
+      "@type": "xsd:string"
+    },
+    "userinfo_response": "elhub:userinfo_response",
+    "sub": {
+      "@id": "elhub:sub",
+      "@type": "xsd:integer"
+    },
+    "entity_id": {
+      "@id": "elhub:entity_id",
+      "@type": "xsd:integer"
+    },
+    "entity_name": {
+      "@id": "elhub:entity_name",
+      "@type": "xsd:string"
+    },
+    "party_id": {
+      "@id": "elhub:party_id",
+      "@type": "xsd:integer"
+    },
+    "party_name": {
+      "@id": "elhub:party_name",
+      "@type": "xsd:string"
+    },
+    "current_role": {
+      "@id": "elhub:current_role",
+      "@type": "@id"
+    },
+    "session_response": "elhub:session_response",
+    "exp": {
+      "@id": "elhub:exp",
+      "@type": "xsd:integer"
+    },
+    "role": {
+      "@id": "elhub:role",
+      "@type": "@id"
+    },
+    "auth_scope": "elhub:auth_scope",
+    "geojson_point": "elhub:geojson_point",
+    "coordinates": {
+      "@id": "elhub:coordinates",
+      "@container": "@list"
+    },
+    "geojson_polygon": "elhub:geojson_polygon",
+    "geojson_linestring": "elhub:geojson_linestring",
+    "substation_cluster_business_id_type": "elhub:substation_cluster_business_id_type",
+    "substation_cluster_status": "elhub:substation_cluster_status",
+    "substation_business_id_type": "elhub:substation_business_id_type",
+    "substation_kind": "elhub:substation_kind",
+    "substation_status": "elhub:substation_status",
+    "line_business_id_type": "elhub:line_business_id_type",
+    "line_status": "elhub:line_status",
+    "substation_cluster_response": "elhub:substation_cluster_response",
+    "business_id": {
+      "@id": "elhub:business_id",
+      "@type": "xsd:string"
+    },
+    "business_id_type": {
+      "@id": "elhub:business_id_type",
+      "@type": "@id"
+    },
+    "averaged_position": {
+      "@id": "elhub:averaged_position"
+    },
+    "area": {
+      "@id": "elhub:area"
+    },
+    "recorded_at": {
+      "@id": "elhub:recorded_at",
+      "@type": "xsd:dateTime"
+    },
+    "recorded_by": {
+      "@id": "elhub:recorded_by",
+      "@type": "xsd:integer"
+    },
+    "substation": {
+      "@id": "elhub:substation"
+    },
+    "line": {
+      "@id": "elhub:line"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Elhub API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Elhub's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-09) from openapi/elhub-access-api-openapi.yml, openapi/elhub-data-export-api-openapi.yml, openapi/elhub-energy-data-api-openapi.yml.",
+  "dcterms:created": "2026-10-09",
+  "dcterms:source": [
+    "openapi/elhub-access-api-openapi.yml",
+    "openapi/elhub-data-export-api-openapi.yml",
+    "openapi/elhub-energy-data-api-openapi.yml",
+    "openapi/elhub-flex-information-system-auth-api-openapi.yml",
+    "openapi/elhub-flex-information-system-grid-api-openapi.yml"
+  ]
+}

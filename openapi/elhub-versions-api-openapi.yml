@@ -1,0 +1,940 @@
+openapi: 3.2.0
+info:
+  title: Virtual Calculations Versions API
+  version: 1.0.0
+  description: 'The Virtual Calculations API lets market participants manage shared-production
+
+    virtual calculations on behalf of end customers, and read versions of virtual calculations
+
+    of any template type.'
+servers:
+- url: https://api.elhub.no
+  description: Server
+tags:
+- name: Versions
+paths:
+  /settlement/v0/virtual-calculations/{udcId}/versions/{versionNumber}:
+    get:
+      operationId: getVersionByUdcIdAndNumber
+      tags:
+      - Versions
+      summary: Get a specific version of a virtual calculation
+      description: 'Retrieves a single version identified by version number for a virtual calculation
+
+        identified by UDC ID. Use the `include` query parameter to side-load the parent
+
+        VirtualCalculation, its managing party, and related metering points
+
+        (e.g. `include=virtual-calculation,virtual-calculation.party,virtual-calculation.meteringpoints`).
+
+
+        **Path:** `GET /settlement/v0/virtual-calculations/{udcId}/versions/{versionNumber}`'
+      parameters:
+      - name: udcId
+        in: path
+        description: The UUID of the virtual calculation
+        required: true
+        schema:
+          type: string
+        example: 9348adce-4574-4009-9af9-5b11ddc0259f
+      - name: versionNumber
+        in: path
+        description: The version number to retrieve
+        required: true
+        schema:
+          type: string
+        example: '1'
+      - name: SenderGLN
+        in: header
+        description: GLN identifying the party making the request.
+        required: true
+        schema:
+          type: string
+        example: '7080000000001'
+      - name: OnBehalfOfGLN
+        in: header
+        description: GLN of the grid owner the request is made on behalf of. Required when the token was issued with the `elhub:serviceprovider` scope, ignored otherwise.
+        schema:
+          type: string
+        example: '7080000000002'
+      - name: include
+        in: query
+        description: 'Comma-separated list of related resources to include. Supported values: `virtual-calculation`, `virtual-calculation.party`, `virtual-calculation.meteringpoints`, `meteringpoints`.'
+        schema:
+          type: string
+        example: virtual-calculation,virtual-calculation.party,meteringpoints
+      responses:
+        '200':
+          description: A JSON:API document containing the requested version resource, with optional included VirtualCalculation, party, and/or metering point resources.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/VersionGetResponse'
+              examples:
+                default:
+                  summary: A single version
+                  value:
+                    data:
+                      type: SharedProduction
+                      id: 9348adce-4574-4009-9af9-5b11ddc0259f
+                      attributes:
+                        versionNumber: 1
+                        status: Active
+                        template: SharedProduction
+                        settlementLevel: Participant
+                        resolution: PT60M
+                        recipientFormulaType: EquallyDistributed
+                        contributorFormulaType: Manual
+                        startDate: '2025-01-01'
+                        endDate: null
+                        participants:
+                        - meteringPointId: '707057500012345678'
+                          role: Recipient
+                          share: null
+                        - meteringPointId: '707057500087654321'
+                          role: Contributor
+                          share: 0.5
+                        - meteringPointId: '707057500011223344'
+                          role: Contributor
+                          share: 0.5
+        '400':
+          description: 'Invalid request: malformed query parameter or missing required headers.'
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                MISSING_SENDER_GLN_HEADER:
+                  summary: Required header 'SenderGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_SENDER_GLN_HEADER
+                      title: MISSING_SENDER_GLN_HEADER
+                      detail: Required header 'SenderGLN' is missing.
+                MISSING_ON_BEHALF_OF_GLN_HEADER:
+                  summary: Required header 'OnBehalfOfGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      title: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      detail: Required header 'OnBehalfOfGLN' is missing.
+                400 Bad Request:
+                  summary: Did not understand the request
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: 400 Bad Request
+                      title: 400 Bad Request
+                      detail: Did not understand the request
+        '404':
+          description: The virtual calculation or requested version was not found.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                VIRTUAL_CALCULATION_NOT_FOUND:
+                  summary: Cannot find Virtual Calculation with id {udcId}
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '404'
+                      code: VIRTUAL_CALCULATION_NOT_FOUND
+                      title: VIRTUAL_CALCULATION_NOT_FOUND
+                      detail: Cannot find Virtual Calculation with id {udcId}
+                VERSION_NOT_FOUND:
+                  summary: 'Version not found: vcUdcId={udcId}, version={versionNumber}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '404'
+                      code: VERSION_NOT_FOUND
+                      title: VERSION_NOT_FOUND
+                      detail: 'Version not found: vcUdcId={udcId}, version={versionNumber}'
+        '502':
+          description: An upstream service (e.g. metering points service) returned an error.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                METERING_POINTS_SERVICE_EXCEPTION:
+                  summary: An error occurred while trying to fetch the metering points
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '502'
+                      code: METERING_POINTS_SERVICE_EXCEPTION
+                      title: METERING_POINTS_SERVICE_EXCEPTION
+                      detail: An error occurred while trying to fetch the metering points
+        '401':
+          description: Missing or invalid authentication credentials.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Unauthorized:
+                  summary: Authentication failed. The provided token may be expired, invalid, or missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: Unauthorized
+                      title: Unauthorized
+                      detail: Authentication failed. The provided token may be expired, invalid, or missing.
+                FAILED_AUTHORIZATION_EXCEPTION:
+                  summary: Missing or invalid authentication credentials.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: FAILED_AUTHORIZATION_EXCEPTION
+                      title: FAILED_AUTHORIZATION_EXCEPTION
+                      detail: Missing or invalid authentication credentials.
+        '403':
+          description: The token does not grant access to the requested resource (failed scope check or PDP denial).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Forbidden:
+                  summary: The authenticated caller does not have sufficient access to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: Forbidden
+                      title: Forbidden
+                      detail: The authenticated caller does not have sufficient access to perform this action.
+                INVALID_TOKEN_SCOPE:
+                  summary: The token scope is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_SCOPE
+                      title: INVALID_TOKEN_SCOPE
+                      detail: The token scope is not authorized to perform this action.
+                INVALID_TOKEN_TYPE:
+                  summary: The token type used is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_TYPE
+                      title: INVALID_TOKEN_TYPE
+                      detail: The token type used is not authorized to perform this action.
+                UNVERIFIED_SENDER:
+                  summary: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNVERIFIED_SENDER
+                      title: UNVERIFIED_SENDER
+                      detail: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                UNAUTHORIZED_METERING_POINTS:
+                  summary: The authenticated caller is not authorized to access one or more of the specified metering points.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNAUTHORIZED_METERING_POINTS
+                      title: UNAUTHORIZED_METERING_POINTS
+                      detail: The authenticated caller is not authorized to access one or more of the specified metering points.
+        '429':
+          description: Per-client rate limit exceeded. Retry after the period indicated by the `Retry-After` header.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                '429':
+                  summary: Too many requests. Wait for {retryAfter} seconds.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '429'
+                      code: '429'
+                      title: Too Many Requests
+                      detail: Too many requests. Wait for {retryAfter} seconds.
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                500 Internal Server Error:
+                  summary: An unexpected error occurred while processing the request.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '500'
+                      code: 500 Internal Server Error
+                      title: 500 Internal Server Error
+                      detail: An unexpected error occurred while processing the request.
+      security:
+      - maskinporten: []
+  /settlement/v0/virtual-calculations/{udcId}/versions:
+    get:
+      operationId: getAllVersionsByUdcId
+      tags:
+      - Versions
+      summary: List versions for a virtual calculation
+      description: 'Retrieves all versions for a virtual calculation identified by UDC ID. Use the
+
+        `include` query parameter to side-load the parent VirtualCalculation and its
+
+        managing party (e.g. `include=virtual-calculation,virtual-calculation.party`).
+
+
+        **Path:** `GET /settlement/v0/virtual-calculations/{udcId}/versions`'
+      parameters:
+      - name: udcId
+        in: path
+        description: The UUID of the virtual calculation
+        required: true
+        schema:
+          type: string
+        example: 9348adce-4574-4009-9af9-5b11ddc0259f
+      - name: SenderGLN
+        in: header
+        description: GLN identifying the party making the request.
+        required: true
+        schema:
+          type: string
+        example: '7080000000001'
+      - name: OnBehalfOfGLN
+        in: header
+        description: GLN of the grid owner the request is made on behalf of. Required when the token was issued with the `elhub:serviceprovider` scope, ignored otherwise.
+        schema:
+          type: string
+        example: '7080000000002'
+      - name: include
+        in: query
+        description: 'Comma-separated list of related resources to include. Supported values: virtual-calculation, virtual-calculation.party'
+        schema:
+          type: string
+        example: virtual-calculation,virtual-calculation.party
+      responses:
+        '200':
+          description: A JSON:API document containing all version resources for the specified virtual calculation, with optional included VirtualCalculation and/or party resources.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/VersionListResponse'
+              examples:
+                default:
+                  summary: Versions for a virtual calculation
+                  value:
+                    data:
+                    - type: SharedProduction
+                      id: 9348adce-4574-4009-9af9-5b11ddc0259f
+                      attributes:
+                        versionNumber: 1
+                        status: Active
+                        template: SharedProduction
+                        settlementLevel: Participant
+                        resolution: PT60M
+                        recipientFormulaType: EquallyDistributed
+                        contributorFormulaType: Manual
+                        startDate: '2025-01-01'
+                        endDate: null
+                        participants:
+                        - meteringPointId: '707057500012345678'
+                          role: Recipient
+                          share: null
+                        - meteringPointId: '707057500087654321'
+                          role: Contributor
+                          share: 0.5
+                        - meteringPointId: '707057500011223344'
+                          role: Contributor
+                          share: 0.5
+        '400':
+          description: 'Invalid request: malformed query parameter or missing required headers.'
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                MISSING_SENDER_GLN_HEADER:
+                  summary: Required header 'SenderGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_SENDER_GLN_HEADER
+                      title: MISSING_SENDER_GLN_HEADER
+                      detail: Required header 'SenderGLN' is missing.
+                MISSING_ON_BEHALF_OF_GLN_HEADER:
+                  summary: Required header 'OnBehalfOfGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      title: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      detail: Required header 'OnBehalfOfGLN' is missing.
+                400 Bad Request:
+                  summary: Did not understand the request
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: 400 Bad Request
+                      title: 400 Bad Request
+                      detail: Did not understand the request
+        '404':
+          description: The virtual calculation or its versions were not found.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                VIRTUAL_CALCULATION_NOT_FOUND:
+                  summary: Cannot find Virtual Calculation with id {udcId}
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '404'
+                      code: VIRTUAL_CALCULATION_NOT_FOUND
+                      title: VIRTUAL_CALCULATION_NOT_FOUND
+                      detail: Cannot find Virtual Calculation with id {udcId}
+                VERSION_NOT_FOUND:
+                  summary: 'Version not found: vcUdcId={udcId}, version={versionNumber}'
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '404'
+                      code: VERSION_NOT_FOUND
+                      title: VERSION_NOT_FOUND
+                      detail: 'Version not found: vcUdcId={udcId}, version={versionNumber}'
+        '401':
+          description: Missing or invalid authentication credentials.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Unauthorized:
+                  summary: Authentication failed. The provided token may be expired, invalid, or missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: Unauthorized
+                      title: Unauthorized
+                      detail: Authentication failed. The provided token may be expired, invalid, or missing.
+                FAILED_AUTHORIZATION_EXCEPTION:
+                  summary: Missing or invalid authentication credentials.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: FAILED_AUTHORIZATION_EXCEPTION
+                      title: FAILED_AUTHORIZATION_EXCEPTION
+                      detail: Missing or invalid authentication credentials.
+        '403':
+          description: The token does not grant access to the requested resource (failed scope check or PDP denial).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Forbidden:
+                  summary: The authenticated caller does not have sufficient access to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: Forbidden
+                      title: Forbidden
+                      detail: The authenticated caller does not have sufficient access to perform this action.
+                INVALID_TOKEN_SCOPE:
+                  summary: The token scope is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_SCOPE
+                      title: INVALID_TOKEN_SCOPE
+                      detail: The token scope is not authorized to perform this action.
+                INVALID_TOKEN_TYPE:
+                  summary: The token type used is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_TYPE
+                      title: INVALID_TOKEN_TYPE
+                      detail: The token type used is not authorized to perform this action.
+                UNVERIFIED_SENDER:
+                  summary: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNVERIFIED_SENDER
+                      title: UNVERIFIED_SENDER
+                      detail: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                UNAUTHORIZED_METERING_POINTS:
+                  summary: The authenticated caller is not authorized to access one or more of the specified metering points.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNAUTHORIZED_METERING_POINTS
+                      title: UNAUTHORIZED_METERING_POINTS
+                      detail: The authenticated caller is not authorized to access one or more of the specified metering points.
+        '429':
+          description: Per-client rate limit exceeded. Retry after the period indicated by the `Retry-After` header.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                '429':
+                  summary: Too many requests. Wait for {retryAfter} seconds.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '429'
+                      code: '429'
+                      title: Too Many Requests
+                      detail: Too many requests. Wait for {retryAfter} seconds.
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                500 Internal Server Error:
+                  summary: An unexpected error occurred while processing the request.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '500'
+                      code: 500 Internal Server Error
+                      title: 500 Internal Server Error
+                      detail: An unexpected error occurred while processing the request.
+      security:
+      - maskinporten: []
+components:
+  schemas:
+    JsonApiErrorDocument:
+      type: object
+      title: JsonApiErrorDocument
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonApiError'
+    OrganisationsResponseDto.Data.Attributes:
+      type: object
+      title: OrganisationsResponseDto.Data.Attributes
+      required:
+      - partyType
+      - partyId
+      - name
+      - status
+      properties:
+        partyType:
+          type: string
+        partyId:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+    VersionResponseAttributesDto:
+      type: object
+      title: VersionResponseAttributesDto
+      required:
+      - versionNumber
+      - participants
+      - status
+      - template
+      - settlementLevel
+      - resolution
+      - recipientFormulaType
+      - contributorFormulaType
+      - startDate
+      properties:
+        versionNumber:
+          type: integer
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionParticipantResponseDto'
+        status:
+          type: string
+          enum:
+          - Draft
+          - Active
+        template:
+          type: string
+          enum:
+          - NetMetering
+          - GrossMetering
+          - NetConsLargeCustomer
+          - SharedProduction
+          - SharedConsumption
+        settlementLevel:
+          type: string
+          enum:
+          - Contributor
+          - Totalizer
+          - Participant
+        resolution:
+          type: string
+          format: duration
+        recipientFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ConsumptionBased
+          - Manual
+        contributorFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ProductionBased
+          - Manual
+          - NoDistribution
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type:
+          - string
+          - 'null'
+          format: date
+    JsonApiDocumentLinks:
+      type:
+      - object
+      - 'null'
+      title: JsonApiDocumentLinks
+      properties:
+        self:
+          type:
+          - string
+          - 'null'
+        first:
+          type:
+          - string
+          - 'null'
+        prev:
+          type:
+          - string
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+        last:
+          type:
+          - string
+          - 'null'
+    VersionRelationships:
+      type:
+      - object
+      - 'null'
+      title: VersionRelationships
+      required:
+      - virtualCalculation
+      - meteringPoints
+      properties:
+        virtualCalculation:
+          $ref: '#/components/schemas/JsonApiToOneRelationship'
+        meteringPoints:
+          $ref: '#/components/schemas/JsonApiToManyRelationship'
+    JsonElement:
+      type: object
+      title: JsonElement
+    JsonApiToManyRelationship:
+      type: object
+      title: JsonApiToManyRelationship
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonApiResourceIdentifier'
+    JsonApiError:
+      type: object
+      title: JsonApiError
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        detail:
+          type:
+          - string
+          - 'null'
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+    VersionIncluded:
+      type: object
+      title: VersionIncluded
+      oneOf:
+      - $ref: '#/components/schemas/VersionIncluded.MeteringPointIncluded'
+      - $ref: '#/components/schemas/VersionIncluded.OrgIncluded'
+      - $ref: '#/components/schemas/VersionIncluded.VcIncluded'
+      discriminator:
+        propertyName: type
+        mapping:
+          MeteringPoint: '#/components/schemas/VersionIncluded.MeteringPointIncluded'
+          Party: '#/components/schemas/VersionIncluded.OrgIncluded'
+          VirtualCalculation: '#/components/schemas/VersionIncluded.VcIncluded'
+    VersionGetResponse:
+      type: object
+      title: VersionGetResponse
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/VersionResourceData'
+        included:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionIncluded'
+        links:
+          $ref: '#/components/schemas/JsonApiDocumentLinks'
+    VersionIncluded.MeteringPointIncluded:
+      type: object
+      title: VersionIncluded.MeteringPointIncluded
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+          enum:
+          - MeteringPoint
+        id:
+          type: string
+        attributes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+        relationships:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+        links:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+    JsonApiToOneRelationship:
+      type: object
+      title: JsonApiToOneRelationship
+      properties:
+        data:
+          $ref: '#/components/schemas/JsonApiResourceIdentifier'
+    JsonApiResourceIdentifier:
+      type: object
+      title: JsonApiResourceIdentifier
+      required:
+      - type
+      - id
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+    VersionResourceData:
+      type: object
+      title: VersionResourceData
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/VersionResponseAttributesDto'
+        relationships:
+          $ref: '#/components/schemas/VersionRelationships'
+        links:
+          $ref: '#/components/schemas/JsonApiResourceLink'
+    VersionParticipantResponseDto:
+      type: object
+      title: VersionParticipantResponseDto
+      required:
+      - meteringPointId
+      - role
+      - channelType
+      properties:
+        meteringPointId:
+          type: string
+        role:
+          type: string
+          enum:
+          - Contributor
+          - Recipient
+          - Totalizer
+        share:
+          type:
+          - number
+          - 'null'
+        channelType:
+          type: string
+          enum:
+          - EH.ELECTRIC.KWH.1.3
+          - EH.ELECTRIC.KWH.1.32
+          - EH.ELECTRIC.KWH.1.4
+          - EH.ELECTRIC.KWH.1.7
+          - EH.ELECTRIC.KWH.1.8
+          - EH.ELECTRIC.KWH.1.9
+          - EH.ELECTRIC.KWH.1.10
+          - EH.ELECTRIC.KWH.1.11
+          - EH.ELECTRIC.KWH.1.12
+          - EH.ELECTRIC.KWH.11.1
+          - EH.ELECTRIC.KWH.11.2
+          - EH.ELECTRIC.KWH.11.3
+          - EH.ELECTRIC.KWH.11.4
+          - EH.ELECTRIC.KWH.11.5
+          - EH.ELECTRIC.KWH.11.6
+          - EH.ELECTRIC.KWH.11.7
+          - EH.ELECTRIC.KWH.11.8
+    VirtualCalculationRelationships:
+      type:
+      - object
+      - 'null'
+      title: VirtualCalculationRelationships
+      required:
+      - party
+      properties:
+        party:
+          $ref: '#/components/schemas/JsonApiToOneRelationship'
+        versions:
+          $ref: '#/components/schemas/JsonApiToManyRelationship'
+    VirtualCalculationResponseAttributes:
+      type: object
+      title: VirtualCalculationResponseAttributes
+      required:
+      - udcId
+      - name
+      - managingParty
+      - partyType
+      properties:
+        udcId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        managingParty:
+          type: string
+        partyType:
+          type: string
+    VersionIncluded.OrgIncluded:
+      type: object
+      title: VersionIncluded.OrgIncluded
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+          enum:
+          - Party
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/OrganisationsResponseDto.Data.Attributes'
+    VersionIncluded.VcIncluded:
+      type: object
+      title: VersionIncluded.VcIncluded
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+          enum:
+          - VirtualCalculation
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/VirtualCalculationResponseAttributes'
+        relationships:
+          $ref: '#/components/schemas/VirtualCalculationRelationships'
+    JsonApiResourceLink:
+      type:
+      - object
+      - 'null'
+      title: JsonApiResourceLink
+      required:
+      - self
+      properties:
+        self:
+          type: string
+    VersionListResponse:
+      type: object
+      title: VersionListResponse
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionResourceData'
+        included:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionIncluded'
+        links:
+          $ref: '#/components/schemas/JsonApiDocumentLinks'
+  securitySchemes:
+    maskinporten:
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Maskinporten access token. Obtain a token from Maskinporten using your client credentials, then submit it as `Authorization: Bearer <token>`. See https://docs.digdir.no/docs/Maskinporten/maskinporten_overordnet for details.'
+      type: http

@@ -1,0 +1,292 @@
+openapi: 3.2.0
+info:
+  title: Energy Data Consumption group API
+  description: 'V0: This API is currently accessible to the public, and we anticipate future updates and enhancements.'
+  version: v0
+servers: []
+tags:
+- name: Consumption group
+paths:
+  /energy-data/v0/consumption-groups:
+    get:
+      tags:
+      - Consumption group
+      summary: List all consumption groups
+      description: Provides a list of all available consumption groups.
+      operationId: consumption_groups
+      parameters: []
+      responses:
+        '200':
+          description: Details for the specified consumption group.
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.ConsumptionGroupResponse'
+              examples:
+                Valid response:
+                  value: '{"meta":{"created":"2024-11-06T08:55:50+01:00","lastUpdated":"2024-11-06T08:55:50+01:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/consumption-groups"},"data":[{"type":"consumption-groups","id":"household","attributes":{"name":"Household","description":"Meteringpoints that either have NACE Code XX (Household) or a combination of NACE Code 68.201 (House cooperative) and Consumption Code 35 (Households)"}},{"type":"consumption-groups","id":"cabin","attributes":{"name":"Cabins and holiday properties","description":"Cabins and vacation homes nace XY"}},{"type":"consumption-groups","id":"primary","attributes":{"name":"Primary Industry","description":"All agriculture, forestry, fishing incl green houses, Division code 1-3 + Y"}},{"type":"consumption-groups","id":"secondary","attributes":{"name":"Secondary Industry","description":"All industry section codes B through F"}},{"type":"consumption-groups","id":"tertiary","attributes":{"name":"Tertiary Industry","description":"All section codes G through U. Also includes all consumption that has incorrect or missing NACE Code."}},{"type":"consumption-groups","id":"industry","attributes":{"name":"Industry","description":"Combination of Primary and Secondary Industry"}},{"type":"consumption-groups","id":"private","attributes":{"name":"Private","description":"Combination of Household and Cabin"}},{"type":"consumption-groups","id":"business","attributes":{"name":"Business","description":"Same as Tertiary Industry"}}]}'
+        '400':
+          description: When the request is invalid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                invalidRequest:
+                  value: '{"errors":[{"status":"400","title":"Invalid request","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/consumption-groups"}}]}'
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unexpectedServerError:
+                  value: '{"errors":[{"status":"500","title":"Unexpected server error. Try again later.","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/consumption-groups"}}]}'
+      deprecated: false
+  /energy-data/v0/consumption-groups/{id}:
+    get:
+      tags:
+      - Consumption group
+      summary: Get a specific consumption group by ID
+      description: Provides details for a specific consumption group.
+      operationId: consumption_groups_id
+      parameters:
+      - name: id
+        in: path
+        description: A valid consumption group ID.
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: household
+      responses:
+        '200':
+          description: Details for the specified consumption group.
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.ConsumptionGroupResponse'
+              examples:
+                Valid response:
+                  value: '{"meta":{"created":"2024-11-06T08:55:50+01:00","lastUpdated":"2024-11-06T08:55:50+01:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/consumption-groups"},"data":[{"type":"consumption-groups","id":"household","attributes":{"name":"Household","description":"Meteringpoints that either have NACE Code XX (Household) or a combination of NACE Code 68.201 (House cooperative) and Consumption Code 35 (Households)"}},{"type":"consumption-groups","id":"cabin","attributes":{"name":"Cabins and holiday properties","description":"Cabins and vacation homes nace XY"}},{"type":"consumption-groups","id":"primary","attributes":{"name":"Primary Industry","description":"All agriculture, forestry, fishing incl green houses, Division code 1-3 + Y"}},{"type":"consumption-groups","id":"secondary","attributes":{"name":"Secondary Industry","description":"All industry section codes B through F"}},{"type":"consumption-groups","id":"tertiary","attributes":{"name":"Tertiary Industry","description":"All section codes G through U. Also includes all consumption that has incorrect or missing NACE Code."}},{"type":"consumption-groups","id":"industry","attributes":{"name":"Industry","description":"Combination of Primary and Secondary Industry"}},{"type":"consumption-groups","id":"private","attributes":{"name":"Private","description":"Combination of Household and Cabin"}},{"type":"consumption-groups","id":"business","attributes":{"name":"Business","description":"Same as Tertiary Industry"}}]}'
+        '400':
+          description: When the request is invalid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                invalidRequest:
+                  value: '{"errors":[{"status":"400","title":"Invalid request","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/consumption-groups/{id}"}}]}'
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unexpectedServerError:
+                  value: '{"errors":[{"status":"500","title":"Unexpected server error. Try again later.","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/consumption-groups/{id}"}}]}'
+      deprecated: false
+components:
+  schemas:
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    jsonapi.Error:
+      type: object
+      properties:
+        code:
+          type:
+          - 'null'
+          - string
+          title: String
+        detail:
+          type:
+          - 'null'
+          - string
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          title: String
+        links:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Error.Source'
+        status:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error
+    jsonapi.Link.LinkObject:
+      type: object
+      properties:
+        describedBy:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Link'
+        href:
+          type: string
+          title: String
+        hreflang:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+            title: String
+          title: List<String>
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        rel:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+        type:
+          type:
+          - 'null'
+          - string
+          title: String
+      required:
+      - href
+      title: Link.LinkObject
+    no.elhub.ds.energy.data.models.response.ConsumptionGroupResponse:
+      type: object
+      properties:
+        consumptionGroups:
+          type:
+          - 'null'
+          - array
+          description: data grouped by a list of consumption groups
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.ConsumptionGroup'
+          title: List<ConsumptionGroup>
+        creationTime:
+          type: string
+          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        currentLink:
+          type:
+          - 'null'
+          - string
+          description: link to the current resource
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+      required:
+      - creationTime
+      title: ConsumptionGroupResponse
+    jsonapi.Meta:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            type: object
+            title: Any
+          title: Map<String,Any>
+      required:
+      - members
+      title: Meta
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
+      type: object
+      properties:
+        header:
+          type:
+          - 'null'
+          - string
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
+    no.elhub.ds.energy.data.models.ConsumptionGroup:
+      type: object
+      properties:
+        description:
+          type:
+          - 'null'
+          - string
+          description: Consumption group description
+          title: String
+        id:
+          type: string
+          description: Consumption group id
+          title: String
+        name:
+          type:
+          - 'null'
+          - string
+          description: Consumption group name
+          title: String
+      required:
+      - id
+      title: ConsumptionGroup
+externalDocs:
+  url: /

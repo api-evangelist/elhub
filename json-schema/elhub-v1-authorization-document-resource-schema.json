@@ -1,0 +1,331 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-v1-authorization-document-resource-schema.json",
+  "title": "V1AuthorizationDocumentResource",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationDocumentResource",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "attributes",
+        "meta",
+        "relationships",
+        "links"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "const": "AuthorizationDocument"
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": false,
+          "allOf": [
+            {
+              "$ref": "#/$defs/V1AuthorizationDocumentScopeProfile"
+            }
+          ],
+          "required": [
+            "documentType",
+            "appliesTo",
+            "externalReference",
+            "status",
+            "createdAt",
+            "updatedAt",
+            "validTo"
+          ],
+          "properties": {
+            "documentType": {
+              "type": "string",
+              "enum": [
+                "ChangeOfEnergySupplierForOrganization",
+                "MoveInAndChangeOfEnergySupplierForOrganization"
+              ]
+            },
+            "appliesTo": {
+              "$ref": "#/$defs/V1AppliesTo"
+            },
+            "allowedChanges": {
+              "$ref": "#/$defs/V1AllowedChanges"
+            },
+            "externalReference": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "Pending",
+                "Signed",
+                "Rejected",
+                "Expired"
+              ]
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "validTo": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "language"
+          ],
+          "properties": {
+            "language": {
+              "type": "string",
+              "enum": [
+                "nb",
+                "nn",
+                "en"
+              ]
+            }
+          }
+        },
+        "relationships": {
+          "$ref": "#/$defs/V1AuthorizationDocumentRelationships"
+        },
+        "links": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "self",
+            "file"
+          ],
+          "properties": {
+            "self": {
+              "type": "string",
+              "format": "uri-reference"
+            },
+            "file": {
+              "type": "string",
+              "format": "uri-reference"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "V1AgentRelationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "id"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "Person",
+                "Organization",
+                "MarketEntity"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "V1AllowedChanges": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "description": "Changes authorized for the listed resources.",
+      "required": [
+        "validFrom"
+      ],
+      "properties": {
+        "validFrom": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "V1AppliesTo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "meteringPointId"
+      ],
+      "properties": {
+        "meteringPointId": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Metering points to which the authorization applies.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "V1AuthorizationDocumentRelationships": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requestedFrom",
+        "requestedTo",
+        "requestedBy"
+      ],
+      "properties": {
+        "requestedFrom": {
+          "$ref": "#/$defs/V1AgentRelationship"
+        },
+        "requestedTo": {
+          "$ref": "#/$defs/V1AgentRelationship"
+        },
+        "requestedBy": {
+          "$ref": "#/$defs/V1AgentRelationship"
+        },
+        "signedBy": {
+          "$ref": "#/$defs/V1SignedByRelationship"
+        },
+        "authorizationGrant": {
+          "$ref": "#/$defs/V1AuthorizationGrantRelationship"
+        }
+      }
+    },
+    "V1AuthorizationDocumentScopeProfile": {
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "documentType": {
+                "const": "ChangeOfEnergySupplierForOrganization"
+              }
+            },
+            "required": [
+              "documentType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "allowedChanges": {
+                "not": {}
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "documentType": {
+                "const": "MoveInAndChangeOfEnergySupplierForOrganization"
+              }
+            },
+            "required": [
+              "documentType"
+            ]
+          },
+          "then": {
+            "required": [
+              "allowedChanges"
+            ]
+          }
+        }
+      ]
+    },
+    "V1AuthorizationGrantRelationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "id"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "AuthorizationGrant"
+              },
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            }
+          }
+        }
+      }
+    },
+    "V1SignedByRelationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "id"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "Person"
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-controllable-unit-lookup-request-schema.json",
+  "title": "controllable_unit_lookup_request",
+  "description": "Request schema for controllable unit lookup operations",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/_original/elhub-openapi-api-base-openapi.yml#/components/schemas/controllable_unit_lookup_request",
+  "summary": "Controllable unit lookup",
+  "type": "object",
+  "properties": {
+    "end_user": {
+      "description": "Birth date (DDMMYY) of the end user if a person, or organisation number if an organisation.",
+      "format": "text",
+      "type": "string",
+      "pattern": "^[0-9]{6}$|^[1-9][0-9]{8}$"
+    },
+    "controllable_unit": {
+      "description": "The business ID of the controllable unit to lookup.",
+      "format": "text",
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "accounting_point": {
+      "description": "The accounting point ID of the controllable unit(s) to lookup. `GSRN` metering point id.",
+      "format": "text",
+      "type": "string",
+      "pattern": "^[1-9][0-9]{17}$"
+    }
+  },
+  "required": [
+    "end_user"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-contract-summary-response-schema.json",
+  "title": "ContractSummaryResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-market-data-contracts-api-openapi.yml#/components/schemas/ContractSummaryResponse",
+  "allOf": [
+    {
+      "$ref": "./schemas/contracts/summary/contracts-summary.schema.json#/definitions/response"
+    }
+  ]
+}

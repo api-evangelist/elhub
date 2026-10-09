@@ -1,0 +1,24 @@
+overlay: 1.0.0
+info:
+  title: Elhub Data Export API overlay
+  version: 1.0.0
+extends: ../openapi/_original/elhub-data-export-api-openapi.yaml
+x-generated: '2026-10-09'
+x-method: generated
+actions:
+- target: $.info
+  description: Annotate provider and catalog provenance
+  update:
+    x-api-evangelist:
+      provider: elhub
+      aid: elhub
+      catalog: https://raw.githubusercontent.com/api-evangelist/elhub/refs/heads/main/apis.yml
+      profiled: '2026-10-09'
+- target: $.paths['/data-export/v0/secure-ping'].get
+  description: Operation has no operationId in the original contract; add a derived one so tools and skills can bind to it
+  update:
+    operationId: get_data_export_v0_secure_ping
+- target: $.paths['/data-export/v0/energy-data/{id}'].get
+  description: Operation has no operationId in the original contract; add a derived one so tools and skills can bind to it
+  update:
+    operationId: get_data_export_v0_energy_data_id

@@ -1,0 +1,294 @@
+openapi: 3.2.0
+info:
+  title: Energy Data Production group API
+  description: 'V0: This API is currently accessible to the public, and we anticipate future updates and enhancements.'
+  version: v0
+servers: []
+tags:
+- name: Production group
+paths:
+  /energy-data/v0/production-groups:
+    get:
+      tags:
+      - Production group
+      summary: List of production groups
+      operationId: production_groups
+      parameters: []
+      responses:
+        '200':
+          description: When request is valid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.ProductionGroupResponse'
+              examples:
+                validRequest:
+                  summary: Valid request
+                  value: '{"meta":{"created":"2024-11-06T09:12:30+01:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/production-groups"},"data":[{"type":"production-groups","id":"solar","attributes":{"name":"Solar","description":"Unit in which solar energy is converted to electricity with unspecified equipment/devices."}},{"type":"production-groups","id":"hydro","attributes":{"name":"Hydro","description":"Unit in which moving water energy is converted to electricity with unspecified equipment/devices."}},{"type":"production-groups","id":"wind","attributes":{"name":"Wind","description":"Unit in which wind energy is converted to electricity with unspecified equipment/devices."}},{"type":"production-groups","id":"thermal","attributes":{"name":"Thermal","description":"Unit in which heat energy is converted to electricity with unspecified equipment/devices."}},{"type":"production-groups","id":"nuclear","attributes":{"name":"Nuclear","description":"Unit in which the heat source is a nuclear reactor with unspecified equipment/devices."}},{"type":"production-groups","id":"other","attributes":{"name":"Other","description":"Other unspecified technology."}}]}'
+        '400':
+          description: When the request is invalid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                invalidRequest:
+                  value: '{"errors":[{"status":"400","title":"Invalid request","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/production-groups"}}]}'
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unexpectedServerError:
+                  summary: Unexpected server error
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"500\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:38:13+01:00\"\n    }\n  ]\n}"
+      deprecated: false
+  /energy-data/v0/production-groups/{id}:
+    get:
+      tags:
+      - Production group
+      summary: Get a specific production group by ID
+      operationId: production_groups_id
+      parameters:
+      - name: id
+        in: path
+        description: A valid production group id returned from /production-groups
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: solar
+      responses:
+        '200':
+          description: When request is valid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.ProductionGroupResponse'
+              examples:
+                validRequest:
+                  summary: Valid request
+                  value: '{"meta":{"created":"2024-11-06T09:12:30+01:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/production-groups"},"data":[{"type":"production-groups","id":"solar","attributes":{"name":"Solar","description":"Unit in which solar energy is converted to electricity with unspecified equipment/devices."}},{"type":"production-groups","id":"hydro","attributes":{"name":"Hydro","description":"Unit in which moving water energy is converted to electricity with unspecified equipment/devices."}},{"type":"production-groups","id":"wind","attributes":{"name":"Wind","description":"Unit in which wind energy is converted to electricity with unspecified equipment/devices."}},{"type":"production-groups","id":"thermal","attributes":{"name":"Thermal","description":"Unit in which heat energy is converted to electricity with unspecified equipment/devices."}},{"type":"production-groups","id":"nuclear","attributes":{"name":"Nuclear","description":"Unit in which the heat source is a nuclear reactor with unspecified equipment/devices."}},{"type":"production-groups","id":"other","attributes":{"name":"Other","description":"Other unspecified technology."}}]}'
+        '400':
+          description: When the request is invalid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                invalidRequest:
+                  value: '{"errors":[{"status":"400","title":"Invalid request","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/production-groups/{id}"}}]}'
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unexpectedServerError:
+                  summary: Unexpected server error
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"500\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:38:13+01:00\"\n    }\n  ]\n}"
+      deprecated: false
+components:
+  schemas:
+    no.elhub.ds.energy.data.models.ProductionGroup:
+      type: object
+      properties:
+        description:
+          type:
+          - 'null'
+          - string
+          description: Production group description
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          description: Production group identification string
+          title: String
+        name:
+          type:
+          - 'null'
+          - string
+          description: Production group name
+          title: String
+      title: ProductionGroup
+    no.elhub.ds.energy.data.models.response.ProductionGroupResponse:
+      type: object
+      properties:
+        creationTime:
+          type: string
+          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        currentLink:
+          type:
+          - 'null'
+          - string
+          description: link to the current resource
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        productionGroups:
+          type:
+          - 'null'
+          - array
+          description: data grouped by a list of production groups
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.ProductionGroup'
+          title: List<ProductionGroup>
+      required:
+      - creationTime
+      title: ProductionGroupResponse
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    jsonapi.Error:
+      type: object
+      properties:
+        code:
+          type:
+          - 'null'
+          - string
+          title: String
+        detail:
+          type:
+          - 'null'
+          - string
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          title: String
+        links:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Error.Source'
+        status:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error
+    jsonapi.Link.LinkObject:
+      type: object
+      properties:
+        describedBy:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Link'
+        href:
+          type: string
+          title: String
+        hreflang:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+            title: String
+          title: List<String>
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        rel:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+        type:
+          type:
+          - 'null'
+          - string
+          title: String
+      required:
+      - href
+      title: Link.LinkObject
+    jsonapi.Meta:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            type: object
+            title: Any
+          title: Map<String,Any>
+      required:
+      - members
+      title: Meta
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
+      type: object
+      properties:
+        header:
+          type:
+          - 'null'
+          - string
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
+externalDocs:
+  url: /

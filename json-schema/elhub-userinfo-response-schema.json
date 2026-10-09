@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-userinfo-response-schema.json",
+  "title": "userinfo_response",
+  "description": "Information about the current user",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-flex-information-system-auth-api-openapi.yml#/components/schemas/userinfo_response",
+  "type": "object",
+  "required": [
+    "sub"
+  ],
+  "properties": {
+    "sub": {
+      "description": "The identity of the user, uniquely identifying who they are and which party they are assuming.",
+      "format": "bigint",
+      "type": "integer"
+    },
+    "entity_id": {
+      "description": "The entity associated to the user.",
+      "format": "bigint",
+      "type": "integer",
+      "x-foreign-key": {
+        "resource": "entity",
+        "field": "id"
+      }
+    },
+    "entity_name": {
+      "description": "The name of the entity associated to the user.",
+      "format": "text",
+      "type": "string",
+      "x-foreign-key": {
+        "resource": "entity",
+        "field": "name"
+      }
+    },
+    "party_id": {
+      "description": "The party assumed by the user.",
+      "format": "bigint",
+      "type": "integer",
+      "x-foreign-key": {
+        "resource": "party",
+        "field": "id"
+      }
+    },
+    "party_name": {
+      "description": "The name of the party assumed by the user.",
+      "format": "text",
+      "type": "string",
+      "x-foreign-key": {
+        "resource": "party",
+        "field": "name"
+      }
+    },
+    "current_role": {
+      "$ref": "#/$defs/flex_role"
+    }
+  },
+  "$defs": {
+    "flex_role": {
+      "description": "The auth role in the Flexibility Information System",
+      "format": "text",
+      "type": "string",
+      "enum": [
+        "flex_anonymous",
+        "flex_balance_responsible_party",
+        "flex_end_user",
+        "flex_energy_supplier",
+        "flex_entity",
+        "flex_flexibility_information_system_operator",
+        "flex_market_operator",
+        "flex_system_operator",
+        "flex_service_provider",
+        "flex_third_party"
+      ]
+    }
+  }
+}

@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-shared-production-version-response-dto-schema.json",
+  "title": "SharedProductionVersionResponseDto",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-settlement-virtual-calculations-api-openapi.yml#/components/schemas/SharedProductionVersionResponseDto",
+  "type": "object",
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/SharedProductionVersionResponseDataDto"
+    },
+    "links": {
+      "$ref": "#/$defs/JsonApiDocumentLinks"
+    }
+  },
+  "$defs": {
+    "JsonApiDocumentLinks": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "JsonApiDocumentLinks",
+      "properties": {
+        "self": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "first": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prev": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "JsonApiResourceLink": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "JsonApiResourceLink",
+      "required": [
+        "self"
+      ],
+      "properties": {
+        "self": {
+          "type": "string"
+        }
+      }
+    },
+    "SharedProductionVersionResponseDataDto": {
+      "type": "object",
+      "title": "SharedProductionVersionResponseDataDto",
+      "required": [
+        "type",
+        "id",
+        "attributes"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "$ref": "#/$defs/VersionResponseAttributesDto"
+        },
+        "links": {
+          "$ref": "#/$defs/JsonApiResourceLink"
+        }
+      }
+    },
+    "VersionParticipantResponseDto": {
+      "type": "object",
+      "title": "VersionParticipantResponseDto",
+      "required": [
+        "meteringPointId",
+        "role",
+        "channelType"
+      ],
+      "properties": {
+        "meteringPointId": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "Contributor",
+            "Recipient",
+            "Totalizer"
+          ]
+        },
+        "share": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "channelType": {
+          "type": "string",
+          "enum": [
+            "EH.ELECTRIC.KWH.1.3",
+            "EH.ELECTRIC.KWH.1.32",
+            "EH.ELECTRIC.KWH.1.4",
+            "EH.ELECTRIC.KWH.1.7",
+            "EH.ELECTRIC.KWH.1.8",
+            "EH.ELECTRIC.KWH.1.9",
+            "EH.ELECTRIC.KWH.1.10",
+            "EH.ELECTRIC.KWH.1.11",
+            "EH.ELECTRIC.KWH.1.12",
+            "EH.ELECTRIC.KWH.11.1",
+            "EH.ELECTRIC.KWH.11.2",
+            "EH.ELECTRIC.KWH.11.3",
+            "EH.ELECTRIC.KWH.11.4",
+            "EH.ELECTRIC.KWH.11.5",
+            "EH.ELECTRIC.KWH.11.6",
+            "EH.ELECTRIC.KWH.11.7",
+            "EH.ELECTRIC.KWH.11.8"
+          ]
+        }
+      }
+    },
+    "VersionResponseAttributesDto": {
+      "type": "object",
+      "title": "VersionResponseAttributesDto",
+      "required": [
+        "versionNumber",
+        "participants",
+        "status",
+        "template",
+        "settlementLevel",
+        "resolution",
+        "recipientFormulaType",
+        "contributorFormulaType",
+        "startDate"
+      ],
+      "properties": {
+        "versionNumber": {
+          "type": "integer"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VersionParticipantResponseDto"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Draft",
+            "Active"
+          ]
+        },
+        "template": {
+          "type": "string",
+          "enum": [
+            "NetMetering",
+            "GrossMetering",
+            "NetConsLargeCustomer",
+            "SharedProduction",
+            "SharedConsumption"
+          ]
+        },
+        "settlementLevel": {
+          "type": "string",
+          "enum": [
+            "Contributor",
+            "Totalizer",
+            "Participant"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "format": "duration"
+        },
+        "recipientFormulaType": {
+          "type": "string",
+          "enum": [
+            "EquallyDistributed",
+            "ConsumptionBased",
+            "Manual"
+          ]
+        },
+        "contributorFormulaType": {
+          "type": "string",
+          "enum": [
+            "EquallyDistributed",
+            "ProductionBased",
+            "Manual",
+            "NoDistribution"
+          ]
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      }
+    }
+  }
+}

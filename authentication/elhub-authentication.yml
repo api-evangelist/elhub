@@ -1,0 +1,62 @@
+generated: '2026-10-09'
+method: searched
+source: https://api.elhub.no/restricted-endpoints/maskinporten
+summary:
+  types:
+  - http
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  sources:
+  - openapi/elhub-access-api-openapi.yml
+  - openapi/elhub-market-data-contracts-api-openapi.yml
+  - openapi/elhub-settlement-virtual-calculations-api-openapi.yml
+- name: bearerAuth
+  type: http
+  scheme: Bearer
+  bearerFormat: JWT
+  description: Bearer token using a JWT
+  sources:
+  - openapi/elhub-flex-information-system-auth-api-openapi.yml
+  - openapi/elhub-flex-information-system-grid-api-openapi.yml
+  - openapi/elhub-flex-information-system-main-api-openapi.yml
+docs: https://api.elhub.no/restricted-endpoints/maskinporten
+derived_from:
+- openapi/elhub-access-api-openapi.yml
+- openapi/elhub-market-data-contracts-api-openapi.yml
+- openapi/elhub-settlement-virtual-calculations-api-openapi.yml
+- openapi/elhub-flex-information-system-*-api-openapi.yml
+public_access: Public APIs are open for everyone and do not require any authorization.
+providers:
+- api: API Portal protected APIs (Energy Data restricted datasets, Data Export, Market Data, Access, Settlement, Metering Values)
+  identity_provider: Maskinporten (Digdir)
+  flow: 'Maskinporten OAuth2 JWT-bearer token, sent as Authorization: Bearer {token}'
+  onboarding: Order Maskinporten access via Digdir Samarbeidsportalen, then contact post@elhub.no to be assigned the Elhub scope
+  requires: a data sharing agreement with Elhub or a pre-existing right to the data in Elhub
+  source: https://api.elhub.no/restricted-endpoints/maskinporten
+- api: Access API / Settlement API
+  headers:
+  - name: Authorization
+    required: true
+    value: Bearer <maskinporten access token>
+  - name: SenderGLN
+    required: true
+    purpose: GLN of the party making the request.
+  - name: OnBehalfOfGln
+    required: false
+    purpose: identifies the organization being represented when a service provider acts for another organization
+  source: https://api.elhub.no/access-api/getting-started
+- api: Flexibility Information System
+  methods:
+  - JWT Bearer (self-signed JWT authorization grant with a public key uploaded to an entity client)
+  - Client Credentials (client_id = entity client UUID, client_secret = password set on the client)
+  - OpenID Connect for portal users (ID-porten expected in production)
+  token_endpoint_operation: call_token
+  source: https://elhub.github.io/flex-information-system/auth/authn-methods/
+docs_pages:
+- https://api.elhub.no/restricted-endpoints/maskinporten
+- https://api.elhub.no/settlement-api/authentication
+- https://api.elhub.no/access-api/getting-started
+- https://elhub.github.io/flex-information-system/auth/authn-methods/

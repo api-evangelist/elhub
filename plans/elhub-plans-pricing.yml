@@ -1,0 +1,17 @@
+generated: '2026-10-09'
+method: none
+source: https://api.elhub.no/intro
+name: Elhub Plans and Pricing
+audience: developer-api
+pricing_basis: free
+published: false
+delivery:
+  delivery: managed
+plan_count: 0
+plans: []
+note: >-
+  Elhub publishes no API pricing or plans. The API Portal states the public APIs are free and open:
+  "Public APIs are open for everyone and do not require any authorization." and "Our APIs and datasets
+  are licenced by CC BY 4.0." Protected APIs require a data sharing agreement with Elhub (or a
+  pre-existing right to the data in Elhub) and Maskinporten integration; no price is published for them.
+  Elhub's market-participant fees (if any) are not API pricing and were not recorded.

@@ -1,0 +1,312 @@
+openapi: 3.2.0
+info:
+  title: Elhub Secure ping API
+  version: v0
+  description: 'Operations tagged Secure ping across 2 of this provider''s published API definitions: elhub-data-export-api-openapi.yaml, elhub-energy-data-api-openapi.yaml. Each path carries the servers of the definition it was published in.'
+tags:
+- name: Secure ping
+paths:
+  /data-export/v0/secure-ping:
+    get:
+      tags:
+      - Secure ping
+      summary: Secure ping endpoint
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Include the bearer token obtained from Maskinporten in the Authorization header. Format: `Bearer <token>`.'
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: Bearer eyJhbGciOi...
+      - name: X-Elhub-GLN
+        in: header
+        description: Sender (Own) GLN value
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: On-Behalf-Of
+        in: header
+        description: GLN value of the onbehalf party
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      responses:
+        '200':
+          description: Successful ping response when the token is valid
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: string
+                title: String
+              examples:
+                pong:
+                  summary: Pong response
+                  value: '{"message": "Pong! Elhoo."}'
+        '401':
+          description: The request lacks valid authentication credentials
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unauthorized:
+                  value: '{"errors":[{"status":"401","title":"Unauthorized","detail":"creationTime: 2026-09-29T15:38:15+02:00","links":{"self":"https://api.elhub.no/energy-data/v0/secure-ping"}}]}'
+        '403':
+          description: Authenticated but not authorized to access the resource
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                forbidden:
+                  value: '{"errors":[{"status":"403","title":"Forbidden","detail":"creationTime: 2026-09-29T15:38:15+02:00","links":{"self":"https://api.elhub.no/energy-data/v0/secure-ping"}}]}'
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unexpectedError:
+                  value: '{"errors":[{"status":"500","title":"Unexpected server error. Try again later.","detail":"creationTime: 2026-09-29T15:38:15+02:00","links":{"self":"https://api.elhub.no/energy-data/v0/secure-ping"}}]}'
+      deprecated: false
+      operationId: getDataExportV0SecurePing
+      x-operation-id-source: derived
+  /energy-data/v0/secure-ping:
+    get:
+      tags:
+      - Secure ping
+      summary: Secure ping endpoint
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Include the bearer token obtained from Maskinporten in the Authorization header. Format: `Bearer <token>`.'
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: Bearer eyJhbGciOi...
+      - name: X-Elhub-GLN
+        in: header
+        description: Sender (Own) GLN value
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: On-Behalf-Of
+        in: header
+        description: GLN value of the onbehalf party
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      responses:
+        '200':
+          description: Successful ping response when the token is valid
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: string
+                title: String
+              examples:
+                pong:
+                  summary: Pong response
+                  value: '{"message": "Pong! Elhoo."}'
+        '401':
+          description: The request lacks valid authentication credentials
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unauthorized:
+                  value: '{"errors":[{"status":"401","title":"Unauthorized","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/energy-data/v0/secure-ping"}}]}'
+        '403':
+          description: Authenticated but not authorized to access the resource
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                forbidden:
+                  value: '{"errors":[{"status":"403","title":"Forbidden","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/energy-data/v0/secure-ping"}}]}'
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unexpectedError:
+                  value: '{"errors":[{"status":"500","title":"Unexpected server error. Try again later.","detail":"creationTime: 2026-09-29T15:38:35+02:00","links":{"self":"https://api.elhub.no/energy-data/v0/secure-ping"}}]}'
+      deprecated: false
+      operationId: getEnergyDataV0SecurePing
+      x-operation-id-source: derived
+components:
+  schemas:
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    jsonapi.Error:
+      type: object
+      properties:
+        code:
+          type:
+          - 'null'
+          - string
+          title: String
+        detail:
+          type:
+          - 'null'
+          - string
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          title: String
+        links:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Error.Source'
+        status:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error
+    jsonapi.Link.LinkObject:
+      type: object
+      properties:
+        describedBy:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Link'
+        href:
+          type: string
+          title: String
+        hreflang:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+            title: String
+          title: List<String>
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        rel:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+        type:
+          type:
+          - 'null'
+          - string
+          title: String
+      required:
+      - href
+      title: Link.LinkObject
+    jsonapi.Meta:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            type: object
+            title: Any
+          title: Map<String,Any>
+      required:
+      - members
+      title: Meta
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
+      type: object
+      properties:
+        header:
+          type:
+          - 'null'
+          - string
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
+externalDocs:
+  url: /
+x-refined-from:
+- elhub-data-export-api-openapi.yaml
+- elhub-energy-data-api-openapi.yaml

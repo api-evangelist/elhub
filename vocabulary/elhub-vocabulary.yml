@@ -1,0 +1,416 @@
+generated: '2026-10-09'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/elhub-access-api-openapi.yml
+- openapi/elhub-data-export-api-openapi.yml
+- openapi/elhub-energy-data-api-openapi.yml
+- openapi/elhub-flex-information-system-auth-api-openapi.yml
+- openapi/elhub-flex-information-system-grid-api-openapi.yml
+vocabulary:
+  name: Elhub Domain Vocabulary
+  description: 'Terms declared by Elhub''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-09'
+  terms:
+  - term: Authorization Documents
+    definition: Operations for creating, retrieving, managing, and submitting authorization documents.
+    tags:
+    - Resource Group
+    source: openapi/elhub-access-api-openapi.yml
+  - term: Authorization Grants
+    definition: Operations for listing and retrieving authorization grants and their scopes.
+    tags:
+    - Resource Group
+    source: openapi/elhub-access-api-openapi.yml
+  - term: Authorization Requests
+    definition: Operations for creating, retrieving, and managing authorization requests.
+    tags:
+    - Resource Group
+    source: openapi/elhub-access-api-openapi.yml
+  - term: Work in Progress
+    definition: Endpoints under development and not yet part of the stable API contract.
+    tags:
+    - Resource Group
+    source: openapi/elhub-access-api-openapi.yml
+  - term: authentication
+    definition: Authentication
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-auth-api-openapi.yml
+  - term: introspection
+    definition: Introspection
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-auth-api-openapi.yml
+  - term: substation_cluster
+    definition: Substation Cluster
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-grid-api-openapi.yml
+  - term: substation
+    definition: Substation
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-grid-api-openapi.yml
+  - term: line
+    definition: Line
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-grid-api-openapi.yml
+  - term: controllable_unit
+    definition: Controllable unit
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: entity
+    definition: Entity
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: controllable_unit_suspension
+    definition: Controllable Unit Suspension
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: controllable_unit_suspension_comment
+    definition: Controllable Unit Suspension Comment
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: controllable_unit_service_provider
+    definition: Relation between controllable unit and service provider
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: controllable_unit_summary
+    definition: Controllable Unit Summary
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_power_per_substation
+    definition: Service Providing Group Power Per Substation
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_summary
+    definition: Service Providing Group Summary
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group
+    definition: Service providing group
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_membership
+    definition: Membership relation of controllable unit in service providing group
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_grid_prequalification
+    definition: Grid prequalification for service providing group
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_grid_prequalification_comment
+    definition: Grid prequalification for service providing group Comment
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_grid_suspension
+    definition: Service Providing Group Grid Suspension
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_grid_suspension_comment
+    definition: Service Providing Group Grid Suspension Comment
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: entity_client
+    definition: Entity client
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: party
+    definition: Party
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: party_membership
+    definition: Party Membership
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: identity
+    definition: Identity
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: technical_resource
+    definition: Technical Resource
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: event
+    definition: Event
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: notification
+    definition: Notification
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: accounting_point
+    definition: Accounting Point
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: accounting_point_balance_responsible_party
+    definition: Accounting Point Balance Responsible Party
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: accounting_point_bidding_zone
+    definition: Accounting Point Bidding Zone
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: accounting_point_end_user
+    definition: Accounting Point End User
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: accounting_point_energy_supplier
+    definition: Accounting Point Energy Supplier
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: metering_grid_area
+    definition: Metering Grid Area
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: accounting_point_metering_grid_area
+    definition: Accounting Point Metering Grid Area
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: accounting_point_grid_location
+    definition: Accounting Point Grid Location
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: product_type
+    definition: Product Type
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: system_operator_product_type
+    definition: System Operator Product Type
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_provider_product_application
+    definition: Service Provider Product Application
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_provider_product_application_comment
+    definition: Service Provider Product Application Comment
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_provider_product_suspension
+    definition: Service Provider Product Suspension
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_provider_product_suspension_comment
+    definition: Service Provider Product Suspension Comment
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_product_application
+    definition: Service Providing Group Product Application
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_product_application_attachment
+    definition: Service Providing Group Product Application Attachment
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_product_application_comment
+    definition: Service Providing Group Product Application Comment
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_product_suspension
+    definition: Service Providing Group Product Suspension
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: service_providing_group_product_suspension_comment
+    definition: Service Providing Group Product Suspension Comment
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: notice
+    definition: Notice
+    tags:
+    - Resource Group
+    source: openapi/elhub-flex-information-system-main-api-openapi.yml
+  - term: V1AuthorizationRequestSubmission
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationRequestSubmission
+  - term: V1AuthorizationRequestSubmissionAttributes
+    definition: 'Object declared by the contract with fields: requestType, appliesTo, allowedChanges, externalReference.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationRequestSubmissionAttributes
+  - term: V1AuthorizationRequestMeta
+    definition: 'Object declared by the contract with fields: language, redirectURI.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationRequestMeta
+  - term: V1AuthorizationRequestResource
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationRequestResource
+  - term: V1AuthorizationDocumentSubmission
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationDocumentSubmission
+  - term: V1AuthorizationDocumentSubmissionData
+    definition: 'Object declared by the contract with fields: type, attributes, meta.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationDocumentSubmissionData
+  - term: V1AuthorizationDocumentSubmissionAttributes
+    definition: 'Object declared by the contract with fields: documentType, appliesTo, allowedChanges, externalReference.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationDocumentSubmissionAttributes
+  - term: V1AppliesTo
+    definition: 'Object declared by the contract with fields: meteringPointId.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AppliesTo
+  - term: V1AllowedChanges
+    definition: Changes authorized for the listed resources.
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AllowedChanges
+  - term: V1AuthorizationDocumentMeta
+    definition: 'Object declared by the contract with fields: requestedFrom, requestedTo, language.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationDocumentMeta
+  - term: V1AuthorizationDocumentResource
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationDocumentResource
+  - term: V1AuthorizationDocumentRelationships
+    definition: 'Object declared by the contract with fields: requestedFrom, requestedTo, requestedBy, signedBy, authorizationGrant.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationDocumentRelationships
+  - term: V1AgentRelationship
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AgentRelationship
+  - term: V1SignedByRelationship
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1SignedByRelationship
+  - term: V1AuthorizationGrantRelationship
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationGrantRelationship
+  - term: V1AuthorizationGrantResource
+    definition: 'Object declared by the contract with fields: data.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationGrantResource
+  - term: V1AuthorizationGrant
+    definition: 'Object declared by the contract with fields: id, type, attributes, relationships, links.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationGrant
+  - term: V1AuthorizationGrantAttributes
+    definition: 'Object declared by the contract with fields: status, grantedAt, validFrom, validTo, createdAt, updatedAt, scopes.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationGrantAttributes
+  - term: V1AuthorizationScope
+    definition: 'Object declared by the contract with fields: capability, resourceType, appliesTo, allowedChanges.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationScope
+  - term: V1AuthorizationScopeConstraint
+    definition: 'Object declared by the contract with fields: attribute, value.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationScopeConstraint
+  - term: V1AuthorizationGrantRelationships
+    definition: 'Object declared by the contract with fields: grantedFor, grantedBy, grantedTo, source.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationGrantRelationships
+  - term: V1AuthorizationGrantSourceRelationship
+    definition: 'Evidence from which this grant was created: either a signed document or an accepted interactive request. The source technology
+      does not change the meaning of the grant''s parties or scopes.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationGrantSourceRelationship
+  - term: V1AuthorizationGrantLinks
+    definition: 'Object declared by the contract with fields: self.'
+    tags:
+    - Object
+    source: openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationGrantLinks
+  - term: Links
+    definition: 'Object declared by the contract with fields: members.'
+    tags:
+    - Object
+    source: openapi/elhub-data-export-api-openapi.yml#/components/schemas/jsonapi.Links
+  - term: Link.LinkObject
+    definition: 'Object declared by the contract with fields: describedBy, href, hreflang, meta, rel, title, type.'
+    tags:
+    - Object
+    source: openapi/elhub-data-export-api-openapi.yml#/components/schemas/jsonapi.Link.LinkObject
+  - term: Meta
+    definition: 'Object declared by the contract with fields: members.'
+    tags:
+    - Object
+    source: openapi/elhub-data-export-api-openapi.yml#/components/schemas/jsonapi.Meta
+  - term: Link.URI
+    definition: 'Object declared by the contract with fields: value.'
+    tags:
+    - Object
+    source: openapi/elhub-data-export-api-openapi.yml#/components/schemas/jsonapi.Link.URI
+  - term: Error.Source
+    definition: 'Object declared by the contract with fields: header, parameter, pointer.'
+    tags:
+    - Object
+    source: openapi/elhub-data-export-api-openapi.yml#/components/schemas/jsonapi.Error.Source
+  - term: Error
+    definition: 'Object declared by the contract with fields: code, detail, id, links, meta, source, status, title.'
+    tags:
+    - Object
+    source: openapi/elhub-data-export-api-openapi.yml#/components/schemas/jsonapi.Error
+  - term: File
+    definition: 'Object declared by the contract with fields: filename, id, location.'
+    tags:
+    - Object
+    source: openapi/elhub-data-export-api-openapi.yml#/components/schemas/no.elhub.ds.energy.data.models.File

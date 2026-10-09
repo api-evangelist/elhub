@@ -1,0 +1,398 @@
+openapi: 3.2.0
+info:
+  title: Energy Data Meta API
+  description: 'V0: This API is currently accessible to the public, and we anticipate future updates and enhancements.'
+  version: v0
+servers: []
+tags:
+- name: Meta
+paths:
+  /energy-data/v0/meta/{entity}:
+    get:
+      tags:
+      - Meta
+      summary: Meta Endpoint for entity and dataset
+      operationId: meta
+      parameters:
+      - name: entity
+        in: path
+        description: Entity type for which metadata is requested
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: price-areas
+      responses:
+        '200':
+          description: Provides metadata
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.MetaResponse'
+              examples:
+                metaExample:
+                  value: '{"meta":{"created":"2026-09-29T15:38:35+02:00","lastUpdated":"2026-09-29T15:38:35+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/meta/{entity}"},"data":{"type":"entity","id":"price-area","attributes":{"description":"Metadata for price area","noOfDataSets":2}}}'
+        '400':
+          description: Invalid request parameters or entity
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                invalidEntity:
+                  value: '{"errors":[{"status":"400","title":"Invalid query parameter","detail":"The requested entity is invalid or unsupported.","links":{"self":"https://api.elhub.no/energy-data/v0/meta/{entity}"}}]}'
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                unexpectedError:
+                  value: '{"errors":[{"status":"500","title":"Unexpected server error. Try again later.","detail":"An unexpected error occurred on the server.","links":{"self":"https://api.elhub.no/energy-data/v0/meta/{entity}"}}]}'
+      deprecated: false
+components:
+  schemas:
+    no.elhub.ds.energy.data.models.RouteAvailability:
+      type: string
+      enum:
+      - ALL
+      - BASE
+      - ID
+      title: RouteAvailability
+    no.elhub.ds.energy.data.models.DataSetMeta:
+      type: object
+      properties:
+        audiences:
+          type: array
+          description: User roles that may find this dataset relevant
+          items:
+            type: string
+            title: String
+          title: Set<String>
+          uniqueItems: true
+        columns:
+          type: array
+          description: List of database columns
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.DatasetAttributes'
+          title: List<DatasetAttributes>
+        datePolicyWithId:
+          type:
+          - 'null'
+          - string
+          description: Date policy used when request contains an entity id
+          title: String
+        datePolicyWithoutId:
+          type:
+          - 'null'
+          - string
+          description: Date policy used when request does not contain an entity id
+          title: String
+        description:
+          type:
+          - 'null'
+          - string
+          description: Dataset description
+          title: String
+        exportable:
+          type: boolean
+          description: Is the dataset exportable
+          title: Boolean
+        filters:
+          type:
+          - 'null'
+          - array
+          description: Filters
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.DataSetFilter'
+          title: List<DataSetFilter>
+        maxDateRange:
+          type: string
+          description: Maximum date range
+          title: String
+        name:
+          type:
+          - 'null'
+          - string
+          description: Dataset name
+          title: String
+        openDataSet:
+          type:
+          - 'null'
+          - boolean
+          description: Is the dataset open to access
+          title: Boolean
+        resolution:
+          type: string
+          description: 'Dataset resolution: can be daily, hourly, etc.'
+          title: String
+        routeAvailability:
+          $ref: '#/components/schemas/no.elhub.ds.energy.data.models.RouteAvailability'
+          description: Route availability
+        scopes:
+          type:
+          - 'null'
+          - array
+          description: Scopes
+          items:
+            type: string
+            title: String
+          title: List<String>
+        topics:
+          type: array
+          description: Topics covered by this dataset
+          items:
+            type: string
+            title: String
+          title: Set<String>
+          uniqueItems: true
+      required:
+      - audiences
+      - columns
+      - exportable
+      - maxDateRange
+      - resolution
+      - routeAvailability
+      - topics
+      title: DataSetMeta
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    no.elhub.ds.energy.data.models.EntityMeta:
+      type: object
+      properties:
+        datasets:
+          type:
+          - 'null'
+          - array
+          description: List of datasets
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.DataSetMeta'
+          title: List<DataSetMeta>
+        description:
+          type:
+          - 'null'
+          - string
+          description: Short description for the entity
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          description: Entity identification string
+          title: String
+        noOfDataSets:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of datasets belonging to this entity
+          title: Int
+      title: EntityMeta
+    no.elhub.ds.energy.data.models.response.MetaResponse:
+      type: object
+      properties:
+        creationTime:
+          type: string
+          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        currentLink:
+          type:
+          - 'null'
+          - string
+          description: link to the current resource
+          title: String
+        entity:
+          description: Entity dataset
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/no.elhub.ds.energy.data.models.EntityMeta'
+        lastUpdatedTime:
+          type: string
+          description: timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+      required:
+      - creationTime
+      - lastUpdatedTime
+      title: MetaResponse
+    jsonapi.Error:
+      type: object
+      properties:
+        code:
+          type:
+          - 'null'
+          - string
+          title: String
+        detail:
+          type:
+          - 'null'
+          - string
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          title: String
+        links:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Error.Source'
+        status:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error
+    jsonapi.Link.LinkObject:
+      type: object
+      properties:
+        describedBy:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Link'
+        href:
+          type: string
+          title: String
+        hreflang:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+            title: String
+          title: List<String>
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        rel:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+        type:
+          type:
+          - 'null'
+          - string
+          title: String
+      required:
+      - href
+      title: Link.LinkObject
+    no.elhub.ds.energy.data.models.DatasetAttributes:
+      type: object
+      properties:
+        description:
+          type: string
+          title: String
+        name:
+          type: string
+          title: String
+        type:
+          type: string
+          title: String
+      required:
+      - description
+      - name
+      - type
+      title: DatasetAttributes
+    jsonapi.Meta:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            type: object
+            title: Any
+          title: Map<String,Any>
+      required:
+      - members
+      title: Meta
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
+      type: object
+      properties:
+        header:
+          type:
+          - 'null'
+          - string
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
+    no.elhub.ds.energy.data.models.DataSetFilter:
+      type: object
+      properties:
+        defaultValue:
+          type:
+          - 'null'
+          - string
+          description: Default value for the filter
+          title: String
+        name:
+          type: string
+          description: Filter parameter name
+          title: String
+        values:
+          type:
+          - 'null'
+          - string
+          description: Allowed values for the filter
+          title: String
+      required:
+      - name
+      title: DataSetFilter
+externalDocs:
+  url: /

@@ -1,0 +1,1530 @@
+generated: '2026-10-09'
+method: derived
+generator: derive-data-model.py
+source:
+- openapi/elhub-access-api-openapi.yml
+- openapi/elhub-data-export-api-openapi.yml
+- openapi/elhub-energy-data-api-openapi.yml
+- openapi/elhub-flex-information-system-auth-api-openapi.yml
+- openapi/elhub-flex-information-system-grid-api-openapi.yml
+- openapi/elhub-flex-information-system-main-api-openapi.yml
+- openapi/elhub-market-data-contracts-api-openapi.yml
+- openapi/elhub-settlement-virtual-calculations-api-openapi.yml
+notation: has_one = property $ref; has_many = array of $ref; belongs_to = <entity>_id field
+summary:
+  entities: 291
+  entities_in_spec: 291
+  relationships: 185
+entities:
+- name: ContractResponses
+  fields: 0
+- name: ContractSummaryResponse
+  fields: 0
+- name: CreateContractRequests
+  fields: 0
+- name: Error
+  fields: 0
+- name: JsonApiDocumentLinks
+  fields: 5
+- name: JsonApiError
+  fields: 6
+- name: JsonApiErrorDocument
+  fields: 1
+- name: JsonApiResourceIdentifier
+  fields: 2
+- name: JsonApiResourceLink
+  fields: 1
+- name: JsonApiToManyRelationship
+  fields: 1
+- name: JsonApiToOneRelationship
+  fields: 1
+- name: JsonElement
+  fields: 0
+- name: OrganisationsResponseDto.Data.Attributes
+  fields: 4
+- name: PageMeta
+  fields: 2
+- name: PageMeta.PageInfo
+  fields: 2
+- name: PageMeta.TotalInfo
+  fields: 2
+- name: SharedProductionVersionPatchAttributesDto
+  fields: 9
+- name: SharedProductionVersionPatchDataDto
+  fields: 3
+- name: SharedProductionVersionPatchRequestDto
+  fields: 1
+- name: SharedProductionVersionPostAttributesDto
+  fields: 9
+- name: SharedProductionVersionPostDataDto
+  fields: 3
+- name: SharedProductionVersionPostRequestDto
+  fields: 1
+- name: SharedProductionVersionResponseDataDto
+  fields: 4
+- name: SharedProductionVersionResponseDto
+  fields: 2
+- name: SingleContractResponse
+  fields: 0
+- name: SingleUpdateContractRequest
+  fields: 0
+- name: UpdateContractRequests
+  fields: 0
+- name: V1AgentRelationship
+  fields: 1
+- name: V1AllowedChanges
+  fields: 1
+  description: Changes authorized for the listed resources.
+- name: V1AppliesTo
+  fields: 1
+- name: V1AuthorizationDocumentMeta
+  fields: 3
+- name: V1AuthorizationDocumentRelationships
+  fields: 5
+- name: V1AuthorizationDocumentResource
+  fields: 1
+- name: V1AuthorizationDocumentScopeProfile
+  fields: 0
+- name: V1AuthorizationDocumentSubmission
+  fields: 1
+- name: V1AuthorizationDocumentSubmissionAttributes
+  fields: 4
+- name: V1AuthorizationDocumentSubmissionData
+  fields: 3
+- name: V1AuthorizationGrant
+  fields: 5
+- name: V1AuthorizationGrantAttributes
+  fields: 7
+- name: V1AuthorizationGrantLinks
+  fields: 1
+- name: V1AuthorizationGrantRelationship
+  fields: 1
+- name: V1AuthorizationGrantRelationships
+  fields: 4
+- name: V1AuthorizationGrantResource
+  fields: 1
+- name: V1AuthorizationGrantSourceRelationship
+  fields: 2
+  description: 'Evidence from which this grant was created: either a signed document or an accepted interactive
+    request. The source technology does not change the meaning of the grant''s parties or scopes.'
+- name: V1AuthorizationRequestMeta
+  fields: 2
+- name: V1AuthorizationRequestResource
+  fields: 1
+- name: V1AuthorizationRequestSubmission
+  fields: 1
+- name: V1AuthorizationRequestSubmissionAttributes
+  fields: 4
+- name: V1AuthorizationScope
+  fields: 4
+- name: V1AuthorizationScopeConstraint
+  fields: 2
+- name: V1SignedByRelationship
+  fields: 1
+- name: VersionGetResponse
+  fields: 3
+- name: VersionIncluded
+  fields: 0
+- name: VersionIncluded.MeteringPointIncluded
+  fields: 5
+- name: VersionIncluded.OrgIncluded
+  fields: 3
+- name: VersionIncluded.VcIncluded
+  fields: 4
+- name: VersionListResponse
+  fields: 3
+- name: VersionParticipantDto
+  fields: 3
+- name: VersionParticipantResponseDto
+  fields: 4
+- name: VersionRelationships
+  fields: 2
+- name: VersionResourceData
+  fields: 5
+- name: VersionResponseAttributesDto
+  fields: 10
+- name: VirtualCalculationGetResponse
+  fields: 3
+- name: VirtualCalculationIncluded
+  fields: 0
+- name: VirtualCalculationIncluded.OrgIncluded
+  fields: 3
+- name: VirtualCalculationIncluded.VersionIncluded
+  fields: 4
+- name: VirtualCalculationListResponse
+  fields: 4
+- name: VirtualCalculationPostAttributesDto
+  fields: 3
+- name: VirtualCalculationPostDataDto
+  fields: 2
+- name: VirtualCalculationPostRequestDto
+  fields: 1
+- name: VirtualCalculationRelationships
+  fields: 2
+- name: VirtualCalculationResourceData
+  fields: 4
+- name: VirtualCalculationResponseAttributes
+  fields: 5
+- name: accounting_point_balance_responsible_party_response
+  fields: 7
+  description: Response schema - Relation linking a balance responsible party to an accounting point.
+- name: accounting_point_bidding_zone_response
+  fields: 5
+  description: Response schema - Relation telling which bidding zone an accounting point belongs to.
+- name: accounting_point_end_user_response
+  fields: 6
+  description: Response schema - Relation telling which end user an accounting point belongs to.
+- name: accounting_point_energy_supplier_response
+  fields: 6
+  description: Response schema - Relation linking an energy supplier to an accounting point.
+- name: accounting_point_grid_location_create_request
+  fields: 7
+  description: Request schema for create operations - The electrical (topological) location of an accounting point
+    in the common grid model (Nemo).
+- name: accounting_point_grid_location_history_response
+  fields: 14
+  description: Accounting Point Grid Location - history
+- name: accounting_point_grid_location_response
+  fields: 12
+  description: Response schema - The electrical (topological) location of an accounting point in the common grid
+    model (Nemo).
+- name: accounting_point_grid_location_update_request
+  fields: 6
+  description: Request schema for update operations - The electrical (topological) location of an accounting point
+    in the common grid model (Nemo).
+- name: accounting_point_metering_grid_area_response
+  fields: 6
+  description: Response schema - Relation telling which metering grid area an accounting point belongs to.
+- name: accounting_point_response
+  fields: 14
+  description: Response schema - Accounting point for a controllable unit.
+- name: client_credentials_request
+  fields: 3
+  description: Client credentials body
+- name: controllable_unit_create_request
+  fields: 7
+  description: Request schema for create operations - Controllable unit
+- name: controllable_unit_history_response
+  fields: 19
+  description: Controllable unit - history
+- name: controllable_unit_lookup_request
+  fields: 3
+  description: Request schema for controllable unit lookup operations
+- name: controllable_unit_lookup_response
+  fields: 3
+  description: Response schema for controllable unit lookup operations
+- name: controllable_unit_response
+  fields: 18
+  description: Response schema - Controllable unit
+- name: controllable_unit_service_provider_create_request
+  fields: 6
+  description: Request schema for create operations - Relation between controllable unit and service provider
+- name: controllable_unit_service_provider_history_response
+  fields: 15
+  description: Relation between controllable unit and service provider - history
+- name: controllable_unit_service_provider_response
+  fields: 12
+  description: Response schema - Relation between controllable unit and service provider
+- name: controllable_unit_service_provider_update_request
+  fields: 3
+  description: Request schema for update operations - Relation between controllable unit and service provider
+- name: controllable_unit_summary_response
+  fields: 4
+  description: Response schema - Aggregated summary of technical resources belonging to a controllable unit.
+- name: controllable_unit_suspension_comment_create_request
+  fields: 3
+  description: Request schema for create operations - Comment made by a party involved in a controllable unit suspension.
+- name: controllable_unit_suspension_comment_history_response
+  fields: 12
+  description: Controllable Unit Suspension Comment - history
+- name: controllable_unit_suspension_comment_response
+  fields: 9
+  description: Response schema - Comment made by a party involved in a controllable unit suspension.
+- name: controllable_unit_suspension_comment_update_request
+  fields: 2
+  description: Request schema for update operations - Comment made by a party involved in a controllable unit suspension.
+- name: controllable_unit_suspension_create_request
+  fields: 3
+  description: Request schema for create operations - The relation allowing an impacted system operator to temporarily
+    suspend a controllable unit.
+- name: controllable_unit_suspension_history_response
+  fields: 12
+  description: Controllable Unit Suspension - history
+- name: controllable_unit_suspension_response
+  fields: 9
+  description: Response schema - The relation allowing an impacted system operator to temporarily suspend a controllable
+    unit.
+- name: controllable_unit_suspension_update_request
+  fields: 1
+  description: Request schema for update operations - The relation allowing an impacted system operator to temporarily
+    suspend a controllable unit.
+- name: controllable_unit_update_request
+  fields: 6
+  description: Request schema for update operations - Controllable unit
+- name: empty_object
+  fields: 0
+  description: An empty object
+- name: entity_client_create_request
+  fields: 6
+  description: Request schema for create operations - Client linked to an entity for client credentials and JWT
+    grant authentication methods.
+- name: entity_client_response
+  fields: 12
+  description: Response schema - Client linked to an entity for client credentials and JWT grant authentication
+    methods.
+- name: entity_client_update_request
+  fields: 5
+  description: Request schema for update operations - Client linked to an entity for client credentials and JWT
+    grant authentication methods.
+- name: entity_create_request
+  fields: 4
+  description: Request schema for create operations - Entity - Natural or legal person
+- name: entity_lookup_request
+  fields: 4
+  description: Request schema for entity lookup operations
+- name: entity_lookup_response
+  fields: 1
+  description: Response schema for entity lookup operations
+- name: entity_response
+  fields: 11
+  description: Response schema - Entity - Natural or legal person
+- name: entity_update_request
+  fields: 1
+  description: Request schema for update operations - Entity - Natural or legal person
+- name: error_message
+  fields: 4
+  description: Error message returned from the API.
+- name: event_data_controllable_unit_lookup
+  fields: 2
+  description: Format of the data field in a controllable_unit.lookup event.
+- name: event_data_updated_fields
+  fields: 2
+  description: Common format of the data field in events concerning update operations.
+- name: event_response
+  fields: 8
+  description: Response schema - Event happening in the system.
+- name: geojson_linestring
+  fields: 2
+- name: geojson_point
+  fields: 2
+- name: geojson_polygon
+  fields: 2
+- name: identity_response
+  fields: 7
+  description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially
+    assumed party.
+- name: java.math.BigDecimal
+  fields: 0
+- name: jsonapi.Error
+  fields: 8
+- name: jsonapi.Error.Source
+  fields: 3
+- name: jsonapi.Link.LinkObject
+  fields: 7
+- name: jsonapi.Link.URI
+  fields: 1
+- name: jsonapi.Links
+  fields: 1
+- name: jsonapi.Meta
+  fields: 1
+- name: jwt_bearer_request
+  fields: 2
+  description: JWT Bearer authorization grant request
+- name: line_response
+  fields: 12
+  description: Response schema - A transmission or distribution line in the common grid model (Nemo), connecting
+    two substation clusters.
+- name: metering_grid_area_response
+  fields: 6
+  description: Response schema - Metering grid area to which accounting points belong.
+- name: no.elhub.ds.energy.data.models.ComparisonNorgespris
+  fields: 11
+- name: no.elhub.ds.energy.data.models.ConsumptionGroup
+  fields: 3
+- name: no.elhub.ds.energy.data.models.DataExportJob
+  fields: 4
+- name: no.elhub.ds.energy.data.models.DataSetFilter
+  fields: 3
+- name: no.elhub.ds.energy.data.models.DataSetMeta
+  fields: 14
+- name: no.elhub.ds.energy.data.models.DatasetAttributes
+  fields: 3
+- name: no.elhub.ds.energy.data.models.EntityMeta
+  fields: 4
+- name: no.elhub.ds.energy.data.models.File
+  fields: 3
+- name: no.elhub.ds.energy.data.models.InstalledCapacityPerMeteringPointDaily
+  fields: 16
+- name: no.elhub.ds.energy.data.models.MeteringPointCoordinate
+  fields: 21
+- name: no.elhub.ds.energy.data.models.Party
+  fields: 7
+- name: no.elhub.ds.energy.data.models.ProductionGroup
+  fields: 3
+- name: no.elhub.ds.energy.data.models.Update
+  fields: 8
+- name: no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerBalanceSupplierMga
+  fields: 29
+- name: no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerMga
+  fields: 33
+- name: no.elhub.ds.energy.data.models.gridarea.ConsumptionPerBalanceSupplierMgaHour
+  fields: 7
+- name: no.elhub.ds.energy.data.models.gridarea.ConsumptionPerGroupMgaHour
+  fields: 7
+- name: no.elhub.ds.energy.data.models.gridarea.ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode
+  fields: 10
+- name: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  fields: 20
+- name: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  fields: 28
+- name: no.elhub.ds.energy.data.models.gridarea.ExchangePerMgaHour
+  fields: 9
+- name: no.elhub.ds.energy.data.models.gridarea.GridArea
+  fields: 21
+- name: no.elhub.ds.energy.data.models.gridarea.LossPerMgaHour
+  fields: 8
+- name: no.elhub.ds.energy.data.models.gridarea.MeteringPointMissingReadsPerMgaDaily
+  fields: 17
+- name: no.elhub.ds.energy.data.models.gridarea.ProductionPerBalanceSupplierMeteringPointTypeMgaHour
+  fields: 9
+- name: no.elhub.ds.energy.data.models.gridarea.ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga
+  fields: 10
+- name: no.elhub.ds.energy.data.models.meteringpoints.MeteringPointEntity
+  fields: 13
+- name: no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesHour
+  fields: 9
+- name: no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionDay
+  fields: 12
+- name: no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionMonth
+  fields: 12
+- name: no.elhub.ds.energy.data.models.meteringpoints.MeteringValuesPerDirectionYear
+  fields: 12
+- name: no.elhub.ds.energy.data.models.meteringpoints.ProductionRevenuePerYear
+  fields: 9
+- name: no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour
+  fields: 7
+- name: no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityHour
+  fields: 6
+- name: no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour
+  fields: 9
+- name: no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour
+  fields: 8
+- name: no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily
+  fields: 7
+- name: no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily
+  fields: 6
+- name: no.elhub.ds.energy.data.models.municipality.MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth
+  fields: 8
+- name: no.elhub.ds.energy.data.models.municipality.MeteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality
+  fields: 8
+  description: Number of metering points at the last day of month per grid owner, NACE code and municipality.
+- name: no.elhub.ds.energy.data.models.municipality.Municipality
+  fields: 16
+- name: no.elhub.ds.energy.data.models.municipality.ProductionPerMeteringPointTypeMunicipalityHour
+  fields: 6
+- name: no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerBalanceSupplierMba
+  fields: 28
+- name: no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerMba
+  fields: 29
+- name: no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceResponsibleMbaHour
+  fields: 7
+- name: no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceSupplierMbaHour
+  fields: 7
+- name: no.elhub.ds.energy.data.models.pricearea.ConsumptionPerGroupMbaHour
+  fields: 7
+- name: no.elhub.ds.energy.data.models.pricearea.ExchangePerMba15Min
+  fields: 7
+- name: no.elhub.ds.energy.data.models.pricearea.ExchangePerMbaHour
+  fields: 7
+- name: no.elhub.ds.energy.data.models.pricearea.InstalledCapacityPerMeteringPointTypeGroupMbaDaily
+  fields: 6
+- name: no.elhub.ds.energy.data.models.pricearea.LossPerMbaHour
+  fields: 11
+- name: no.elhub.ds.energy.data.models.pricearea.MeteringValueComparisonEacPerMonth
+  fields: 9
+- name: no.elhub.ds.energy.data.models.pricearea.NorgesprisConsumptionPerGroupEacMba
+  fields: 12
+- name: no.elhub.ds.energy.data.models.pricearea.PriceArea
+  fields: 21
+- name: no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour
+  fields: 8
+- name: no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour
+  fields: 8
+- name: no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMba15Min
+  fields: 6
+- name: no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMbaHour
+  fields: 6
+- name: no.elhub.ds.energy.data.models.pricearea.ProductionPerMba15Min
+  fields: 5
+- name: no.elhub.ds.energy.data.models.response.ConsumptionGroupResponse
+  fields: 4
+- name: no.elhub.ds.energy.data.models.response.DataExportResponse
+  fields: 4
+- name: no.elhub.ds.energy.data.models.response.GridAreaResponse
+  fields: 4
+- name: no.elhub.ds.energy.data.models.response.MetaResponse
+  fields: 4
+- name: no.elhub.ds.energy.data.models.response.MeteringPointResponse
+  fields: 4
+- name: no.elhub.ds.energy.data.models.response.MunicipalityResponse
+  fields: 4
+- name: no.elhub.ds.energy.data.models.response.PartyResponse
+  fields: 3
+- name: no.elhub.ds.energy.data.models.response.PriceAreaResponse
+  fields: 4
+- name: no.elhub.ds.energy.data.models.response.ProductionGroupResponse
+  fields: 4
+- name: no.elhub.ds.energy.data.models.response.UpdatesResponse
+  fields: 4
+- name: notice_data_controllable_unit_product_duplication
+  fields: 3
+  description: Format of the data field in a notice with data.kind = notice.data.controllable_unit.product_duplication
+- name: notice_data_party_missing
+  fields: 3
+  description: Format of the data field in a notice with data.kind = notice.data.party.missing
+- name: notice_data_party_outdated
+  fields: 3
+  description: Format of the data field in a notice with data.kind = notice.data.party.outdated
+- name: notice_data_product_type_not_qualified
+  fields: 2
+  description: Format of the data field in a notice with data.kind = notice.data.product_type.not_qualified
+- name: notice_data_valid_time_outside_contract
+  fields: 2
+  description: Format of the data field in a notice with data.kind = notice.data.valid_time.outside_contract
+- name: notice_response
+  fields: 9
+  description: Response schema - Notice to users about various issues or actions expected from them.
+- name: notification_response
+  fields: 8
+  description: Response schema - Notification about an event happening in the system.
+- name: notification_update_request
+  fields: 1
+  description: Request schema for update operations - Notification about an event happening in the system.
+- name: numeric_aggregation
+  fields: 4
+- name: oauth_error_message
+  fields: 4
+  description: Error message returned from the API for oAuth errors.
+- name: party_create_request
+  fields: 7
+  description: Request schema for create operations - The body that interacts with the Flexibility Information System
+- name: party_history_response
+  fields: 13
+  description: Party - history
+- name: party_membership_create_request
+  fields: 3
+  description: Request schema for create operations - The relation between a party and entity.
+- name: party_membership_history_response
+  fields: 10
+  description: Party Membership - history
+- name: party_membership_response
+  fields: 8
+  description: Response schema - The relation between a party and entity.
+- name: party_membership_update_request
+  fields: 1
+  description: Request schema for update operations - The relation between a party and entity.
+- name: party_response
+  fields: 11
+  description: Response schema - The body that interacts with the Flexibility Information System
+- name: party_update_request
+  fields: 2
+  description: Request schema for update operations - The body that interacts with the Flexibility Information System
+- name: product_type_response
+  fields: 6
+  description: Response schema - Product type.
+- name: service_provider_product_application_comment_create_request
+  fields: 3
+  description: Request schema for create operations - Comment made by a party involved in a service provider product
+    application.
+- name: service_provider_product_application_comment_history_response
+  fields: 12
+  description: Service Provider Product Application Comment - history
+- name: service_provider_product_application_comment_response
+  fields: 9
+  description: Response schema - Comment made by a party involved in a service provider product application.
+- name: service_provider_product_application_comment_update_request
+  fields: 2
+  description: Request schema for update operations - Comment made by a party involved in a service provider product
+    application.
+- name: service_provider_product_application_create_request
+  fields: 5
+  description: Request schema for create operations - Relation between a service provider and a system operator,
+    for the SP to apply for delivering the SO some of the types of product they want to buy on a flexibili
+- name: service_provider_product_application_history_response
+  fields: 14
+  description: Service Provider Product Application - history
+- name: service_provider_product_application_response
+  fields: 11
+  description: Response schema - Relation between a service provider and a system operator, for the SP to apply
+    for delivering the SO some of the types of product they want to buy on a flexibility market.
+- name: service_provider_product_application_update_request
+  fields: 3
+  description: Request schema for update operations - Relation between a service provider and a system operator,
+    for the SP to apply for delivering the SO some of the types of product they want to buy on a flexibili
+- name: service_provider_product_suspension_comment_create_request
+  fields: 3
+  description: Request schema for create operations - Comment made by a party involved in a service provider product
+    suspension.
+- name: service_provider_product_suspension_comment_history_response
+  fields: 12
+  description: Service Provider Product Suspension Comment - history
+- name: service_provider_product_suspension_comment_response
+  fields: 9
+  description: Response schema - Comment made by a party involved in a service provider product suspension.
+- name: service_provider_product_suspension_comment_update_request
+  fields: 2
+  description: Request schema for update operations - Comment made by a party involved in a service provider product
+    suspension.
+- name: service_provider_product_suspension_create_request
+  fields: 4
+  description: Request schema for create operations - The relation allowing a procuring system operator to temporarily
+    suspend a service provider from delivering them products of the given types.
+- name: service_provider_product_suspension_history_response
+  fields: 13
+  description: Service Provider Product Suspension - history
+- name: service_provider_product_suspension_response
+  fields: 10
+  description: Response schema - The relation allowing a procuring system operator to temporarily suspend a service
+    provider from delivering them products of the given types.
+- name: service_provider_product_suspension_update_request
+  fields: 2
+  description: Request schema for update operations - The relation allowing a procuring system operator to temporarily
+    suspend a service provider from delivering them products of the given types.
+- name: service_providing_group_create_request
+  fields: 5
+  description: Request schema for create operations - Group of controllable units
+- name: service_providing_group_grid_prequalification_comment_create_request
+  fields: 3
+  description: Request schema for create operations - Comment made by a party involved in a service providing group
+    grid prequalification.
+- name: service_providing_group_grid_prequalification_comment_history_response
+  fields: 12
+  description: Grid prequalification for service providing group Comment - history
+- name: service_providing_group_grid_prequalification_comment_response
+  fields: 9
+  description: Response schema - Comment made by a party involved in a service providing group grid prequalification.
+- name: service_providing_group_grid_prequalification_comment_update_request
+  fields: 2
+  description: Request schema for update operations - Comment made by a party involved in a service providing group
+    grid prequalification.
+- name: service_providing_group_grid_prequalification_create_request
+  fields: 4
+  description: Request schema for create operations - Grid prequalification for service providing group
+- name: service_providing_group_grid_prequalification_history_response
+  fields: 13
+  description: Grid prequalification for service providing group - history
+- name: service_providing_group_grid_prequalification_response
+  fields: 10
+  description: Response schema - Grid prequalification for service providing group
+- name: service_providing_group_grid_prequalification_update_request
+  fields: 2
+  description: Request schema for update operations - Grid prequalification for service providing group
+- name: service_providing_group_grid_suspension_comment_create_request
+  fields: 3
+  description: Request schema for create operations - Comment made by a party involved in a service providing group
+    grid suspension.
+- name: service_providing_group_grid_suspension_comment_history_response
+  fields: 12
+  description: Service Providing Group Grid Suspension Comment - history
+- name: service_providing_group_grid_suspension_comment_response
+  fields: 9
+  description: Response schema - Comment made by a party involved in a service providing group grid suspension.
+- name: service_providing_group_grid_suspension_comment_update_request
+  fields: 2
+  description: Request schema for update operations - Comment made by a party involved in a service providing group
+    grid suspension.
+- name: service_providing_group_grid_suspension_create_request
+  fields: 3
+  description: Request schema for create operations - The relation allowing an impacted system operator to temporarily
+    suspend a service providing group from delivering services.
+- name: service_providing_group_grid_suspension_history_response
+  fields: 12
+  description: Service Providing Group Grid Suspension - history
+- name: service_providing_group_grid_suspension_response
+  fields: 9
+  description: Response schema - The relation allowing an impacted system operator to temporarily suspend a service
+    providing group from delivering services.
+- name: service_providing_group_grid_suspension_update_request
+  fields: 1
+  description: Request schema for update operations - The relation allowing an impacted system operator to temporarily
+    suspend a service providing group from delivering services.
+- name: service_providing_group_history_response
+  fields: 18
+  description: Service providing group - history
+- name: service_providing_group_membership_create_request
+  fields: 4
+  description: Request schema for create operations - Membership relation of controllable unit in service providing
+    group
+- name: service_providing_group_membership_history_response
+  fields: 12
+  description: Membership relation of controllable unit in service providing group - history
+- name: service_providing_group_membership_response
+  fields: 9
+  description: Response schema - Membership relation of controllable unit in service providing group
+- name: service_providing_group_membership_update_request
+  fields: 2
+  description: Request schema for update operations - Membership relation of controllable unit in service providing
+    group
+- name: service_providing_group_power_per_substation_response
+  fields: 4
+  description: Response schema - Per-substation breakdown of controllable units and their technical details for
+    a service providing group.
+- name: service_providing_group_product_application_attachment_history_response
+  fields: 13
+  description: Service Providing Group Product Application Attachment - history
+- name: service_providing_group_product_application_attachment_response
+  fields: 10
+  description: Response schema - File attachment associated with a service providing group product application,
+    allowing involved parties to exchange supporting documents.
+- name: service_providing_group_product_application_comment_create_request
+  fields: 3
+  description: Request schema for create operations - Comment made by a party involved in a service providing group
+    product application.
+- name: service_providing_group_product_application_comment_history_response
+  fields: 12
+  description: Service Providing Group Product Application Comment - history
+- name: service_providing_group_product_application_comment_response
+  fields: 9
+  description: Response schema - Comment made by a party involved in a service providing group product application.
+- name: service_providing_group_product_application_comment_update_request
+  fields: 2
+  description: Request schema for update operations - Comment made by a party involved in a service providing group
+    product application.
+- name: service_providing_group_product_application_create_request
+  fields: 12
+  description: Request schema for create operations - Relation between a service providing group and a system operator
+    for a product type, for the SPG to deliver a product to the SO later.
+- name: service_providing_group_product_application_history_response
+  fields: 23
+  description: Service Providing Group Product Application - history
+- name: service_providing_group_product_application_response
+  fields: 20
+  description: Response schema - Relation between a service providing group and a system operator for a product
+    type, for the SPG to deliver a product to the SO later.
+- name: service_providing_group_product_application_update_request
+  fields: 10
+  description: Request schema for update operations - Relation between a service providing group and a system operator
+    for a product type, for the SPG to deliver a product to the SO later.
+- name: service_providing_group_product_suspension_comment_create_request
+  fields: 3
+  description: Request schema for create operations - Comment made by a party involved in a service providing group
+    product suspension.
+- name: service_providing_group_product_suspension_comment_history_response
+  fields: 12
+  description: Service Providing Group Product Suspension Comment - history
+- name: service_providing_group_product_suspension_comment_response
+  fields: 9
+  description: Response schema - Comment made by a party involved in a service providing group product suspension.
+- name: service_providing_group_product_suspension_comment_update_request
+  fields: 2
+  description: Request schema for update operations - Comment made by a party involved in a service providing group
+    product suspension.
+- name: service_providing_group_product_suspension_create_request
+  fields: 4
+  description: Request schema for create operations - The relation allowing a procuring system operator to temporarily
+    suspend a service providing group from delivering products of certain types.
+- name: service_providing_group_product_suspension_history_response
+  fields: 13
+  description: Service Providing Group Product Suspension - history
+- name: service_providing_group_product_suspension_response
+  fields: 10
+  description: Response schema - The relation allowing a procuring system operator to temporarily suspend a service
+    providing group from delivering products of certain types.
+- name: service_providing_group_product_suspension_update_request
+  fields: 2
+  description: Request schema for update operations - The relation allowing a procuring system operator to temporarily
+    suspend a service providing group from delivering products of certain types.
+- name: service_providing_group_response
+  fields: 17
+  description: Response schema - Group of controllable units
+- name: service_providing_group_summary_response
+  fields: 5
+  description: Response schema - Aggregated summary of controllable units and technical resources belonging to a
+    service providing group.
+- name: service_providing_group_update_request
+  fields: 4
+  description: Request schema for update operations - Group of controllable units
+- name: session_response
+  fields: 6
+  description: Session response
+- name: substation_cluster_response
+  fields: 11
+  description: Response schema - A cluster of substations in the common grid model (Nemo), representing a group
+    of electrically related substations in a geographic area.
+- name: substation_response
+  fields: 13
+  description: Response schema - A substation in the common grid model (Nemo), representing a node in the electricity
+    grid.
+- name: system_operator_product_type_create_request
+  fields: 3
+  description: Request schema for create operations - Relation between a system operator and a product type they
+    want to buy.
+- name: system_operator_product_type_history_response
+  fields: 10
+  description: System Operator Product Type - history
+- name: system_operator_product_type_response
+  fields: 8
+  description: Response schema - Relation between a system operator and a product type they want to buy.
+- name: system_operator_product_type_update_request
+  fields: 1
+  description: Request schema for update operations - Relation between a system operator and a product type they
+    want to buy.
+- name: technical_resource_create_request
+  fields: 10
+  description: Request schema for create operations - Technical unit being part of a controllable unit.
+- name: technical_resource_history_response
+  fields: 18
+  description: Technical Resource - history
+- name: technical_resource_response
+  fields: 15
+  description: Response schema - Technical unit being part of a controllable unit.
+- name: technical_resource_update_request
+  fields: 9
+  description: Request schema for update operations - Technical unit being part of a controllable unit.
+- name: token_exchange_request
+  fields: 4
+  description: Token exchange body
+- name: userinfo_response
+  fields: 6
+  description: Information about the current user
+relationships:
+- from: V1AuthorizationRequestSubmissionAttributes
+  to: V1AppliesTo
+  type: has_one
+  via: appliesTo
+- from: V1AuthorizationRequestSubmissionAttributes
+  to: V1AllowedChanges
+  type: has_one
+  via: allowedChanges
+- from: V1AuthorizationDocumentSubmission
+  to: V1AuthorizationDocumentSubmissionData
+  type: has_one
+  via: data
+- from: V1AuthorizationDocumentSubmissionData
+  to: V1AuthorizationDocumentSubmissionAttributes
+  type: has_one
+  via: attributes
+- from: V1AuthorizationDocumentSubmissionData
+  to: V1AuthorizationDocumentMeta
+  type: has_one
+  via: meta
+- from: V1AuthorizationDocumentSubmissionAttributes
+  to: V1AppliesTo
+  type: has_one
+  via: appliesTo
+- from: V1AuthorizationDocumentSubmissionAttributes
+  to: V1AllowedChanges
+  type: has_one
+  via: allowedChanges
+- from: V1AuthorizationDocumentRelationships
+  to: V1AgentRelationship
+  type: has_one
+  via: requestedFrom
+- from: V1AuthorizationDocumentRelationships
+  to: V1AgentRelationship
+  type: has_one
+  via: requestedTo
+- from: V1AuthorizationDocumentRelationships
+  to: V1AgentRelationship
+  type: has_one
+  via: requestedBy
+- from: V1AuthorizationDocumentRelationships
+  to: V1SignedByRelationship
+  type: has_one
+  via: signedBy
+- from: V1AuthorizationDocumentRelationships
+  to: V1AuthorizationGrantRelationship
+  type: has_one
+  via: authorizationGrant
+- from: V1AuthorizationGrantResource
+  to: V1AuthorizationGrant
+  type: has_one
+  via: data
+- from: V1AuthorizationGrant
+  to: V1AuthorizationGrantAttributes
+  type: has_one
+  via: attributes
+- from: V1AuthorizationGrant
+  to: V1AuthorizationGrantRelationships
+  type: has_one
+  via: relationships
+- from: V1AuthorizationGrant
+  to: V1AuthorizationGrantLinks
+  type: has_one
+  via: links
+- from: V1AuthorizationGrantAttributes
+  to: V1AuthorizationScope
+  type: has_many
+  via: scopes
+- from: V1AuthorizationScope
+  to: V1AuthorizationScopeConstraint
+  type: has_many
+  via: appliesTo
+- from: V1AuthorizationScope
+  to: V1AuthorizationScopeConstraint
+  type: has_many
+  via: allowedChanges
+- from: V1AuthorizationGrantRelationships
+  to: V1AgentRelationship
+  type: has_one
+  via: grantedFor
+- from: V1AuthorizationGrantRelationships
+  to: V1AgentRelationship
+  type: has_one
+  via: grantedBy
+- from: V1AuthorizationGrantRelationships
+  to: V1AgentRelationship
+  type: has_one
+  via: grantedTo
+- from: V1AuthorizationGrantRelationships
+  to: V1AuthorizationGrantSourceRelationship
+  type: has_one
+  via: source
+- from: jsonapi.Link.LinkObject
+  to: jsonapi.Meta
+  type: has_one
+  via: meta
+- from: jsonapi.Error
+  to: jsonapi.Links
+  type: has_one
+  via: links
+- from: jsonapi.Error
+  to: jsonapi.Meta
+  type: has_one
+  via: meta
+- from: jsonapi.Error
+  to: jsonapi.Error.Source
+  type: has_one
+  via: source
+- from: no.elhub.ds.energy.data.models.response.DataExportResponse
+  to: no.elhub.ds.energy.data.models.File
+  type: has_one
+  via: file
+- from: no.elhub.ds.energy.data.models.DataSetMeta
+  to: no.elhub.ds.energy.data.models.DatasetAttributes
+  type: has_many
+  via: columns
+- from: no.elhub.ds.energy.data.models.response.MetaResponse
+  to: no.elhub.ds.energy.data.models.EntityMeta
+  type: has_one
+  via: entity
+- from: no.elhub.ds.energy.data.models.Party
+  to: jsonapi.Links
+  type: has_one
+  via: links
+- from: no.elhub.ds.energy.data.models.gridarea.GridArea
+  to: no.elhub.ds.energy.data.models.Party
+  type: has_one
+  via: gridOwner
+- from: no.elhub.ds.energy.data.models.gridarea.GridArea
+  to: jsonapi.Links
+  type: has_one
+  via: links
+- from: no.elhub.ds.energy.data.models.gridarea.GridArea
+  to: no.elhub.ds.energy.data.models.pricearea.PriceArea
+  type: has_one
+  via: priceArea
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: consumptionKwh
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: consumptionKwhNorwayPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: consumptionKwhSpotPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: consumptionKwhSupportPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: costNorwayPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: costSpotPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: costSupportPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: supportNorwayPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: supportSupportPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: totalCost
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: consumptionKwh
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: consumptionKwhNorwayPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: consumptionKwhSpotPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: consumptionKwhSupportPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: costNorwayPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: costSpotPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: costSupportPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: diffCompSpotMinusSupportPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: diffCompSupportMinusNorwayPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: supportNorwayPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: supportSupportPrice
+- from: no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth
+  to: java.math.BigDecimal
+  type: has_one
+  via: totalCost
+- from: no.elhub.ds.energy.data.models.pricearea.PriceArea
+  to: jsonapi.Links
+  type: has_one
+  via: links
+- from: no.elhub.ds.energy.data.models.response.PartyResponse
+  to: no.elhub.ds.energy.data.models.Party
+  type: has_many
+  via: parties
+- from: no.elhub.ds.energy.data.models.response.GridAreaResponse
+  to: no.elhub.ds.energy.data.models.gridarea.GridArea
+  type: has_many
+  via: gridAreas
+- from: no.elhub.ds.energy.data.models.municipality.Municipality
+  to: jsonapi.Links
+  type: has_one
+  via: links
+- from: no.elhub.ds.energy.data.models.response.MunicipalityResponse
+  to: no.elhub.ds.energy.data.models.municipality.Municipality
+  type: has_many
+  via: municipalities
+- from: no.elhub.ds.energy.data.models.meteringpoints.MeteringPointEntity
+  to: no.elhub.ds.energy.data.models.gridarea.GridArea
+  type: has_one
+  via: gridArea
+- from: no.elhub.ds.energy.data.models.meteringpoints.MeteringPointEntity
+  to: no.elhub.ds.energy.data.models.Party
+  type: has_one
+  via: gridOwner
+- from: no.elhub.ds.energy.data.models.meteringpoints.MeteringPointEntity
+  to: no.elhub.ds.energy.data.models.MeteringPointCoordinate
+  type: has_one
+  via: meteringPointCoordinate
+- from: no.elhub.ds.energy.data.models.meteringpoints.MeteringPointEntity
+  to: no.elhub.ds.energy.data.models.pricearea.PriceArea
+  type: has_one
+  via: priceArea
+- from: no.elhub.ds.energy.data.models.InstalledCapacityPerMeteringPointDaily
+  to: java.math.BigDecimal
+  type: has_one
+  via: latitude
+- from: no.elhub.ds.energy.data.models.InstalledCapacityPerMeteringPointDaily
+  to: java.math.BigDecimal
+  type: has_one
+  via: longitude
+- from: no.elhub.ds.energy.data.models.meteringpoints.ProductionRevenuePerYear
+  to: java.math.BigDecimal
+  type: has_one
+  via: quantityKwh
+- from: no.elhub.ds.energy.data.models.meteringpoints.ProductionRevenuePerYear
+  to: java.math.BigDecimal
+  type: has_one
+  via: revenueNok
+- from: no.elhub.ds.energy.data.models.response.MeteringPointResponse
+  to: no.elhub.ds.energy.data.models.meteringpoints.MeteringPointEntity
+  type: has_many
+  via: meteringPoints
+- from: no.elhub.ds.energy.data.models.Update
+  to: jsonapi.Links
+  type: has_one
+  via: links
+- from: substation_cluster_response
+  to: geojson_point
+  type: has_one
+  via: averaged_position
+- from: substation_cluster_response
+  to: geojson_polygon
+  type: has_one
+  via: area
+- from: substation_response
+  to: geojson_point
+  type: has_one
+  via: position
+- from: substation_response
+  to: substation_cluster_response
+  type: has_one
+  via: substation_cluster
+- from: line_response
+  to: geojson_linestring
+  type: has_one
+  via: line
+- from: line_response
+  to: substation_cluster_response
+  type: has_one
+  via: from_substation_cluster
+- from: line_response
+  to: substation_cluster_response
+  type: has_one
+  via: to_substation_cluster
+- from: notice_data_party_missing
+  to: entity_response
+  type: has_one
+  via: entity
+- from: notice_data_party_missing
+  to: party_response
+  type: has_one
+  via: party
+- from: notice_data_party_outdated
+  to: entity_response
+  type: has_one
+  via: entity
+- from: notice_data_party_outdated
+  to: party_response
+  type: has_one
+  via: party
+- from: controllable_unit_response
+  to: accounting_point_response
+  type: has_one
+  via: accounting_point
+- from: controllable_unit_response
+  to: controllable_unit_summary_response
+  type: has_one
+  via: summary
+- from: controllable_unit_suspension_response
+  to: controllable_unit_response
+  type: has_one
+  via: controllable_unit
+- from: controllable_unit_suspension_response
+  to: party_response
+  type: has_one
+  via: impacted_system_operator
+- from: controllable_unit_suspension_comment_response
+  to: controllable_unit_suspension_response
+  type: has_one
+  via: controllable_unit_suspension
+- from: controllable_unit_service_provider_response
+  to: controllable_unit_response
+  type: has_one
+  via: controllable_unit
+- from: controllable_unit_service_provider_response
+  to: party_response
+  type: has_one
+  via: service_provider
+- from: controllable_unit_service_provider_response
+  to: party_response
+  type: has_one
+  via: end_user
+- from: controllable_unit_summary_response
+  to: controllable_unit_response
+  type: has_one
+  via: controllable_unit
+- from: service_providing_group_power_per_substation_response
+  to: service_providing_group_response
+  type: has_one
+  via: service_providing_group
+- from: service_providing_group_summary_response
+  to: service_providing_group_response
+  type: has_one
+  via: service_providing_group
+- from: service_providing_group_response
+  to: service_providing_group_power_per_substation_response
+  type: has_one
+  via: power_per_substation
+- from: service_providing_group_response
+  to: service_providing_group_summary_response
+  type: has_one
+  via: summary
+- from: service_providing_group_response
+  to: party_response
+  type: has_one
+  via: service_provider
+- from: service_providing_group_membership_response
+  to: controllable_unit_response
+  type: has_one
+  via: controllable_unit
+- from: service_providing_group_membership_response
+  to: service_providing_group_response
+  type: has_one
+  via: service_providing_group
+- from: service_providing_group_grid_prequalification_response
+  to: service_providing_group_response
+  type: has_one
+  via: service_providing_group
+- from: service_providing_group_grid_prequalification_response
+  to: party_response
+  type: has_one
+  via: impacted_system_operator
+- from: service_providing_group_grid_prequalification_comment_response
+  to: service_providing_group_grid_prequalification_response
+  type: has_one
+  via: service_providing_group_grid_prequalification
+- from: service_providing_group_grid_suspension_response
+  to: party_response
+  type: has_one
+  via: impacted_system_operator
+- from: service_providing_group_grid_suspension_response
+  to: service_providing_group_response
+  type: has_one
+  via: service_providing_group
+- from: service_providing_group_grid_suspension_comment_response
+  to: service_providing_group_grid_suspension_response
+  type: has_one
+  via: service_providing_group_grid_suspension
+- from: entity_client_response
+  to: entity_response
+  type: has_one
+  via: entity
+- from: entity_client_response
+  to: party_response
+  type: has_one
+  via: party
+- from: party_response
+  to: entity_response
+  type: has_one
+  via: entity
+- from: party_membership_response
+  to: party_response
+  type: has_one
+  via: party
+- from: party_membership_response
+  to: entity_response
+  type: has_one
+  via: entity
+- from: identity_response
+  to: entity_response
+  type: has_one
+  via: entity
+- from: identity_response
+  to: party_response
+  type: has_one
+  via: party
+- from: technical_resource_response
+  to: controllable_unit_response
+  type: has_one
+  via: controllable_unit
+- from: notification_response
+  to: event_response
+  type: has_one
+  via: event
+- from: notification_response
+  to: party_response
+  type: has_one
+  via: party
+- from: accounting_point_response
+  to: geojson_point
+  type: has_one
+  via: location
+- from: accounting_point_response
+  to: party_response
+  type: has_one
+  via: system_operator
+- from: accounting_point_response
+  to: accounting_point_grid_location_response
+  type: has_one
+  via: grid_location
+- from: accounting_point_balance_responsible_party_response
+  to: accounting_point_response
+  type: has_one
+  via: accounting_point
+- from: accounting_point_balance_responsible_party_response
+  to: party_response
+  type: has_one
+  via: balance_responsible_party
+- from: accounting_point_bidding_zone_response
+  to: accounting_point_response
+  type: has_one
+  via: accounting_point
+- from: accounting_point_end_user_response
+  to: accounting_point_response
+  type: has_one
+  via: accounting_point
+- from: accounting_point_end_user_response
+  to: party_response
+  type: has_one
+  via: end_user
+- from: accounting_point_energy_supplier_response
+  to: accounting_point_response
+  type: has_one
+  via: accounting_point
+- from: accounting_point_energy_supplier_response
+  to: party_response
+  type: has_one
+  via: energy_supplier
+- from: accounting_point_metering_grid_area_response
+  to: accounting_point_response
+  type: has_one
+  via: accounting_point
+- from: accounting_point_metering_grid_area_response
+  to: metering_grid_area_response
+  type: has_one
+  via: metering_grid_area
+- from: accounting_point_grid_location_response
+  to: accounting_point_response
+  type: has_one
+  via: accounting_point
+- from: system_operator_product_type_response
+  to: party_response
+  type: has_one
+  via: system_operator
+- from: system_operator_product_type_response
+  to: product_type_response
+  type: has_one
+  via: product_type
+- from: service_provider_product_application_response
+  to: party_response
+  type: has_one
+  via: service_provider
+- from: service_provider_product_application_response
+  to: party_response
+  type: has_one
+  via: system_operator
+- from: service_provider_product_application_comment_response
+  to: service_provider_product_application_response
+  type: has_one
+  via: service_provider_product_application
+- from: service_provider_product_suspension_response
+  to: party_response
+  type: has_one
+  via: procuring_system_operator
+- from: service_provider_product_suspension_response
+  to: party_response
+  type: has_one
+  via: service_provider
+- from: service_provider_product_suspension_comment_response
+  to: service_provider_product_suspension_response
+  type: has_one
+  via: service_provider_product_suspension
+- from: service_providing_group_product_application_response
+  to: service_providing_group_response
+  type: has_one
+  via: service_providing_group
+- from: service_providing_group_product_application_response
+  to: party_response
+  type: has_one
+  via: procuring_system_operator
+- from: service_providing_group_product_application_attachment_response
+  to: service_providing_group_product_application_response
+  type: has_one
+  via: service_providing_group_product_application
+- from: service_providing_group_product_application_comment_response
+  to: service_providing_group_product_application_response
+  type: has_one
+  via: service_providing_group_product_application
+- from: service_providing_group_product_suspension_response
+  to: party_response
+  type: has_one
+  via: procuring_system_operator
+- from: service_providing_group_product_suspension_response
+  to: service_providing_group_response
+  type: has_one
+  via: service_providing_group
+- from: service_providing_group_product_suspension_comment_response
+  to: service_providing_group_product_suspension_response
+  type: has_one
+  via: service_providing_group_product_suspension
+- from: notice_response
+  to: party_response
+  type: has_one
+  via: party
+- from: SharedProductionVersionPatchAttributesDto
+  to: VersionParticipantDto
+  type: has_many
+  via: participants
+- from: SharedProductionVersionPatchDataDto
+  to: SharedProductionVersionPatchAttributesDto
+  type: has_one
+  via: attributes
+- from: SharedProductionVersionPatchRequestDto
+  to: SharedProductionVersionPatchDataDto
+  type: has_one
+  via: data
+- from: VersionResponseAttributesDto
+  to: VersionParticipantResponseDto
+  type: has_many
+  via: participants
+- from: SharedProductionVersionResponseDataDto
+  to: VersionResponseAttributesDto
+  type: has_one
+  via: attributes
+- from: SharedProductionVersionResponseDataDto
+  to: JsonApiResourceLink
+  type: has_one
+  via: links
+- from: SharedProductionVersionResponseDto
+  to: SharedProductionVersionResponseDataDto
+  type: has_one
+  via: data
+- from: SharedProductionVersionResponseDto
+  to: JsonApiDocumentLinks
+  type: has_one
+  via: links
+- from: JsonApiErrorDocument
+  to: JsonApiError
+  type: has_many
+  via: errors
+- from: SharedProductionVersionPostAttributesDto
+  to: VersionParticipantDto
+  type: has_many
+  via: participants
+- from: SharedProductionVersionPostDataDto
+  to: SharedProductionVersionPostAttributesDto
+  type: has_one
+  via: attributes
+- from: SharedProductionVersionPostRequestDto
+  to: SharedProductionVersionPostDataDto
+  type: has_one
+  via: data
+- from: JsonApiToOneRelationship
+  to: JsonApiResourceIdentifier
+  type: has_one
+  via: data
+- from: JsonApiToManyRelationship
+  to: JsonApiResourceIdentifier
+  type: has_many
+  via: data
+- from: VersionRelationships
+  to: JsonApiToOneRelationship
+  type: has_one
+  via: virtualCalculation
+- from: VersionRelationships
+  to: JsonApiToManyRelationship
+  type: has_one
+  via: meteringPoints
+- from: VersionResourceData
+  to: VersionResponseAttributesDto
+  type: has_one
+  via: attributes
+- from: VersionResourceData
+  to: VersionRelationships
+  type: has_one
+  via: relationships
+- from: VersionResourceData
+  to: JsonApiResourceLink
+  type: has_one
+  via: links
+- from: VersionIncluded.OrgIncluded
+  to: OrganisationsResponseDto.Data.Attributes
+  type: has_one
+  via: attributes
+- from: VirtualCalculationRelationships
+  to: JsonApiToOneRelationship
+  type: has_one
+  via: party
+- from: VirtualCalculationRelationships
+  to: JsonApiToManyRelationship
+  type: has_one
+  via: versions
+- from: VersionIncluded.VcIncluded
+  to: VirtualCalculationResponseAttributes
+  type: has_one
+  via: attributes
+- from: VersionIncluded.VcIncluded
+  to: VirtualCalculationRelationships
+  type: has_one
+  via: relationships
+- from: VersionListResponse
+  to: VersionResourceData
+  type: has_many
+  via: data
+- from: VersionListResponse
+  to: JsonApiDocumentLinks
+  type: has_one
+  via: links
+- from: VersionGetResponse
+  to: VersionResourceData
+  type: has_one
+  via: data
+- from: VersionGetResponse
+  to: JsonApiDocumentLinks
+  type: has_one
+  via: links
+- from: VirtualCalculationResourceData
+  to: VirtualCalculationResponseAttributes
+  type: has_one
+  via: attributes
+- from: VirtualCalculationResourceData
+  to: VirtualCalculationRelationships
+  type: has_one
+  via: relationships
+- from: VirtualCalculationIncluded.OrgIncluded
+  to: OrganisationsResponseDto.Data.Attributes
+  type: has_one
+  via: attributes
+- from: VirtualCalculationIncluded.VersionIncluded
+  to: VersionResponseAttributesDto
+  type: has_one
+  via: attributes
+- from: VirtualCalculationIncluded.VersionIncluded
+  to: VersionRelationships
+  type: has_one
+  via: relationships
+- from: VirtualCalculationGetResponse
+  to: VirtualCalculationResourceData
+  type: has_one
+  via: data
+- from: VirtualCalculationGetResponse
+  to: JsonApiDocumentLinks
+  type: has_one
+  via: links
+- from: PageMeta
+  to: PageMeta.PageInfo
+  type: has_one
+  via: page
+- from: PageMeta
+  to: PageMeta.TotalInfo
+  type: has_one
+  via: total
+- from: VirtualCalculationListResponse
+  to: VirtualCalculationResourceData
+  type: has_many
+  via: data
+- from: VirtualCalculationListResponse
+  to: JsonApiDocumentLinks
+  type: has_one
+  via: links
+- from: VirtualCalculationListResponse
+  to: PageMeta
+  type: has_one
+  via: meta
+- from: VirtualCalculationPostDataDto
+  to: VirtualCalculationPostAttributesDto
+  type: has_one
+  via: attributes
+- from: VirtualCalculationPostRequestDto
+  to: VirtualCalculationPostDataDto
+  type: has_one
+  via: data

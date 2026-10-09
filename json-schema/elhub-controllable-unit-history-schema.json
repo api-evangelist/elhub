@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-controllable-unit-history-schema.json",
+  "title": "controllable_unit_history",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/_original/elhub-postgrest-openapi-3-0-openapi.json#/components/schemas/controllable_unit_history",
+  "properties": {
+    "id": {
+      "format": "bigint",
+      "type": "integer"
+    },
+    "controllable_unit_id": {
+      "format": "bigint",
+      "type": "integer"
+    },
+    "accounting_point_id": {
+      "format": "bigint",
+      "type": "integer"
+    },
+    "business_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "grid_node_id": {
+      "format": "uuid",
+      "type": "string"
+    },
+    "grid_validation_notes": {
+      "format": "text",
+      "type": "string"
+    },
+    "grid_validation_status": {
+      "format": "text",
+      "type": "string"
+    },
+    "validated_at": {
+      "format": "timestamp with time zone",
+      "type": "string"
+    },
+    "maximum_active_power": {
+      "format": "numeric",
+      "type": "number"
+    },
+    "is_small": {
+      "format": "boolean",
+      "type": "boolean"
+    },
+    "maximum_duration": {
+      "format": "bigint",
+      "type": "integer"
+    },
+    "minimum_duration": {
+      "format": "bigint",
+      "type": "integer"
+    },
+    "name": {
+      "format": "text",
+      "type": "string"
+    },
+    "ramp_rate": {
+      "format": "numeric",
+      "type": "number"
+    },
+    "recovery_duration": {
+      "format": "bigint",
+      "type": "integer"
+    },
+    "regulation_direction": {
+      "format": "text",
+      "type": "string"
+    },
+    "start_date": {
+      "format": "date",
+      "type": "string"
+    },
+    "status": {
+      "format": "text",
+      "type": "string"
+    },
+    "recorded_by": {
+      "format": "bigint",
+      "type": "integer"
+    },
+    "recorded_at": {
+      "format": "timestamp with time zone",
+      "type": "string"
+    },
+    "replaced_by": {
+      "format": "bigint",
+      "type": "integer"
+    },
+    "replaced_at": {
+      "format": "timestamp with time zone",
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

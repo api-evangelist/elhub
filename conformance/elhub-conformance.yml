@@ -1,0 +1,53 @@
+generated: '2026-10-09'
+method: searched
+source: https://api.elhub.no/energy-data-api
+name: Elhub Conformance
+standards:
+- id: json:api
+  conforms: true
+  version: '1.1'
+  evidence: '"This API returns JSON in the JSON:API v1.1 format." (https://api.elhub.no/energy-data-api); "This API follows the JSON:API 1.1 specification."
+    (https://api.elhub.no/settlement-api/request-and-response-format); contracts use application/vnd.api+json'
+- id: oauth2
+  conforms: true
+  evidence: 'Protected APIs use Maskinporten (Digdir) OAuth2 JWT-bearer tokens sent as "Authorization: Bearer {token}" (https://api.elhub.no/restricted-endpoints/maskinporten);
+    FIS supports JWT Bearer authorization grant and Client Credentials (https://elhub.github.io/flex-information-system/auth/authn-methods/)'
+- id: oidc
+  conforms: true
+  scope: Flexibility Information System portal login only
+  evidence: '"Individuals what want to log into the portal will log in using the OpenID Connect protocol with an identity provider." (https://elhub.github.io/flex-information-system/auth/authn-methods/)'
+- id: postgrest
+  conforms: true
+  scope: Flexibility Information System
+  evidence: '"The API is backed by PostgREST. Most query parameters are forwarded to PostgREST directly" (https://elhub.github.io/flex-information-system/api/query-parameters/)'
+- id: gs1-gln
+  conforms: true
+  kind: domain-identifier-scheme
+  evidence: 'GLN party identifiers are part of the contract: SenderGLN / OnBehalfOfGLN headers in openapi/elhub-settlement-virtual-calculations-api-openapi.yml
+    (info.description) and SenderGln/OnBehalfOfGln in the Access API (https://api.elhub.no/access-api/getting-started)'
+- id: gs1-gsrn
+  conforms: true
+  kind: domain-identifier-scheme
+  evidence: '"GLN is used for party identifiers and GSRN is used for accounting point identifiers." (https://elhub.github.io/flex-information-system/guides/test-data/)'
+- id: cc-by-4.0
+  conforms: true
+  kind: data-license
+  evidence: '"Our APIs and datasets are licenced by CC BY 4.0." (https://api.elhub.no/intro)'
+- id: openapi-3.1
+  conforms: true
+  evidence: the document declares 3.1.0
+- id: openapi-3.1
+  conforms: true
+  evidence: the document declares 3.1.1
+- id: rfc9457
+  conforms: false
+  evidence: no response declares application/problem+json
+- id: idempotency
+  conforms: false
+  evidence: no idempotency key parameter on mutating operations
+- id: pagination
+  conforms: true
+  evidence: list operations take limit, offset
+- id: json-api
+  conforms: true
+  evidence: responses use application/vnd.api+json

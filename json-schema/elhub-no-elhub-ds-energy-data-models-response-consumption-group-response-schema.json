@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-no-elhub-ds-energy-data-models-response-consumption-group-response-schema.json",
+  "title": "ConsumptionGroupResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-energy-data-api-openapi.yml#/components/schemas/no.elhub.ds.energy.data.models.response.ConsumptionGroupResponse",
+  "type": "object",
+  "properties": {
+    "consumptionGroups": {
+      "type": [
+        "null",
+        "array"
+      ],
+      "description": "data grouped by a list of consumption groups",
+      "items": {
+        "$ref": "#/$defs/no.elhub.ds.energy.data.models.ConsumptionGroup"
+      },
+      "title": "List<ConsumptionGroup>"
+    },
+    "creationTime": {
+      "type": "string",
+      "description": "timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format",
+      "title": "String"
+    },
+    "currentLink": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "link to the current resource",
+      "title": "String"
+    },
+    "lastUpdatedTime": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format",
+      "title": "String"
+    }
+  },
+  "required": [
+    "creationTime"
+  ],
+  "$defs": {
+    "no.elhub.ds.energy.data.models.ConsumptionGroup": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Consumption group description",
+          "title": "String"
+        },
+        "id": {
+          "type": "string",
+          "description": "Consumption group id",
+          "title": "String"
+        },
+        "name": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Consumption group name",
+          "title": "String"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "title": "ConsumptionGroup"
+    }
+  }
+}

@@ -1,0 +1,282 @@
+openapi: 3.2.0
+info:
+  title: Virtual Calculations Events API
+  version: 1.0.0
+  description: 'The Virtual Calculations API lets market participants manage shared-production
+
+    virtual calculations on behalf of end customers, and read versions of virtual calculations
+
+    of any template type.'
+servers:
+- url: https://api.elhub.no
+  description: Server
+tags:
+- name: Events
+paths:
+  /settlement/v0/virtual-calculations/events:
+    get:
+      operationId: subscribeToResourceChanges
+      tags:
+      - Events
+      summary: Subscribe to resource change events
+      description: 'Opens a Server-Sent Events (SSE) stream that emits thin notifications whenever a virtual calculation resource changes.
+
+        Each event contains an SSE `id`, the SSE `event` is an enum (either `resource.created` or
+
+        `resource.updated`, and a JSON payload in the SSE `data` field using JSON:API document members
+
+        (`data` and optional `meta`) describing which resource changed.
+
+        Clients are expected to follow up with a GET request to the referenced `links` to retrieve the latest state.
+
+
+        The stream starts with an SSE `retry` directive of 3000 milliseconds so compliant
+
+        clients know how long to wait before reconnecting after a disconnect. Clients that
+
+        reconnect can provide the `Last-Event-ID` header to replay any events that were
+
+        persisted after the last processed event.
+
+
+        **Path:** `GET /settlement/v0/virtual-calculations/events`'
+      parameters:
+      - name: SenderGLN
+        in: header
+        description: GLN identifying the party making the request.
+        required: true
+        schema:
+          type: string
+        example: '7080000000001'
+      - name: OnBehalfOfGLN
+        in: header
+        description: GLN of the grid owner the request is made on behalf of. Required when the token was issued with the `elhub:serviceprovider` scope, ignored otherwise.
+        schema:
+          type: string
+        example: '7080000000002'
+      - name: Last-Event-ID
+        in: header
+        description: Optional SSE replay cursor. When provided with a previously observed event id, the stream resolves that event to its occurredAt/persistedAt position and replays newer persisted events before continuing with live events.
+        schema:
+          type: string
+        example: '42'
+      responses:
+        '200':
+          description: A `text/event-stream` response where each SSE event contains either the `resource.created` or `resource.updated` event type, and a JSON payload in the SSE `data` field with a JSON:API-style resource reference. The OpenAPI schema describes the full SSE frame as a string; the JSON in each `data:` line follows `ResourceChangeEventDto`.
+          content:
+            text/event-stream:
+              schema:
+                type: string
+              examples:
+                resourceUpdatedFrame:
+                  summary: Single SSE event frame
+                  value: 'id: 42
+
+                    event: resource.updated
+
+                    data: {"data":{"type":"VirtualCalculation","id":"11111111-1111-1111-1111-111111111111","links":{"self":"/settlement/v0/virtual-calculations/11111111-1111-1111-1111-111111111111"}},"meta":{"occurredAt":"2026-05-26T10:31:12.123Z"}}
+
+
+                    '
+        '400':
+          description: 'Invalid request: missing required headers, or an invalid `Last-Event-ID` header value (for example non-numeric).'
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                MISSING_SENDER_GLN_HEADER:
+                  summary: Required header 'SenderGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_SENDER_GLN_HEADER
+                      title: MISSING_SENDER_GLN_HEADER
+                      detail: Required header 'SenderGLN' is missing.
+                MISSING_ON_BEHALF_OF_GLN_HEADER:
+                  summary: Required header 'OnBehalfOfGLN' is missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      title: MISSING_ON_BEHALF_OF_GLN_HEADER
+                      detail: Required header 'OnBehalfOfGLN' is missing.
+                INVALID_LAST_EVENT_ID:
+                  summary: Invalid Last-Event-ID value [{lastEventIdString}]. Expected a sequence number.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '400'
+                      code: INVALID_LAST_EVENT_ID
+                      title: INVALID_LAST_EVENT_ID
+                      detail: Invalid Last-Event-ID value [{lastEventIdString}]. Expected a sequence number.
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+        '401':
+          description: Missing or invalid authentication credentials.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                FAILED_AUTHORIZATION_EXCEPTION:
+                  summary: Missing or invalid authentication credentials.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: FAILED_AUTHORIZATION_EXCEPTION
+                      title: FAILED_AUTHORIZATION_EXCEPTION
+                      detail: Missing or invalid authentication credentials.
+                Unauthorized:
+                  summary: Authentication failed. The provided token may be expired, invalid, or missing.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '401'
+                      code: Unauthorized
+                      title: Unauthorized
+                      detail: Authentication failed. The provided token may be expired, invalid, or missing.
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+        '403':
+          description: The token does not grant access to the requested resource (failed scope check or PDP denial).
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                Forbidden:
+                  summary: The authenticated caller does not have sufficient access to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: Forbidden
+                      title: Forbidden
+                      detail: The authenticated caller does not have sufficient access to perform this action.
+                INVALID_TOKEN_SCOPE:
+                  summary: The token scope is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_SCOPE
+                      title: INVALID_TOKEN_SCOPE
+                      detail: The token scope is not authorized to perform this action.
+                INVALID_TOKEN_TYPE:
+                  summary: The token type used is not authorized to perform this action.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: INVALID_TOKEN_TYPE
+                      title: INVALID_TOKEN_TYPE
+                      detail: The token type used is not authorized to perform this action.
+                UNVERIFIED_SENDER:
+                  summary: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNVERIFIED_SENDER
+                      title: UNVERIFIED_SENDER
+                      detail: The combination of token, 'SenderGLN' and/or 'OnBehalfOfGLN' does not identify a market party allowed to act.
+                UNAUTHORIZED_METERING_POINTS:
+                  summary: The authenticated caller is not authorized to access one or more of the specified metering points.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '403'
+                      code: UNAUTHORIZED_METERING_POINTS
+                      title: UNAUTHORIZED_METERING_POINTS
+                      detail: The authenticated caller is not authorized to access one or more of the specified metering points.
+        '429':
+          description: Per-client rate limit exceeded. Retry after the period indicated by the `Retry-After` header.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                '429':
+                  summary: Too many requests. Wait for {retryAfter} seconds.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '429'
+                      code: '429'
+                      title: Too Many Requests
+                      detail: Too many requests. Wait for {retryAfter} seconds.
+        '500':
+          description: An unexpected error occurred while processing the request.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiErrorDocument'
+              examples:
+                500 Internal Server Error:
+                  summary: An unexpected error occurred while processing the request.
+                  value:
+                    errors:
+                    - id: 00000000-0000-0000-0000-000000000000
+                      status: '500'
+                      code: 500 Internal Server Error
+                      title: 500 Internal Server Error
+                      detail: An unexpected error occurred while processing the request.
+      security:
+      - maskinporten: []
+components:
+  schemas:
+    JsonApiErrorDocument:
+      type: object
+      title: JsonApiErrorDocument
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonApiError'
+    JsonApiError:
+      type: object
+      title: JsonApiError
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        detail:
+          type:
+          - string
+          - 'null'
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+    JsonElement:
+      type: object
+      title: JsonElement
+  securitySchemes:
+    maskinporten:
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Maskinporten access token. Obtain a token from Maskinporten using your client credentials, then submit it as `Authorization: Bearer <token>`. See https://docs.digdir.no/docs/Maskinporten/maskinporten_overordnet for details.'
+      type: http

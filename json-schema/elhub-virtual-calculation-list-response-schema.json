@@ -1,0 +1,477 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-virtual-calculation-list-response-schema.json",
+  "title": "VirtualCalculationListResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-settlement-virtual-calculations-api-openapi.yml#/components/schemas/VirtualCalculationListResponse",
+  "type": "object",
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/VirtualCalculationResourceData"
+      }
+    },
+    "included": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/VirtualCalculationIncluded"
+      }
+    },
+    "links": {
+      "$ref": "#/$defs/JsonApiDocumentLinks"
+    },
+    "meta": {
+      "$ref": "#/$defs/PageMeta"
+    }
+  },
+  "$defs": {
+    "JsonApiDocumentLinks": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "JsonApiDocumentLinks",
+      "properties": {
+        "self": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "first": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "prev": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "next": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "JsonApiResourceIdentifier": {
+      "type": "object",
+      "title": "JsonApiResourceIdentifier",
+      "required": [
+        "type",
+        "id"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "JsonApiToManyRelationship": {
+      "type": "object",
+      "title": "JsonApiToManyRelationship",
+      "required": [
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/JsonApiResourceIdentifier"
+          }
+        }
+      }
+    },
+    "JsonApiToOneRelationship": {
+      "type": "object",
+      "title": "JsonApiToOneRelationship",
+      "properties": {
+        "data": {
+          "$ref": "#/$defs/JsonApiResourceIdentifier"
+        }
+      }
+    },
+    "OrganisationsResponseDto.Data.Attributes": {
+      "type": "object",
+      "title": "OrganisationsResponseDto.Data.Attributes",
+      "required": [
+        "partyType",
+        "partyId",
+        "name",
+        "status"
+      ],
+      "properties": {
+        "partyType": {
+          "type": "string"
+        },
+        "partyId": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "PageMeta": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "PageMeta",
+      "required": [
+        "page",
+        "total"
+      ],
+      "properties": {
+        "page": {
+          "$ref": "#/$defs/PageMeta.PageInfo"
+        },
+        "total": {
+          "$ref": "#/$defs/PageMeta.TotalInfo"
+        }
+      }
+    },
+    "PageMeta.PageInfo": {
+      "type": "object",
+      "title": "PageMeta.PageInfo",
+      "required": [
+        "number",
+        "size"
+      ],
+      "properties": {
+        "number": {
+          "type": "integer"
+        },
+        "size": {
+          "type": "integer"
+        }
+      }
+    },
+    "PageMeta.TotalInfo": {
+      "type": "object",
+      "title": "PageMeta.TotalInfo",
+      "required": [
+        "pages",
+        "items"
+      ],
+      "properties": {
+        "pages": {
+          "type": "integer"
+        },
+        "items": {
+          "type": "integer"
+        }
+      }
+    },
+    "VersionParticipantResponseDto": {
+      "type": "object",
+      "title": "VersionParticipantResponseDto",
+      "required": [
+        "meteringPointId",
+        "role",
+        "channelType"
+      ],
+      "properties": {
+        "meteringPointId": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "Contributor",
+            "Recipient",
+            "Totalizer"
+          ]
+        },
+        "share": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "channelType": {
+          "type": "string",
+          "enum": [
+            "EH.ELECTRIC.KWH.1.3",
+            "EH.ELECTRIC.KWH.1.32",
+            "EH.ELECTRIC.KWH.1.4",
+            "EH.ELECTRIC.KWH.1.7",
+            "EH.ELECTRIC.KWH.1.8",
+            "EH.ELECTRIC.KWH.1.9",
+            "EH.ELECTRIC.KWH.1.10",
+            "EH.ELECTRIC.KWH.1.11",
+            "EH.ELECTRIC.KWH.1.12",
+            "EH.ELECTRIC.KWH.11.1",
+            "EH.ELECTRIC.KWH.11.2",
+            "EH.ELECTRIC.KWH.11.3",
+            "EH.ELECTRIC.KWH.11.4",
+            "EH.ELECTRIC.KWH.11.5",
+            "EH.ELECTRIC.KWH.11.6",
+            "EH.ELECTRIC.KWH.11.7",
+            "EH.ELECTRIC.KWH.11.8"
+          ]
+        }
+      }
+    },
+    "VersionRelationships": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "VersionRelationships",
+      "required": [
+        "virtualCalculation",
+        "meteringPoints"
+      ],
+      "properties": {
+        "virtualCalculation": {
+          "$ref": "#/$defs/JsonApiToOneRelationship"
+        },
+        "meteringPoints": {
+          "$ref": "#/$defs/JsonApiToManyRelationship"
+        }
+      }
+    },
+    "VersionResponseAttributesDto": {
+      "type": "object",
+      "title": "VersionResponseAttributesDto",
+      "required": [
+        "versionNumber",
+        "participants",
+        "status",
+        "template",
+        "settlementLevel",
+        "resolution",
+        "recipientFormulaType",
+        "contributorFormulaType",
+        "startDate"
+      ],
+      "properties": {
+        "versionNumber": {
+          "type": "integer"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VersionParticipantResponseDto"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Draft",
+            "Active"
+          ]
+        },
+        "template": {
+          "type": "string",
+          "enum": [
+            "NetMetering",
+            "GrossMetering",
+            "NetConsLargeCustomer",
+            "SharedProduction",
+            "SharedConsumption"
+          ]
+        },
+        "settlementLevel": {
+          "type": "string",
+          "enum": [
+            "Contributor",
+            "Totalizer",
+            "Participant"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "format": "duration"
+        },
+        "recipientFormulaType": {
+          "type": "string",
+          "enum": [
+            "EquallyDistributed",
+            "ConsumptionBased",
+            "Manual"
+          ]
+        },
+        "contributorFormulaType": {
+          "type": "string",
+          "enum": [
+            "EquallyDistributed",
+            "ProductionBased",
+            "Manual",
+            "NoDistribution"
+          ]
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        }
+      }
+    },
+    "VirtualCalculationIncluded": {
+      "type": "object",
+      "title": "VirtualCalculationIncluded",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/VirtualCalculationIncluded.OrgIncluded"
+        },
+        {
+          "$ref": "#/$defs/VirtualCalculationIncluded.VersionIncluded"
+        }
+      ]
+    },
+    "VirtualCalculationIncluded.OrgIncluded": {
+      "type": "object",
+      "title": "VirtualCalculationIncluded.OrgIncluded",
+      "required": [
+        "type",
+        "id",
+        "attributes"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Party"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "$ref": "#/$defs/OrganisationsResponseDto.Data.Attributes"
+        }
+      }
+    },
+    "VirtualCalculationIncluded.VersionIncluded": {
+      "type": "object",
+      "title": "VirtualCalculationIncluded.VersionIncluded",
+      "required": [
+        "type",
+        "id",
+        "attributes"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Version"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "$ref": "#/$defs/VersionResponseAttributesDto"
+        },
+        "relationships": {
+          "$ref": "#/$defs/VersionRelationships"
+        }
+      }
+    },
+    "VirtualCalculationRelationships": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "title": "VirtualCalculationRelationships",
+      "required": [
+        "party"
+      ],
+      "properties": {
+        "party": {
+          "$ref": "#/$defs/JsonApiToOneRelationship"
+        },
+        "versions": {
+          "$ref": "#/$defs/JsonApiToManyRelationship"
+        }
+      }
+    },
+    "VirtualCalculationResourceData": {
+      "type": "object",
+      "title": "VirtualCalculationResourceData",
+      "required": [
+        "type",
+        "id",
+        "attributes"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "$ref": "#/$defs/VirtualCalculationResponseAttributes"
+        },
+        "relationships": {
+          "$ref": "#/$defs/VirtualCalculationRelationships"
+        }
+      }
+    },
+    "VirtualCalculationResponseAttributes": {
+      "type": "object",
+      "title": "VirtualCalculationResponseAttributes",
+      "required": [
+        "udcId",
+        "name",
+        "managingParty",
+        "partyType"
+      ],
+      "properties": {
+        "udcId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "managingParty": {
+          "type": "string"
+        },
+        "partyType": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

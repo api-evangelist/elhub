@@ -1,0 +1,579 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-substation-response-schema.json",
+  "title": "substation_response",
+  "description": "Response schema - A substation in the common grid model (Nemo), representing a node in the electricity grid.",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-flex-information-system-grid-api-openapi.yml#/components/schemas/substation_response",
+  "summary": "Response - Substation",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "Unique surrogate identifier.",
+      "format": "bigint",
+      "type": "integer",
+      "readOnly": true
+    },
+    "name": {
+      "description": "The name of the substation.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true
+    },
+    "business_id": {
+      "description": "The business identifier (mRID) of the substation.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true
+    },
+    "business_id_type": {
+      "$ref": "#/$defs/substation_business_id_type",
+      "readOnly": true
+    },
+    "kind": {
+      "$ref": "#/$defs/substation_kind",
+      "readOnly": true
+    },
+    "primary_concessionaire": {
+      "description": "The name of the primary grid concessionaire responsible for this substation.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true
+    },
+    "substation_cluster_id": {
+      "description": "The substation cluster this substation belongs to.",
+      "format": "bigint",
+      "type": "integer",
+      "readOnly": true
+    },
+    "voltage_levels": {
+      "description": "List of nominal voltage levels present at the substation, in kilovolt (kV).",
+      "type": "array",
+      "readOnly": true,
+      "items": {
+        "type": "number"
+      }
+    },
+    "position": {
+      "description": "Geographic position of the substation (WGS84), as a GeoJSON point object.",
+      "readOnly": true,
+      "type": "object",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/geojson_point"
+        }
+      ]
+    },
+    "status": {
+      "$ref": "#/$defs/substation_status",
+      "readOnly": true
+    },
+    "recorded_at": {
+      "description": "When the resource was recorded (created or updated) in the system.",
+      "format": "date-time",
+      "type": "string",
+      "readOnly": true
+    },
+    "recorded_by": {
+      "description": "The identity that recorded the resource.",
+      "format": "bigint",
+      "type": "integer",
+      "readOnly": true
+    },
+    "substation_cluster": {
+      "description": "Embedded substation_cluster",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/substation_cluster_response"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "nullable": true
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "business_id",
+    "business_id_type",
+    "kind",
+    "primary_concessionaire",
+    "substation_cluster_id",
+    "voltage_levels",
+    "position",
+    "status",
+    "recorded_at",
+    "recorded_by"
+  ],
+  "$defs": {
+    "geojson_linestring": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "LineString"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "description": "Array of [longitude, latitude] positions in decimal degrees (WGS84)",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "minItems": 2
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "geojson_point": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Point"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "description": "[longitude, latitude] in decimal degrees (WGS84)",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "geojson_polygon": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Polygon"
+          ]
+        },
+        "coordinates": {
+          "type": "array",
+          "description": "Array of linear rings (WGS84). First ring is the exterior boundary.",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 2,
+              "maxItems": 2
+            }
+          }
+        }
+      },
+      "required": [
+        "type",
+        "coordinates"
+      ]
+    },
+    "line_business_id_type": {
+      "description": "The type of the business identifier.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true,
+      "enum": [
+        "uuid"
+      ]
+    },
+    "line_response": {
+      "summary": "Response - Line",
+      "description": "Response schema - A transmission or distribution line in the common grid model (Nemo), connecting two substation clusters.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique surrogate identifier.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "name": {
+          "description": "The name of the line.",
+          "format": "text",
+          "type": "string",
+          "readOnly": true
+        },
+        "business_id": {
+          "description": "The business identifier (mRID) of the line.",
+          "format": "text",
+          "type": "string",
+          "readOnly": true
+        },
+        "business_id_type": {
+          "$ref": "#/$defs/line_business_id_type",
+          "readOnly": true
+        },
+        "from_substation_cluster_id": {
+          "description": "The substation cluster at the start of the line.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "to_substation_cluster_id": {
+          "description": "The substation cluster at the end of the line.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "line": {
+          "description": "Geographic path of the line (WGS84), as a GeoJSON linestring object.",
+          "readOnly": true,
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/geojson_linestring"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/line_status",
+          "readOnly": true
+        },
+        "recorded_at": {
+          "description": "When the resource was recorded (created or updated) in the system.",
+          "format": "date-time",
+          "type": "string",
+          "readOnly": true
+        },
+        "recorded_by": {
+          "description": "The identity that recorded the resource.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "from_substation_cluster": {
+          "description": "Embedded substation_cluster",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/substation_cluster_response"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "nullable": true
+        },
+        "to_substation_cluster": {
+          "description": "Embedded substation_cluster",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/substation_cluster_response"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "nullable": true
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "business_id",
+        "business_id_type",
+        "from_substation_cluster_id",
+        "to_substation_cluster_id",
+        "line",
+        "status",
+        "recorded_at",
+        "recorded_by"
+      ]
+    },
+    "line_status": {
+      "description": "The status of the line.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true,
+      "enum": [
+        "active",
+        "inactive"
+      ]
+    },
+    "substation_business_id_type": {
+      "description": "The type of the business identifier.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true,
+      "enum": [
+        "uuid"
+      ]
+    },
+    "substation_cluster_business_id_type": {
+      "description": "The type of the business identifier.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true,
+      "enum": [
+        "uuid"
+      ]
+    },
+    "substation_cluster_response": {
+      "summary": "Response - Substation Cluster",
+      "description": "Response schema - A cluster of substations in the common grid model (Nemo), representing a group of electrically related substations in a geographic area.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique surrogate identifier.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "name": {
+          "description": "The name of the substation cluster.",
+          "format": "text",
+          "type": "string",
+          "readOnly": true
+        },
+        "business_id": {
+          "description": "The business identifier (mRID) of the substation cluster.",
+          "format": "text",
+          "type": "string",
+          "readOnly": true
+        },
+        "business_id_type": {
+          "$ref": "#/$defs/substation_cluster_business_id_type",
+          "readOnly": true
+        },
+        "averaged_position": {
+          "description": "Averaged geographic position of the substation cluster (WGS84), as a GeoJSON point object.",
+          "readOnly": true,
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/geojson_point"
+            }
+          ]
+        },
+        "area": {
+          "description": "Geographic area covered by the substation cluster (WGS84), as a GeoJSON polygon object.",
+          "readOnly": true,
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/geojson_polygon"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/substation_cluster_status",
+          "readOnly": true
+        },
+        "recorded_at": {
+          "description": "When the resource was recorded (created or updated) in the system.",
+          "format": "date-time",
+          "type": "string",
+          "readOnly": true
+        },
+        "recorded_by": {
+          "description": "The identity that recorded the resource.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "substation": {
+          "description": "Embedded substation",
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/substation_response"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "nullable": true
+        },
+        "line": {
+          "description": "Embedded line",
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/line_response"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "nullable": true
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "business_id",
+        "business_id_type",
+        "averaged_position",
+        "area",
+        "status",
+        "recorded_at",
+        "recorded_by"
+      ]
+    },
+    "substation_cluster_status": {
+      "description": "The status of the substation cluster.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true,
+      "enum": [
+        "active",
+        "inactive"
+      ]
+    },
+    "substation_kind": {
+      "description": "The type of substation.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true,
+      "enum": [
+        "coupling",
+        "junction",
+        "power",
+        "transformer"
+      ]
+    },
+    "substation_response": {
+      "summary": "Response - Substation",
+      "description": "Response schema - A substation in the common grid model (Nemo), representing a node in the electricity grid.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique surrogate identifier.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "name": {
+          "description": "The name of the substation.",
+          "format": "text",
+          "type": "string",
+          "readOnly": true
+        },
+        "business_id": {
+          "description": "The business identifier (mRID) of the substation.",
+          "format": "text",
+          "type": "string",
+          "readOnly": true
+        },
+        "business_id_type": {
+          "$ref": "#/$defs/substation_business_id_type",
+          "readOnly": true
+        },
+        "kind": {
+          "$ref": "#/$defs/substation_kind",
+          "readOnly": true
+        },
+        "primary_concessionaire": {
+          "description": "The name of the primary grid concessionaire responsible for this substation.",
+          "format": "text",
+          "type": "string",
+          "readOnly": true
+        },
+        "substation_cluster_id": {
+          "description": "The substation cluster this substation belongs to.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "voltage_levels": {
+          "description": "List of nominal voltage levels present at the substation, in kilovolt (kV).",
+          "type": "array",
+          "readOnly": true,
+          "items": {
+            "type": "number"
+          }
+        },
+        "position": {
+          "description": "Geographic position of the substation (WGS84), as a GeoJSON point object.",
+          "readOnly": true,
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/geojson_point"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/substation_status",
+          "readOnly": true
+        },
+        "recorded_at": {
+          "description": "When the resource was recorded (created or updated) in the system.",
+          "format": "date-time",
+          "type": "string",
+          "readOnly": true
+        },
+        "recorded_by": {
+          "description": "The identity that recorded the resource.",
+          "format": "bigint",
+          "type": "integer",
+          "readOnly": true
+        },
+        "substation_cluster": {
+          "description": "Embedded substation_cluster",
+          "oneOf": [
+            {
+              "$ref": "#/$defs/substation_cluster_response"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "nullable": true
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "business_id",
+        "business_id_type",
+        "kind",
+        "primary_concessionaire",
+        "substation_cluster_id",
+        "voltage_levels",
+        "position",
+        "status",
+        "recorded_at",
+        "recorded_by"
+      ]
+    },
+    "substation_status": {
+      "description": "The status of the substation.",
+      "format": "text",
+      "type": "string",
+      "readOnly": true,
+      "enum": [
+        "active",
+        "inactive"
+      ]
+    }
+  }
+}

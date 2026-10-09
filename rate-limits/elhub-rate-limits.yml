@@ -1,0 +1,36 @@
+generated: '2026-10-09'
+method: searched
+source: https://api.elhub.no/intro
+name: Elhub Rate Limits
+note: api.elhub.no is a JavaScript-rendered portal; the intro text was read with a headless browser and is also present verbatim in the site bundle. The Settlement and FIS rows come from the provider's
+  own OpenAPI contracts (429 responses), not prose docs. Contract-declared 429 behaviours (no numeric limit published) are kept under contract_signals, quoted from the OpenAPI files named in each row.
+limit_count: 1
+headers:
+  retry_after: Retry-After (documented on Settlement API 429 responses)
+  ratelimit_headers: none documented
+exhaustion_status: 429
+limits:
+- name: Public API rate limit
+  limit_text: Currently the rate limit is 5 calls per second per user.
+  max: 5
+  limit: 5
+  window: 1 second
+  scope: per-user (by client IP address)
+  scope_text: The IP address of the user will be used for rate limiting, but will not be stored.
+  plan: public (unauthenticated) APIs
+  source: https://api.elhub.no/intro
+contract_signals:
+- name: Settlement API per-client rate limit
+  scope: per-client
+  endpoint: /settlement/v0/virtual-calculations
+  status: 429
+  headers:
+  - Retry-After
+  source: openapi/elhub-settlement-virtual-calculations-api-openapi.yml
+  contract_text: Per-client rate limit exceeded. Retry after the period indicated by the `Retry-After` header.
+- name: FIS token endpoint failed-login throttle
+  scope: per-client
+  endpoint: call_token
+  status: 429
+  source: openapi/elhub-flex-information-system-auth-api-openapi.yml
+  contract_text: Returned after too many failures with the client credentials login.

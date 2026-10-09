@@ -1,0 +1,9 @@
+generated: '2026-10-09'
+method: probed
+generator: harvest-sibling-contracts.py
+source: https://raw.githubusercontent.com/elhub/flex-information-system/main/openapi/postgrest-swagger-2.0.json
+found_on: https://github.com/elhub/flex-information-system
+operations: gh:postgrest-swagger-2.0.json
+version: '2.0'
+ownership: sibling of a contract the pass accepted on the same host; URL names the
+  provider

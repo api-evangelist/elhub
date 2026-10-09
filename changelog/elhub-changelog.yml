@@ -1,0 +1,89 @@
+generated: '2026-10-09'
+method: searched
+source: https://api.elhub.no/energy-data-api/change-logs
+name: Elhub API Changelog
+description: Elhub publishes per-API change logs on the API Portal (JavaScript-rendered; read with a headless browser) and a separate changelog for the Flexibility Information System API. The Data Export
+  API change-log page (https://api.elhub.no/data-export-api/change-logs) rendered the same entries as the Energy Data API page on 2026-10-09; the Settlement API change-log page was empty. Dates on the portal
+  are DD.MM.YY. Recent window only.
+scheme: dated entries (portal DD.MM.YY, New/Updates); FIS ISO dates tied to Api-Version
+sources:
+- https://api.elhub.no/energy-data-api/change-logs
+- https://api.elhub.no/data-export-api/change-logs
+- https://elhub.github.io/flex-information-system/changelog/
+entries:
+- api: flex-information-system
+  version: null
+  date: '2026-09-17'
+  breaking: false
+  highlights:
+  - Removed default limit on list endpoint (previously transparently set to 2000)
+  source: https://elhub.github.io/flex-information-system/changelog/
+- api: flex-information-system
+  version: null
+  date: '2026-09-07'
+  breaking: false
+  highlights:
+  - Added created_at field to the Service Providing Group resource
+  - Added created_at and complete_at fields to the Service Providing Group Product Application resource
+  source: https://elhub.github.io/flex-information-system/changelog/
+- api: flex-information-system
+  version: '2026-06-08'
+  date: '2026-06-08'
+  breaking: false
+  highlights:
+  - Initial public release of the Flexibility Information System API; all endpoints under Api-Version 2026-06-08
+  source: https://elhub.github.io/flex-information-system/changelog/
+- api: energy-data
+  version: v0
+  date: '2025-12-11'
+  breaking: false
+  highlights:
+  - Added open dataset NORGESPRIS_CONSUMPTION_PER_GROUP_EAC_MBA under /price-areas
+- api: energy-data
+  version: v0
+  date: '2025-12-03'
+  breaking: false
+  highlights:
+  - Added open datasets PRODUCTION_PER_GROUP_MBA_15MIN, EXCHANGE_PER_MBA_15MIN and PRODUCTION_PER_MBA_15MIN under /price-areas
+- api: energy-data
+  version: v0
+  date: '2025-11-08'
+  breaking: false
+  highlights:
+  - Added Maskinporten-protected dataset COST_PER_MGA_MONTH_RESTRICTED under /grid-areas (scopes elhub:publicstakeholder, elhub:gridowner)
+- api: energy-data
+  version: v0
+  date: '2025-10-22'
+  breaking: false
+  highlights:
+  - Introduced new API header "On-Behalf-Of" for scope elhub:serviceprovider
+- api: energy-data
+  version: v0
+  date: '2025-10-15'
+  breaking: false
+  highlights:
+  - Dataset COMPARISON_NORGESPRIS now also available for scopes elhub:balancesupplier and elhub:thirdparty
+- api: energy-data
+  version: v0
+  date: '2025-08-20'
+  breaking: false
+  highlights:
+  - Added protected dataset COMPARISON_NORGESPRIS under metering-points
+  - Added open dataset METERING_VALUE_COMPARISON_EAC_PER_MONTH under price-areas
+  - Improved performance of LOSS_PER_MGA_HOUR and LOSS_PER_MGA_HOUR_RESTRICTED (data range 1 year by grid-area ID, 1 month otherwise)
+- api: energy-data
+  version: v0
+  date: '2025-06-04'
+  breaking: false
+  highlights:
+  - Added filter param includeAllMeasurements (Y/N, default N) for METERING_VALUES_HOUR_RESTRICTED under /metering-points
+- api: energy-data
+  version: v0
+  date: '2025-05-26'
+  breaking: false
+  highlights:
+  - Added protected dataset INSTALLED_CAPACITY_PER_METERING_POINT_DAILY_RESTRICTED under /metering-points
+current_versions:
+  energy-data: v0
+  flex-information-system: Api-Version 2026-06-08
+current_version: null

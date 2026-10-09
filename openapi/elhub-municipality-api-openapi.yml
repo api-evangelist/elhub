@@ -1,0 +1,1211 @@
+openapi: 3.2.0
+info:
+  title: Energy Data Municipality API
+  description: 'V0: This API is currently accessible to the public, and we anticipate future updates and enhancements.'
+  version: v0
+servers: []
+tags:
+- name: Municipality
+paths:
+  /energy-data/v0/municipalities:
+    get:
+      tags:
+      - Municipality
+      summary: Get list of Municipalities and aggregations
+      operationId: municipalities
+      parameters:
+      - name: dataset
+        in: query
+        description: The dataset name.
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: ConsumptionPerGroupMunicipalityHour
+      - name: startDate
+        in: query
+        description: 'Start date (Format: yyyy-MM-dd''T''HH:mm:ssXXX at Europe/Oslo timezone) of aggregated data (inclusive). If startDate is empty, it will be set to a date one month in the past from endDate.'
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: 2023-04-09 03:00:00+02:00
+      - name: endDate
+        in: query
+        description: 'End date (Format: yyyy-MM-dd''T''HH:mm:ssXXX at Europe/Oslo timezone) of aggregated data (inclusive). The time period from startDate to endDate cannot exceed one month. If endDate is empty, it will be set to current date and startDate will be set to a date one month in the past.'
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: 2023-04-10 03:00:00+02:00
+      - name: consumptionGroup
+        in: query
+        description: The consumption group.
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: industry
+      - name: priceArea
+        in: query
+        description: Price area filter
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: gridArea
+        in: query
+        description: Grid area filter
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: productionGroup
+        in: query
+        description: Production group filter
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: basicStatisticalUnit
+        in: query
+        description: Basic statistical unit
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: meteringPointTypeCode
+        in: query
+        description: Metering point type code
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: Authorization
+        in: header
+        description: 'Include the bearer token obtained from Maskinporten in the Authorization header. Format: ''Bearer <token>''.'
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: X-Elhub-GLN
+        in: header
+        description: Sender (Own) GLN value
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: On-Behalf-Of
+        in: header
+        description: GLN value of the on behalf party
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      responses:
+        '200':
+          description: When request is valid. Choose a different dataset under 'Examples' to see different responses
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.MunicipalityResponse'
+              examples:
+                '[No dataset chosen]':
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String"}}]}'
+                ConsumptionPerGroupMunicipalityHour:
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities?dataset=ConsumptionPerGroupMunicipalityHour"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String","ConsumptionPerGroupMunicipalityHour":[{"consumptionGroup":"String","endTime":"String","lastUpdatedTime":"String","meteringPointCount":"Int","quantityKwh":"Float","startTime":"String"}]}}]}'
+                ProductionPerMeteringPointTypeMunicipalityHour:
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities?dataset=ProductionPerMeteringPointTypeMunicipalityHour"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String","ProductionPerMeteringPointTypeMunicipalityHour":[{"endTime":"String","lastUpdatedTime":"String","meteringPointCount":"Int","meteringPointTypeCode":"String","quantityKwh":"Float","startTime":"String"}]}}]}'
+                ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour:
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities?dataset=ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String","ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour":[{"consumptionCode":"String","endTime":"String","gridArea":"String","lastUpdatedTime":"String","meteringPointCount":"Int","naceCode":"String","priceArea":"String","quantityKwh":"Float","startTime":"String"}]}}]}'
+                ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour:
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities?dataset=ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String","ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour":[{"basicStatisticalUnit":"String","consumptionGroup":"String","endTime":"String","lastUpdatedTime":"String","meteringPointCount":"Int","quantityKwh":"Float","startTime":"String"}]}}]}'
+                ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour:
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities?dataset=ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String","ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour":[{"consumptionCode":"String","endTime":"String","lastUpdatedTime":"String","meteringPointCount":"Int","naceCode":"String","priceArea":"String","quantityKwh":"Float","startTime":"String"}]}}]}'
+                ConsumptionPerBalanceSupplierMunicipalityHour:
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities?dataset=ConsumptionPerBalanceSupplierMunicipalityHour"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String","ConsumptionPerBalanceSupplierMunicipalityHour":[{"consumptionGroup":"String","endTime":"String","lastUpdatedTime":"String","meteringPointCount":"Int","quantityKwh":"Float","startTime":"String"}]}}]}'
+                ProductionPerBalanceSupplierMeteringPointTypeCodeMunicipalityHour:
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities?dataset=ProductionPerBalanceSupplierMeteringPointTypeCodeMunicipalityHour"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String","ProductionPerBalanceSupplierMeteringPointTypeCodeMunicipalityHour":[{"endTime":"String","lastUpdatedTime":"String","meteringPointCount":"Int","meteringPointTypeCode":"String","quantityKwh":"Float","startTime":"String"}]}}]}'
+        '400':
+          description: When the request is invalid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Invalid request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"400\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:15:45+01:00\",\n      \"links\": {\n        \"self\": \"https://api.elhub.no/energy-data/v0/municipalities\"\n      }\n    }\n  ]\n}"
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unexpected server error:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"500\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:38:13+01:00\"\n    }\n  ]\n}"
+        '401':
+          description: The request lacks valid authentication credentials
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+        '403':
+          description: When the request lacks valid authorization
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+      deprecated: false
+  /energy-data/v0/municipalities/{id}:
+    get:
+      tags:
+      - Municipality
+      summary: Get list of Municipalities and aggregations
+      operationId: municipalities_id
+      parameters:
+      - name: id
+        in: path
+        description: A valid municipality id returned from /municipalities
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: '1101'
+      - name: dataset
+        in: query
+        description: The dataset name.
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: ConsumptionPerGroupMunicipalityHour
+      - name: startDate
+        in: query
+        description: 'Start date (Format: yyyy-MM-dd''T''HH:mm:ssXXX at Europe/Oslo timezone) of aggregated data (inclusive). If startDate is empty, it will be set to a date one month in the past from endDate.'
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: 2023-04-09 03:00:00+02:00
+      - name: endDate
+        in: query
+        description: 'End date (Format: yyyy-MM-dd''T''HH:mm:ssXXX at Europe/Oslo timezone) of aggregated data (inclusive). The time period from startDate to endDate cannot exceed one month. If endDate is empty, it will be set to current date and startDate will be set to a date one month in the past.'
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: 2023-04-10 03:00:00+02:00
+      - name: consumptionGroup
+        in: query
+        description: The consumption group.
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: industry
+      - name: priceArea
+        in: query
+        description: Price area filter
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: gridArea
+        in: query
+        description: Grid area filter
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: productionGroup
+        in: query
+        description: Production group filter
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: basicStatisticalUnit
+        in: query
+        description: Basic statistical unit
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: meteringPointTypeCode
+        in: query
+        description: Metering point type code
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: Authorization
+        in: header
+        description: 'Include the bearer token obtained from Maskinporten in the Authorization header. Format: ''Bearer <token>''.'
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: X-Elhub-GLN
+        in: header
+        description: Sender (Own) GLN value
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: On-Behalf-Of
+        in: header
+        description: GLN value of the on behalf party
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      responses:
+        '200':
+          description: When request is valid. Choose a different dataset under 'Examples' to see different responses
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.MunicipalityResponse'
+              examples:
+                '[No dataset chosen]':
+                  value: '{"meta":{"created":"2023-10-01T12:00:00+02:00"},"links":{"self":"https://api.elhub.no/energy-data/v0/municipalities"},"data":[{"type":"municipality","id":"String","attributes":{"municipalityNumber":"String","name":"String","nameNo":"String"}}]}'
+        '400':
+          description: When the request is invalid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Invalid request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"400\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:15:45+01:00\",\n      \"links\": {\n        \"self\": \"https://api.elhub.no/energy-data/v0/municipalities/{id}\"\n      }\n    }\n  ]\n}"
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unexpected server error:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"500\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:38:13+01:00\"\n    }\n  ]\n}"
+        '401':
+          description: The request lacks valid authentication credentials
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Missing authentication:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"401\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:40:21+01:00\"\n    }\n  ]\n}"
+        '403':
+          description: When the request lacks valid authorization
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unauthorized request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"403\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:41:55+01:00\"\n    }\n  ]\n}"
+      deprecated: false
+  /energy-data/v0/municipalities{suffix}:
+    get:
+      tags:
+      - Municipality
+      summary: Get list of Municipalities and aggregations
+      operationId: municipalities_export
+      parameters:
+      - name: suffix
+        in: path
+        description: Suffix to specify type of data returned.
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: .csv
+      - name: dataset
+        in: query
+        description: The dataset name.
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: ConsumptionPerGroupMunicipalityHour
+      - name: Authorization
+        in: header
+        description: 'Include the bearer token obtained from Maskinporten in the Authorization header. Format: ''Bearer <token>''.'
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: X-Elhub-GLN
+        in: header
+        description: Sender (Own) GLN value
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: On-Behalf-Of
+        in: header
+        description: GLN value of the on behalf party
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      responses:
+        '302':
+          description: CSV export redirect
+          headers:
+            Location:
+              description: Redirect target (download URL)
+              required: false
+              deprecated: false
+              schema:
+                type: string
+                title: String
+        '400':
+          description: When the request is invalid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Invalid request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"400\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:15:45+01:00\",\n      \"links\": {\n        \"self\": \"https://api.elhub.no/energy-data/v0/municipalities{suffix}\"\n      }\n    }\n  ]\n}"
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unexpected server error:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"500\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:38:13+01:00\"\n    }\n  ]\n}"
+        '401':
+          description: The request lacks valid authentication credentials
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Missing authentication:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"401\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:40:21+01:00\"\n    }\n  ]\n}"
+        '403':
+          description: When the request lacks valid authorization
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unauthorized request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"403\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:41:55+01:00\"\n    }\n  ]\n}"
+      deprecated: false
+components:
+  schemas:
+    no.elhub.ds.energy.data.models.municipality.Municipality:
+      type: object
+      properties:
+        consumptionPerBalanceSupplierMunicipalityHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per balance supplier per municipality
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityHour'
+          title: List<ConsumptionPerGroupMunicipalityHour>
+        consumptionPerGroupMunicipalityBasicStatisticalUnitHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per group per basic statistical unit
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour'
+          title: List<ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour>
+        consumptionPerGroupMunicipalityHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per group per municipality
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityHour'
+          title: List<ConsumptionPerGroupMunicipalityHour>
+        consumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per mba, mga, municipality, nace code, consumption code
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour'
+          title: List<ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour>
+        consumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per mba, municipality, nace code, consumption code
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour'
+          title: List<ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour>
+        id:
+          type:
+          - 'null'
+          - string
+          description: Municipality identification string
+          title: String
+        installedCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily:
+          type:
+          - 'null'
+          - array
+          description: List of daily aggregated installed capacity per metering point type group per basic statistical unit
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily'
+          title: List<InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily>
+        installedCapacityPerMeteringPointTypeGroupMunicipalityDaily:
+          type:
+          - 'null'
+          - array
+          description: List of daily aggregated installed capacity per metering point type group per municipality
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily'
+          title: List<InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily>
+        links:
+          description: Links object
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        maxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth:
+          type:
+          - 'null'
+          - array
+          description: List of monthly max consumption per EAC per basic statistical unit
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth'
+          title: List<MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth>
+        meteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality:
+          type:
+          - 'null'
+          - array
+          description: Number of metering points at the last day of month per grid owner, nace code and municipality.
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.MeteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality'
+          title: List<MeteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality>
+        municipalityNumber:
+          type: string
+          description: Municipality number
+          title: String
+        name:
+          type: string
+          description: Municipality name
+          title: String
+        nameNo:
+          type: string
+          description: Municipality name in Norwegian
+          title: String
+        productionPerBalanceSupplierMeteringPointTypeCodeMunicipalityHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated production per balance supplier, metering point type code per municipality
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.ProductionPerMeteringPointTypeMunicipalityHour'
+          title: List<ProductionPerMeteringPointTypeMunicipalityHour>
+        productionPerMeteringPointTypeMunicipalityHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated production per metering point type per municipality
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.ProductionPerMeteringPointTypeMunicipalityHour'
+          title: List<ProductionPerMeteringPointTypeMunicipalityHour>
+      required:
+      - municipalityNumber
+      - name
+      - nameNo
+      title: Municipality
+    no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily:
+      type: object
+      properties:
+        installedCapacity:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Sum of installed capacity of all metering point. E18 and E19 only. Direction In only(production), meaning consumption is ignored.
+          title: Float
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18(production), E19(combined/prosumers)
+          title: String
+        municipalityId:
+          type:
+          - 'null'
+          - string
+          description: Municipality ID
+          title: String
+        productionGroup:
+          type:
+          - 'null'
+          - string
+          description: 'Production group: solar, hydro, wind, thermal, other'
+          title: String
+        usageDateId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The usage date
+          title: Int
+      title: InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily
+    ? no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily
+    : type: object
+      properties:
+        basicStatisticalUnit:
+          type:
+          - 'null'
+          - string
+          description: Basic Statistical Unit
+          title: String
+        installedCapacity:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Sum of installed capacity of all metering point. E18(production) and E19(combined/prosumers) only. Direction In only(production), meaning consumption is ignored.
+          title: Float
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18(production), E19(combined/prosumers)
+          title: String
+        municipalityId:
+          type:
+          - 'null'
+          - string
+          description: Municipality ID
+          title: String
+        productionGroup:
+          type:
+          - 'null'
+          - string
+          description: 'Production group: solar, hydro, wind, thermal, other'
+          title: String
+        usageDateId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The usage date
+          title: Int
+      title: InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily
+    no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityHour:
+      type: object
+      properties:
+        consumptionGroup:
+          type:
+          - 'null'
+          - string
+          description: The consumption group
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate
+          title: Int
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval
+          title: String
+      title: ConsumptionPerGroupMunicipalityHour
+    no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour:
+      type: object
+      properties:
+        consumptionCode:
+          type:
+          - 'null'
+          - string
+          description: Consumption code for the aggregate.
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: The end time of the interval.
+          title: String
+        gridArea:
+          type:
+          - 'null'
+          - string
+          description: Grid area for the aggregate.
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the aggregate was last updated.
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate.
+          title: Int
+        naceCode:
+          type:
+          - 'null'
+          - string
+          description: NACE code for the aggregate.
+          title: String
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: Price area for the aggregate.
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate.
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: The start time of the interval.
+          title: String
+      title: ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    no.elhub.ds.energy.data.models.municipality.ProductionPerMeteringPointTypeMunicipalityHour:
+      type: object
+      properties:
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate
+          title: Int
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18.
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval
+          title: String
+      title: ProductionPerMeteringPointTypeMunicipalityHour
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour:
+      type: object
+      properties:
+        consumptionCode:
+          type:
+          - 'null'
+          - string
+          description: Consumption code for the aggregate.
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: The end time of the interval.
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the aggregate was last updated.
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate.
+          title: Int
+        naceCode:
+          type:
+          - 'null'
+          - string
+          description: NACE code for the aggregate.
+          title: String
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: Price area for the aggregate.
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate.
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: The start time of the interval.
+          title: String
+      title: ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour
+    jsonapi.Error:
+      type: object
+      properties:
+        code:
+          type:
+          - 'null'
+          - string
+          title: String
+        detail:
+          type:
+          - 'null'
+          - string
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          title: String
+        links:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Error.Source'
+        status:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error
+    jsonapi.Error.Source:
+      type: object
+      properties:
+        header:
+          type:
+          - 'null'
+          - string
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
+    no.elhub.ds.energy.data.models.municipality.MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth:
+      type: object
+      properties:
+        basicStatisticalUnit:
+          type:
+          - 'null'
+          - string
+          description: Basic Statistical Unit Name (Grunnkrets)
+          title: String
+        basicStatisticalUnitId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Basic Statistical Unit ID (Grunnkrets)
+          title: Int
+        dailyConsumption:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The total consumption for the day with the highest hourly consumption in kWh
+          title: Float
+        estimatedAnnualConsumption:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Sum of estimated annual consumption in kWh of all metering points included in the basic statistical unit(Grunnkrets).
+          title: Float
+        highestHourlyConsumption:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The highest hourly consumption for the month in kWh
+          title: Float
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        usageDateId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The usage date with the highest hourly consumption
+          title: Int
+        yearMonth:
+          type:
+          - 'null'
+          - string
+          description: The month and year of the max consumption
+          title: String
+      title: MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth
+    jsonapi.Link.LinkObject:
+      type: object
+      properties:
+        describedBy:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Link'
+        href:
+          type: string
+          title: String
+        hreflang:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+            title: String
+          title: List<String>
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        rel:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+        type:
+          type:
+          - 'null'
+          - string
+          title: String
+      required:
+      - href
+      title: Link.LinkObject
+    jsonapi.Meta:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            type: object
+            title: Any
+          title: Map<String,Any>
+      required:
+      - members
+      title: Meta
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour:
+      type: object
+      properties:
+        basicStatisticalUnit:
+          type:
+          - 'null'
+          - string
+          description: Basic statistical unit (Grunnkrets)
+          title: String
+        consumptionGroup:
+          type:
+          - 'null'
+          - string
+          description: The consumption group
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate
+          title: Int
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval
+          title: String
+      title: ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour
+    no.elhub.ds.energy.data.models.municipality.MeteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality:
+      type: object
+      description: Number of metering points at the last day of month per grid owner, NACE code and municipality.
+      properties:
+        gridOwnerGln:
+          type:
+          - 'null'
+          - string
+          description: The grid owner GLN.
+          title: String
+        gridOwnerOrgName:
+          type:
+          - 'null'
+          - string
+          description: Organization name of the grid owner
+          title: String
+        gridOwnerOrgNumber:
+          type:
+          - 'null'
+          - string
+          description: The organization number of the grid owner
+          title: String
+        lastDayOfMonth:
+          type: string
+          description: Date of last day of month. The date used to determine the counts.
+          title: String
+        lastUpdateTime:
+          type: string
+          description: Time in UTC the row was last updated.
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of metering point in this group at the end of the month
+          title: Int
+        naceCode:
+          type:
+          - 'null'
+          - string
+          description: The NACE code. Note that for metering points where nace code is XX or consumption code 35, then this is set to XX. If nace code XY or consumption code 36, then it is set to XY.
+          title: String
+        yearMonth:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: YYYYMM
+          title: Int
+      required:
+      - lastDayOfMonth
+      - lastUpdateTime
+      title: MeteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality
+    no.elhub.ds.energy.data.models.response.MunicipalityResponse:
+      type: object
+      properties:
+        creationTime:
+          type: string
+          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        currentLink:
+          type:
+          - 'null'
+          - string
+          description: link to the current resource
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        municipalities:
+          type: array
+          description: data grouped by a list of municipalities
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.Municipality'
+          title: List<Municipality>
+      required:
+      - creationTime
+      - municipalities
+      title: MunicipalityResponse
+externalDocs:
+  url: /

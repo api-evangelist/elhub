@@ -1,0 +1,38 @@
+generated: '2026-10-09'
+method: searched
+source: https://api.elhub.no/access-api/getting-started
+name: Elhub Sandbox / Test Environments
+description: >-
+  Elhub documents separate test environments rather than test keys. The Access API documents an MT1
+  test environment beside production ("Use the MT1 environment for testing and the production
+  environment for live integrations."). The Flexibility Information System runs a test environment
+  (flex-test.elhub.no) where each test user gets generated test data. Protected API Portal APIs require
+  Maskinporten onboarding even for testing (Digdir Samarbeidsportalen; Maskinporten has its own test
+  environment). No test-vs-live key prefixes, test clocks or fixture tooling are documented.
+docs:
+- https://api.elhub.no/access-api/getting-started
+- https://api.elhub.no/restricted-endpoints/maskinporten
+- https://elhub.github.io/flex-information-system/guides/test-data/
+environments:
+- api: Access API
+  name: Production
+  base_url: https://api.elhub.no/access/v0
+- api: Access API
+  name: MT1
+  purpose: testing
+  base_url: https://api-mt1.elhub.no/access/v0
+- api: Flexibility Information System
+  name: test
+  url: https://flex-test.elhub.no
+  source: https://elhub.github.io/flex-information-system/
+test_data:
+  source: https://elhub.github.io/flex-information-system/guides/test-data/
+  description: >-
+    Each test user has its own set of test data generated into the system: one party of each type and a
+    set of 1000 accounting points connected to the test user's system operator; plus a "common" set of
+    parties (names prefixed "Felles"). Party names append the party abbreviation to the test user's first
+    name (e.g. "John SP", "John SO").
+  identifier_formats:
+    GLN: 13370 + 3-digit SSN suffix + 4-digit increment + check digit
+    GSRN: 13370000000 + 3-digit SSN suffix + 3-digit increment + check digit
+  common_test_user: 'SSN suffix 0, first name Felles'

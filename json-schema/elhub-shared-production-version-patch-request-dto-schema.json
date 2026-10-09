@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-shared-production-version-patch-request-dto-schema.json",
+  "title": "SharedProductionVersionPatchRequestDto",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-settlement-virtual-calculations-api-openapi.yml#/components/schemas/SharedProductionVersionPatchRequestDto",
+  "type": "object",
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/SharedProductionVersionPatchDataDto"
+    }
+  },
+  "$defs": {
+    "SharedProductionVersionPatchAttributesDto": {
+      "type": "object",
+      "title": "SharedProductionVersionPatchAttributesDto",
+      "properties": {
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VersionParticipantDto"
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Draft",
+            "Active"
+          ]
+        },
+        "template": {
+          "type": "string",
+          "enum": [
+            "NetMetering",
+            "GrossMetering",
+            "NetConsLargeCustomer",
+            "SharedProduction",
+            "SharedConsumption"
+          ]
+        },
+        "settlementLevel": {
+          "type": "string",
+          "enum": [
+            "Contributor",
+            "Totalizer",
+            "Participant"
+          ]
+        },
+        "resolution": {
+          "type": "string",
+          "format": "duration"
+        },
+        "recipientFormulaType": {
+          "type": "string",
+          "enum": [
+            "EquallyDistributed",
+            "ConsumptionBased",
+            "Manual"
+          ]
+        },
+        "contributorFormulaType": {
+          "type": "string",
+          "enum": [
+            "EquallyDistributed",
+            "ProductionBased",
+            "Manual",
+            "NoDistribution"
+          ]
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "SharedProductionVersionPatchDataDto": {
+      "type": "object",
+      "title": "SharedProductionVersionPatchDataDto",
+      "required": [
+        "type",
+        "attributes"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/$defs/SharedProductionVersionPatchAttributesDto"
+        }
+      }
+    },
+    "VersionParticipantDto": {
+      "type": "object",
+      "title": "VersionParticipantDto",
+      "required": [
+        "meteringPointId",
+        "role"
+      ],
+      "properties": {
+        "meteringPointId": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "Contributor",
+            "Recipient",
+            "Totalizer"
+          ]
+        },
+        "share": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

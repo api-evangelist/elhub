@@ -1,0 +1,938 @@
+openapi: 3.1.1
+info:
+  title: Contracts JSON:API
+  description: |
+    API for managing contract information in the Elhub system.
+    Contracts represent agreements on metering points in the Elhub system and is used to represent a variety of different relationships
+    that can exist on a metering point. Norgespris is a type of contract in the Elhub information model.
+  version: 0.0.1
+  contact:
+    name: team-wow
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: /market-data/v1
+security:
+  - bearerAuth: []
+paths:
+  /contracts:
+    get:
+      summary: Get all contracts
+      description: |
+        Get all contracts which you (as a market party or end user) are entitled to view.
+        In almost all cases, this means you must have a valid contract on the metering point in order to retrieve information about it.
+      operationId: getContracts
+      parameters:
+        - $ref: "#/components/parameters/UserAgent"
+        - $ref: "#/components/parameters/Sender"
+        - $ref: "#/components/parameters/OnBehalfOf"
+        - name: filter[contractType]
+          in: query
+          description: Filter by contract type. This is used to retrieve all records of a specific type; e.g., all contracts of type Norgespris.
+          required: false
+          schema:
+            type: string
+            enum:
+              - Norgespris
+        - name: filter[meteringPointId]
+          in: query
+          description: Filter list by metering point IDs (query limit size is 21). This is used to retrieve records based on the metering point ID.
+          required: false
+          explode: false
+          schema:
+            type: array
+            items:
+              type: string
+            maxItems: 21
+            uniqueItems: true
+          example: ["845123456789323423", "845123456789323424"]
+        - name: filter[updatedAt][gt]
+          in: query
+          description: Filter contracts updated after this timestamp (RFC 3339 format in Oslo time - Europe/Oslo timezone)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2025-09-02T09:28:00.00000+02:00"
+        - name: filter[updatedAt][lt]
+          in: query
+          description: Filter contracts updated before this timestamp (RFC 3339 format in Oslo time - Europe/Oslo timezone)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2025-10-02T13:28:00.00000+02:00"
+      responses:
+        "200":
+          description: Successfully get contracts
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/ContractResponses"
+              examples:
+                success:
+                  summary: Example response for get all contracts
+                  value:
+                    data:
+                      - type: contract
+                        id: 4ef727d1-b672-4166-a973-aa6e412b09bb
+                        attributes:
+                          contractType: Norgespris
+                          startDate: "2026-01-01"
+                          endDate: "2026-12-31"
+                          status: Initiated
+                        relationships:
+                          createdBy:
+                            data:
+                              type: party
+                              id: GLN1234567890123
+                          updatedBy:
+                            data:
+                              type: party
+                              id: GLN1234567890123
+                          meteringPoint:
+                            data:
+                              type: metering-point
+                              id: "845123456789323423"
+                        meta:
+                          createdAt: "2025-07-01T09:53:49.980467+02:00"
+                          updatedAt: "2025-07-01T09:53:49.980467+02:00"
+        "400":
+          description: Bad Request - When the request is invalid
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingAttributes:
+                  $ref: "#/components/examples/missingAttributes"
+                missingRelationships:
+                  $ref: "#/components/examples/missingRelationships"
+                missingStatus:
+                  $ref: "#/components/examples/missingStatus"
+                invalidEndDate:
+                  $ref: "#/components/examples/invalidEndDate"
+        "401":
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  $ref: "#/components/examples/unauthorized"
+        "500":
+          description: Internal Server Error
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                internalError:
+                  $ref: "#/components/examples/internalError"
+    post:
+      summary: Create a contract
+      description: Create one or more contracts linked to meteringPointId(s).
+      operationId: createContracts
+      parameters:
+        - $ref: "#/components/parameters/UserAgent"
+        - $ref: "#/components/parameters/Sender"
+        - $ref: "#/components/parameters/OnBehalfOf"
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: "#/components/schemas/CreateContractRequests"
+            examples:
+              createContracts:
+                summary: Example request for creating contracts
+                value:
+                  data:
+                    - type: contract
+                      attributes:
+                        contractType: Norgespris
+                        startDate: "2026-01-01"
+                        endDate: "2026-12-31"
+                      relationships:
+                        meteringPoint:
+                          data:
+                            type: metering-point
+                            id: "845123456789323423"
+      responses:
+        "201":
+          description: Successfully created contract
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/ContractResponses"
+              examples:
+                created:
+                  summary: Example response for created contract
+                  value:
+                    data:
+                      - type: contract
+                        id: 4ef727d1-b672-4166-a973-aa6e412b09bb
+                        attributes:
+                          contractType: Norgespris
+                          startDate: "2026-01-01"
+                          endDate: "2026-12-31"
+                          status: Initiated
+                        relationships:
+                          createdBy:
+                            data:
+                              type: party
+                              id: GLN1234567890123
+                          updatedBy:
+                            data:
+                              type: party
+                              id: GLN1234567890123
+                          meteringPoint:
+                            data:
+                              type: metering-point
+                              id: "845123456789323423"
+                        meta:
+                          createdAt: "2025-07-01T09:53:49.980467+02:00"
+                          updatedAt: "2025-07-01T09:53:49.980467+02:00"
+        "400":
+          description: Bad Request - When the request is invalid
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingAttributes:
+                  $ref: "#/components/examples/missingAttributes"
+                missingRelationships:
+                  $ref: "#/components/examples/missingRelationships"
+                missingStatus:
+                  $ref: "#/components/examples/missingStatus"
+                invalidEndDate:
+                  $ref: "#/components/examples/invalidEndDate"
+        "401":
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  $ref: "#/components/examples/unauthorized"
+        "403":
+          description: Forbidden
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorizedStatusUpdate:
+                  $ref: "#/components/examples/unauthorizedStatusUpdate"
+                endUserRestrictedFieldUpdate:
+                  $ref: "#/components/examples/endUserRestrictedFieldUpdate"
+        "409":
+          description: Conflict - When the contract already exists
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                contractAlreadyExists:
+                  $ref: "#/components/examples/contractAlreadyExists"
+                meteringPointMismatch:
+                  $ref: "#/components/examples/meteringPointMismatch"
+                contractTypeMismatch:
+                  $ref: "#/components/examples/contractTypeMismatch"
+                invalidStatusTransition:
+                  $ref: "#/components/examples/invalidStatusTransition"
+        "500":
+          description: Internal Server Error
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                internalError:
+                  $ref: "#/components/examples/internalError"
+    patch:
+      summary: Update contracts
+      description: Update a set of contracts.
+      operationId: updateContracts
+      parameters:
+        - $ref: "#/components/parameters/UserAgent"
+        - $ref: "#/components/parameters/Sender"
+        - $ref: "#/components/parameters/OnBehalfOf"
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: "#/components/schemas/UpdateContractRequests"
+            examples:
+              updateContracts:
+                summary: Example request for updating contracts
+                value:
+                  data:
+                    - type: contract
+                      id: 4ef727d1-b672-4166-a973-aa6e412b09bb
+                      attributes:
+                        contractType: Norgespris
+                        startDate: "2026-01-01"
+                        endDate: "2026-12-31"
+                        isCancelled: true
+                        cancelledAt: "2025-07-01T09:47:26.560233+02:00"
+      responses:
+        "200":
+          description: Successfully updated contracts
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/ContractResponses"
+              examples:
+                updated:
+                  summary: Example response for updated contracts
+                  value:
+                    data:
+                      - type: contract
+                        id: 4ef727d1-b672-4166-a973-aa6e412b09bb
+                        attributes:
+                          contractType: Norgespris
+                          startDate: "2026-01-01"
+                          endDate: "2026-12-31"
+                          status: Cancelled
+                          cancelledAt: "2025-07-01T09:47:26.560233+02:00"
+                        relationships:
+                          createdBy:
+                            data:
+                              type: party
+                              id: GLN1234567890123
+                          updatedBy:
+                            data:
+                              type: party
+                              id: GLN1234567890123
+                          meteringPoint:
+                            data:
+                              type: metering-point
+                              id: "845123456789323423"
+                        meta:
+                          createdAt: "2025-07-01T09:47:26.560233+02:00"
+                          updatedAt: "2025-07-01T10:01:18.022467+02:00"
+        "400":
+          description: Bad Request - When the request is invalid
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingAttributes:
+                  $ref: "#/components/examples/missingAttributes"
+                missingRelationships:
+                  $ref: "#/components/examples/missingRelationships"
+                missingStatus:
+                  $ref: "#/components/examples/missingStatus"
+                invalidEndDate:
+                  $ref: "#/components/examples/invalidEndDate"
+        "401":
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  $ref: "#/components/examples/unauthorized"
+        "403":
+          description: Forbidden
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorizedStatusUpdate:
+                  $ref: "#/components/examples/unauthorizedStatusUpdate"
+                endUserRestrictedFieldUpdate:
+                  $ref: "#/components/examples/endUserRestrictedFieldUpdate"
+        "404":
+          description: Not Found - Contract not found
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                contractNotFound:
+                  $ref: "#/components/examples/contractNotFound"
+                contractNotFoundForMeteringPoint:
+                  $ref: "#/components/examples/contractNotFoundForMeteringPoint"
+        "409":
+          description: Conflict - When trying to update with conflicting data
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                contractAlreadyExists:
+                  $ref: "#/components/examples/contractAlreadyExists"
+                meteringPointMismatch:
+                  $ref: "#/components/examples/meteringPointMismatch"
+                contractTypeMismatch:
+                  $ref: "#/components/examples/contractTypeMismatch"
+                invalidStatusTransition:
+                  $ref: "#/components/examples/invalidStatusTransition"
+        "500":
+          description: Internal Server Error
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                internalError:
+                  $ref: "#/components/examples/internalError"
+  /contracts/{contractId}:
+    get:
+      summary: Get a single contract by ID
+      description: Get a single contract entity identified by ID.
+      operationId: getContractById
+      parameters:
+        - name: contractId
+          in: path
+          description: The ID of the contract to retrieve.
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/UserAgent"
+        - $ref: "#/components/parameters/Sender"
+        - $ref: "#/components/parameters/OnBehalfOf"
+      responses:
+        "200":
+          description: Successfully get contract by ID
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/SingleContractResponse"
+              examples:
+                success:
+                  summary: Example response for get contract by ID
+                  value:
+                    data:
+                      type: contract
+                      id: 4ef727d1-b672-4166-a973-aa6e412b09bb
+                      attributes:
+                        contractType: Norgespris
+                        startDate: "2026-01-01"
+                        endDate: "2026-12-31"
+                        status: Cancelled
+                        cancelledAt: "2025-07-01T09:55:49.980467+02:00"
+                      relationships:
+                        createdBy:
+                          data:
+                            type: party
+                            id: GLN1234567890123
+                        updatedBy:
+                          data:
+                            type: party
+                            id: GLN1234567890123
+                        meteringPoint:
+                          data:
+                            type: metering-point
+                            id: "845123456789323423"
+                      meta:
+                        createdAt: "2026-01-01T09:47:26.560233+02:00"
+                        updatedAt: "2026-06-01T09:47:26.560233+02:00"
+        "400":
+          description: Bad Request - When the request is invalid
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingAttributes:
+                  $ref: "#/components/examples/missingAttributes"
+                missingRelationships:
+                  $ref: "#/components/examples/missingRelationships"
+                missingStatus:
+                  $ref: "#/components/examples/missingStatus"
+                invalidEndDate:
+                  $ref: "#/components/examples/invalidEndDate"
+        "401":
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  $ref: "#/components/examples/unauthorized"
+        "404":
+          description: Not Found - Contract not found
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                contractNotFound:
+                  $ref: "#/components/examples/contractNotFound"
+        "500":
+          description: Internal Server Error
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                internalError:
+                  $ref: "#/components/examples/internalError"
+    patch:
+      summary: Update a contract by ID
+      description: Update a contract entity identified by ID.
+      operationId: patchContractById
+      parameters:
+        - name: contractId
+          in: path
+          description: The ID of the contract to update.
+          required: true
+          schema:
+            type: string
+        - $ref: "#/components/parameters/UserAgent"
+        - $ref: "#/components/parameters/Sender"
+        - $ref: "#/components/parameters/OnBehalfOf"
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: "#/components/schemas/SingleUpdateContractRequest"
+            examples:
+              updateSingleContract:
+                summary: Example request for updating a single contract
+                value:
+                  data:
+                    type: contract
+                    id: 4ef727d1-b672-4166-a973-aa6e412b09bb
+                    attributes:
+                      contractType: Norgespris
+                      startDate: "2026-01-01"
+                      endDate: "2026-12-31"
+                      isCancelled: true
+                      cancelledAt: "2025-07-01T09:47:26.560233+02:00"
+      responses:
+        "200":
+          description: Successfully updated contract
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/SingleContractResponse"
+              examples:
+                updated:
+                  summary: Example response for updated contract by ID
+                  value:
+                    data:
+                      type: contract
+                      id: 4ef727d1-b672-4166-a973-aa6e412b09bb
+                      attributes:
+                        contractType: Norgespris
+                        startDate: "2026-01-01"
+                        endDate: "2026-12-31"
+                        status: Cancelled
+                        cancelledAt: "2025-07-01T09:47:26.560233+02:00"
+                      relationships:
+                        createdBy:
+                          data:
+                            type: party
+                            id: GLN1234567890123
+                        updatedBy:
+                          data:
+                            type: party
+                            id: GLN1234567890123
+                        meteringPoint:
+                          data:
+                            type: metering-point
+                            id: "845123456789323423"
+                      meta:
+                        createdAt: "2026-01-01T09:47:26.560233+02:00"
+                        updatedAt: "2026-06-01T10:07:33.968671+02:00"
+        "400":
+          description: Bad Request - When the request is invalid
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                missingAttributes:
+                  $ref: "#/components/examples/missingAttributes"
+                missingRelationships:
+                  $ref: "#/components/examples/missingRelationships"
+                missingStatus:
+                  $ref: "#/components/examples/missingStatus"
+                invalidEndDate:
+                  $ref: "#/components/examples/invalidEndDate"
+        "401":
+          description: Unauthorized
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  $ref: "#/components/examples/unauthorized"
+        "403":
+          description: Forbidden
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorizedStatusUpdate:
+                  $ref: "#/components/examples/unauthorizedStatusUpdate"
+                endUserRestrictedFieldUpdate:
+                  $ref: "#/components/examples/endUserRestrictedFieldUpdate"
+        "404":
+          description: Not Found - Contract not found
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                contractNotFound:
+                  $ref: "#/components/examples/contractNotFound"
+                contractNotFoundForMeteringPoint:
+                  $ref: "#/components/examples/contractNotFoundForMeteringPoint"
+        "409":
+          description: Conflict - When trying to update with conflicting data
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                contractAlreadyExists:
+                  $ref: "#/components/examples/contractAlreadyExists"
+                meteringPointMismatch:
+                  $ref: "#/components/examples/meteringPointMismatch"
+                contractTypeMismatch:
+                  $ref: "#/components/examples/contractTypeMismatch"
+                invalidStatusTransition:
+                  $ref: "#/components/examples/invalidStatusTransition"
+        "500":
+          description: Internal Server Error
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                internalError:
+                  $ref: "#/components/examples/internalError"
+  /contracts/summary:
+    get:
+      summary: A summary of contracts by type and state.
+      operationId: summary
+      description: |
+        Retrieves an aggregated summary of contracts for the authenticated GLN, broken down by contract type
+        (norgespris) and state (active, initiated, cancelled, expired)
+        within the specified time range. Each contract type includes the most recent update timestamp.
+      parameters:
+        - $ref: "#/components/parameters/UserAgent"
+        - $ref: "#/components/parameters/Sender"
+        - $ref: "#/components/parameters/OnBehalfOf"
+        - name: filter[updatedAt][gt]
+          in: query
+          description: Filter contracts updated after this timestamp (RFC 3339 format in Oslo time - Europe/Oslo timezone)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2026-06-01T10:07:33.968671+02:00"
+        - name: filter[updatedAt][lt]
+          in: query
+          description: Filter contracts updated before this timestamp (RFC 3339 format in Oslo time - Europe/Oslo timezone)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2026-06-01T10:07:33.968671+02:00"
+        - name: filter[createdAt][gt]
+          in: query
+          description: Filter contracts created after this timestamp (RFC 3339 format in Oslo time - Europe/Oslo timezone)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2026-06-01T10:07:33.968671+02:00"
+        - name: filter[createdAt][lt]
+          in: query
+          description: Filter contracts created before this timestamp (RFC 3339 format in Oslo time - Europe/Oslo timezone)
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: "2026-06-01T10:07:33.968671+02:00"
+        - name: filter[contractType]
+          in: query
+          description: Filter by contract type. This is used to retrieve all records of a specific type; e.g., all contracts of type Norgespris.
+          required: false
+          schema:
+            type: string
+            enum:
+              - Norgespris
+      responses:
+        "200":
+          description: Successful response with contract summary by type.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/ContractSummaryResponse"
+        "400":
+          description: Bad Request - When the request is invalid
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  $ref: "#/components/examples/unauthorized"
+        "403":
+          description: Forbidden
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal Server Error
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                internalError:
+                  $ref: "#/components/examples/internalError"
+  /contracts/ping:
+    get:
+      summary: A secured Health check endpoint
+      description: Simple health secured check endpoint that returns "pong" to verify the service is running.
+      operationId: ping
+      parameters:
+        - $ref: "#/components/parameters/UserAgent"
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/vnd.api+json:
+              schema:
+                type: string
+                example: "pong"
+        "401":
+          description: Unauthorized - Invalid or missing token
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: "#/components/schemas/Error"
+              examples:
+                unauthorized:
+                  $ref: "#/components/examples/unauthorized"
+  /contracts/open/ping:
+    get:
+      summary: Health check endpoint
+      description: Simple health check endpoint that returns "pong" to verify the service is running.
+      operationId: open-ping
+      parameters:
+        - $ref: "#/components/parameters/UserAgent"
+      security: [] # No authentication required for this endpoint
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/vnd.api+json:
+              schema:
+                type: string
+                example: "pong"
+components:
+  parameters:
+    UserAgent:
+      name: User-Agent
+      in: header
+      required: true
+      description: Identifies the client software originating the request.
+      schema:
+        type: string
+        example: ExampleCompany-ElhubClient/1.0.0
+    Sender:
+      name: Sender
+      in: header
+      description: Global Location Number (GLN) of the requesting party
+      schema:
+        type: string
+        pattern: ^[0-9]{13}$
+    OnBehalfOf:
+      name: On-Behalf-Of
+      in: header
+      description: Global Location Number (GLN) of the party on whose behalf the request is made
+      schema:
+        type: string
+        pattern: ^[0-9]{13}$
+  schemas:
+    ContractResponses:
+      allOf:
+        - $ref: "./schemas/contracts/norgespris/response/contracts-list.schema.json#/definitions/response"
+    CreateContractRequests:
+      allOf:
+        - $ref: "./schemas/contracts/norgespris/request/contracts-list.schema.json#/definitions/createRequest"
+    ContractSummaryResponse:
+      allOf:
+        - $ref: "./schemas/contracts/summary/contracts-summary.schema.json#/definitions/response"
+    UpdateContractRequests:
+      allOf:
+        - $ref: "./schemas/contracts/norgespris/request/contracts-list.schema.json#/definitions/updateRequest"
+    SingleUpdateContractRequest:
+      allOf:
+        - $ref: "./schemas/contracts/norgespris/request/contract-single.schema.json#/definitions/updateRequest"
+    SingleContractResponse:
+      allOf:
+        - $ref: "./schemas/contracts/norgespris/response/contract-single.schema.json#/definitions/response"
+    Error:
+      allOf:
+        - $ref: "./schemas/json-api-error.schema.json"
+  examples:
+    missingAttributes:
+      summary: Missing Attributes in Contract Creation
+      value:
+        errors:
+          - status: "400"
+            code: INVALID_INPUT
+            title: Missing Attributes in Contract Creation
+            detail: No attributes have been detected.
+            source:
+              pointer: /data/attributes
+    missingRelationships:
+      summary: Missing Relationships in Contract Creation
+      value:
+        errors:
+          - status: "400"
+            code: INVALID_INPUT
+            title: Missing Relationships in Contract Creation
+            detail: Relationships can't be empty.
+            source:
+              pointer: /data/relationships
+    missingStatus:
+      summary: Missing Status in Contract Update
+      value:
+        errors:
+          - status: "400"
+            code: INVALID_INPUT
+            title: Missing Status in Contract Update
+            detail: Status is required.
+            source:
+              pointer: /data/attributes/status
+    invalidEndDate:
+      summary: End Date is before Start Date
+      value:
+        errors:
+          - status: "400"
+            code: INVALID_END_DATE
+            title: End Date is before Start Date
+            detail: endDate must be after or equal to startDate.
+            source:
+              pointer: /data/attributes/endDate
+    unauthorized:
+      summary: Unauthorized
+      value:
+        errors:
+          - status: "401"
+            code: ""
+            title: Unauthorized
+            detail: Authentication credentials are missing or invalid.
+    unauthorizedStatusUpdate:
+      summary: Unauthorized Status Update by User
+      value:
+        errors:
+          - status: "403"
+            code: INVALID_STATUS_UPDATE
+            title: Unauthorized Status Update by User
+            detail: User GLN1234567890123 is not authorized to update status to Activated.
+            source:
+              pointer: /data/attributes/status
+    endUserRestrictedFieldUpdate:
+      summary: End User Restricted Field Update
+      value:
+        errors:
+          - status: "403"
+            code: END_USER_RESTRICTED_FIELD_UPDATE
+            title: End User Restricted Field Update
+            detail: End user GLN1234567890123 is not allowed to update startDate.
+            source:
+              pointer: /data/attributes/startDate
+    contractAlreadyExists:
+      summary: Contract Already Exists
+      value:
+        errors:
+          - status: "409"
+            code: CONTRACT_ALREADY_EXISTS
+            title: Contract Already Exists
+            detail: "Contract for metering point: 845123456789323423 with contract type: Norgespris already exists."
+            source:
+              pointer: /data/relationships/meteringPoint
+    meteringPointMismatch:
+      summary: Mismatched Metering Point in Contract Update
+      value:
+        errors:
+          - status: "409"
+            code: METERING_POINT_MISMATCH
+            title: Mismatched Metering Point in Contract Update
+            detail: Contract metering point ID does not match update request.
+            source:
+              pointer: /data/relationships/meteringPoint
+    contractTypeMismatch:
+      summary: Mismatched Contract Type in Update
+      value:
+        errors:
+          - status: "409"
+            code: CONTRACT_TYPE_MISMATCH
+            title: Mismatched Contract Type in Update
+            detail: Contract type Norgespris does not match update request type GridAccessContract.
+            source:
+              pointer: /data/attributes/contractType
+    invalidStatusTransition:
+      summary: Invalid Contract Status Transition
+      value:
+        errors:
+          - status: "409"
+            code: INVALID_STATUS_TRANSITION
+            title: Invalid Contract Status Transition
+            detail: Cannot transition contract status from Initiated to Expired for metering point 845123456789323423.
+            source:
+              pointer: /data/attributes/status
+    contractNotFound:
+      summary: Contract Not Found
+      value:
+        errors:
+          - status: "404"
+            code: CONTRACT_NOT_FOUND
+            title: Contract Not Found
+            detail: "Contract not found for ID: 4ef727d1-b672-4166-a973-aa6e412b09bb"
+            source:
+              pointer: /data/id
+    contractNotFoundForMeteringPoint:
+      summary: No Contract Found for Metering Point
+      value:
+        errors:
+          - status: "404"
+            code: CONTRACT_NOT_FOUND_FOR_METERING_POINT
+            title: No Contract Found for Metering Point
+            detail: "No contract found for metering point: 845123456789323423, contract type: Norgespris, user: GLN1234567890123"
+            source:
+              pointer: /data/relationships/meteringPoint
+    internalError:
+      summary: Internal error – try again
+      value:
+        errors:
+          - status: "500"
+            code: ""
+            title: Internal error – try again
+            detail: An unexpected error occurred. Please try again later.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

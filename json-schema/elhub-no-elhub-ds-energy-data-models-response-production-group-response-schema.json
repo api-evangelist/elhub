@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-no-elhub-ds-energy-data-models-response-production-group-response-schema.json",
+  "title": "ProductionGroupResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-energy-data-api-openapi.yml#/components/schemas/no.elhub.ds.energy.data.models.response.ProductionGroupResponse",
+  "type": "object",
+  "properties": {
+    "creationTime": {
+      "type": "string",
+      "description": "timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format",
+      "title": "String"
+    },
+    "currentLink": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "link to the current resource",
+      "title": "String"
+    },
+    "lastUpdatedTime": {
+      "type": [
+        "null",
+        "string"
+      ],
+      "description": "timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format",
+      "title": "String"
+    },
+    "productionGroups": {
+      "type": [
+        "null",
+        "array"
+      ],
+      "description": "data grouped by a list of production groups",
+      "items": {
+        "$ref": "#/$defs/no.elhub.ds.energy.data.models.ProductionGroup"
+      },
+      "title": "List<ProductionGroup>"
+    }
+  },
+  "required": [
+    "creationTime"
+  ],
+  "$defs": {
+    "no.elhub.ds.energy.data.models.ProductionGroup": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Production group description",
+          "title": "String"
+        },
+        "id": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Production group identification string",
+          "title": "String"
+        },
+        "name": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Production group name",
+          "title": "String"
+        }
+      },
+      "title": "ProductionGroup"
+    }
+  }
+}

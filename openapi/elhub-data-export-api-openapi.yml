@@ -1,0 +1,638 @@
+openapi: 3.2.0
+info:
+  title: Data Export API
+  description: The Data Export API endpoints provide various energy data file exports to serve multiple requirements.
+  version: v0
+servers: []
+tags:
+- name: Data Export
+paths:
+  /data-export/v0/energy-data:
+    get:
+      tags:
+      - Data Export
+      summary: Retrieve a list of available data export job and file IDs for your GLN
+      description: 'This endpoint retrieves a list of data export job IDs associated with the GLN specified in the request, along with the file IDs generated for each job.
+
+
+        This is a protected endpoint and should be accessed with a Maskinporten token as a Bearer token along with the below header:
+
+
+        X-Elhub-GLN : your-gln-value
+
+
+        Sample Response:
+
+
+        {
+
+        \"meta\": { \"created\": \"2024-04-22T22:33:21+02:00\" },
+
+        \"links\": { \"self\": \"https://api.elhub.no/data-export/v0/energy-data\" },
+
+        \"data\": [ { \"type\": \"job\", \"id\": \"3f3e62bb-ed02-45fa-a951-a979491524a3\" } ]
+
+        }'
+      operationId: energy_data
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Include the bearer token obtained from Maskinporten in the Authorization header. Format: ''Bearer <token>''.'
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: X-Elhub-GLN
+        in: header
+        description: Sender (Own) GLN value
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: On-Behalf-Of
+        in: header
+        description: GLN value of the on behalf party
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      responses:
+        '200':
+          description: When the request is valid
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.DataExportResponse'
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unexpected server error:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"500\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:38:13+01:00\"\n    }\n  ]\n}"
+        '401':
+          description: The request lacks valid authentication credentials
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Missing authentication:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"401\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:40:21+01:00\"\n    }\n  ]\n}"
+        '403':
+          description: When the request lacks valid authorization
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unauthorized request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"403\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:41:55+01:00\"\n    }\n  ]\n}"
+      deprecated: false
+  /data-export/v0/energy-data/{id}:
+    get:
+      tags:
+      - Data Export
+      parameters:
+      - name: id
+        in: path
+        description: Energy data job id
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: 3f3e62bb-ed02-45fa-a951-a979491524a3
+      - name: Authorization
+        in: header
+        description: 'Include the bearer token obtained from Maskinporten in the Authorization header. Format: ''Bearer <token>''.'
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: X-Elhub-GLN
+        in: header
+        description: Sender (Own) GLN value
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: On-Behalf-Of
+        in: header
+        description: GLN value of the on behalf party
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      responses:
+        '200':
+          description: When a data export job is found (status + file list when completed)
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/no.elhub.ds.energy.data.models.response.DataExportResponse'
+        '400':
+          description: When job id is not a valid UUID
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Invalid Request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"400\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:15:45+01:00\",\n      \"links\": {\n        \"self\": \"https://api.elhub.no/energy-data/v0/energy-data/{id}\"\n      }\n    }\n  ]\n}"
+        '404':
+          description: When job is not found in the job pool
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Requested resource not found:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"404\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:41:55+01:00\"\n    }\n  ]\n}"
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unexpected server error:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"500\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:38:13+01:00\"\n    }\n  ]\n}"
+        '401':
+          description: The request lacks valid authentication credentials
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Missing authentication:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"401\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:40:21+01:00\"\n    }\n  ]\n}"
+        '403':
+          description: When the request lacks valid authorization
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unauthorized request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"403\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:41:55+01:00\"\n    }\n  ]\n}"
+      deprecated: false
+      summary: Get data export energy data by id
+      x-summary-source: derived
+      operationId: getDataExportV0EnergyDataById
+      x-operation-id-source: derived
+  /data-export/v0/energy-data/files/{id}:
+    get:
+      tags:
+      - Data Export
+      summary: Retrieve a file associated with the specified fileId from a data export job
+      description: 'This endpoint redirects to download the file associated with the given FileId.
+
+
+        This is a protected endpoint and should be accessed with a Maskinporten token as a Bearer token along with the below header:
+
+
+        X-Elhub-GLN : your-gln-value
+
+
+        The FileId should be obtained from our Job endpoint, which is linked to your GLN.
+
+        The file format and structure vary depending on the Job type.
+
+        For Portfolio Move, files are exported in CSV format and compressed using GZIP.
+
+
+        Column
+
+        Type
+
+        Description
+
+        Example
+
+
+        METERING_POINT_ID
+
+        String
+
+        Requested metering point id. All metering points IDs in the messages are identified by using GSRN (Global Service Relation Number) issued by GS1. These are unique identifiers containing 18 digit numbers. Example: 707057500012345678. More info: https://gs1.no/malepunkt-id/
+
+        707057500012345678
+
+
+        RESOLUTION
+
+        String
+
+        Resolution, either PT60M or PT15M
+
+        PT60M
+
+
+        DIRECTION
+
+        String
+
+        Direction, either In or Out
+
+        In
+
+
+        PRODUCT_CODE
+
+        String
+
+        GS1 code, e.g., 8716867000030
+
+        8716867000030
+
+
+        START_TIME
+
+        String
+
+        Start of interval in ISO-8601 format with offset in Europe/Oslo timezone
+
+        2023-04-05T01:00:00+02:00
+
+
+        END_TIME
+
+        String
+
+        End of interval in ISO-8601 format with offset in Europe/Oslo timezone
+
+        2023-04-05T02:00:00+02:00
+
+
+        INSERT_DATE_TIME
+
+        String
+
+        Time when the measurement value was stored in Elhub
+
+        2024-04-22T09:00:00+02:00
+
+
+        QUANTITY
+
+        String
+
+        Volume in kWh
+
+        100.253'
+      operationId: energy_data_file_id
+      parameters:
+      - name: Authorization
+        in: header
+        description: 'Include the bearer token obtained from Maskinporten in the Authorization header. Format: ''Bearer <token>''.'
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: X-Elhub-GLN
+        in: header
+        description: Sender (Own) GLN value
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: On-Behalf-Of
+        in: header
+        description: GLN value of the on behalf party
+        required: false
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+      - name: id
+        in: path
+        description: Valid file id returned from Job /energy-data endpoint
+        required: true
+        deprecated: false
+        explode: false
+        schema:
+          type: string
+          title: String
+        example: e128b01f-7767-4cc5-9801-c5f28220521a
+      responses:
+        '302':
+          description: When file exists, a redirect response is returned with the final location URL
+          headers:
+            Location:
+              description: Final redirect target (pre-signed download URL)
+              required: false
+              deprecated: false
+              schema:
+                type: string
+                title: String
+        '400':
+          description: When file id is not a valid UUID
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Invalid Request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"400\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:15:45+01:00\",\n      \"links\": {\n        \"self\": \"https://api.elhub.no/energy-data/v0/energy-data/files/{id}\"\n      }\n    }\n  ]\n}"
+        '404':
+          description: When file is not found in the job pool
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Requested resource not found:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"404\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:41:55+01:00\"\n    }\n  ]\n}"
+        '500':
+          description: Unexpected server error
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unexpected server error:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"500\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:38:13+01:00\"\n    }\n  ]\n}"
+        '401':
+          description: The request lacks valid authentication credentials
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Missing authentication:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"401\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:40:21+01:00\"\n    }\n  ]\n}"
+        '403':
+          description: When the request lacks valid authorization
+          headers: {}
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/jsonapi.Error'
+              examples:
+                Unauthorized request:
+                  value: "{\n  \"errors\": [\n    {\n      \"status\": \"403\",\n      \"title\": \"String\",\n      \"detail\": \"creationTime: 2024-10-28T14:41:55+01:00\"\n    }\n  ]\n}"
+      deprecated: false
+components:
+  schemas:
+    no.elhub.ds.energy.data.models.DataExportJob:
+      type: object
+      properties:
+        files:
+          type:
+          - 'null'
+          - array
+          description: List of files for the job
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.File'
+          title: List<File>
+        jobId:
+          type:
+          - 'null'
+          - string
+          description: Job id
+          title: String
+        status:
+          $ref: '#/components/schemas/no.elhub.ds.energy.data.models.Status'
+          description: 'Data export job status, which is one of these strings: Initiated, InProgress, OnHold, Reject, Completed, Cancelled'
+        type:
+          type: string
+          description: Data export job type
+          title: String
+      required:
+      - status
+      - type
+      title: DataExportJob
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    no.elhub.ds.energy.data.models.File:
+      type: object
+      properties:
+        filename:
+          type:
+          - 'null'
+          - string
+          description: File name
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          description: File identification string
+          title: String
+        location:
+          type:
+          - 'null'
+          - string
+          description: File location URI
+          title: String
+      title: File
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    jsonapi.Error:
+      type: object
+      properties:
+        code:
+          type:
+          - 'null'
+          - string
+          title: String
+        detail:
+          type:
+          - 'null'
+          - string
+          title: String
+        id:
+          type:
+          - 'null'
+          - string
+          title: String
+        links:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Error.Source'
+        status:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error
+    no.elhub.ds.energy.data.models.response.DataExportResponse:
+      type: object
+      properties:
+        creationTime:
+          type: string
+          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        currentLink:
+          type: string
+          description: link to the current resource
+          title: String
+        file:
+          description: File attached to this job
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/no.elhub.ds.energy.data.models.File'
+        job:
+          type:
+          - 'null'
+          - array
+          description: Job information
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.DataExportJob'
+          title: List<DataExportJob>
+      required:
+      - creationTime
+      - currentLink
+      title: DataExportResponse
+    jsonapi.Link.LinkObject:
+      type: object
+      properties:
+        describedBy:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Link'
+        href:
+          type: string
+          title: String
+        hreflang:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+            title: String
+          title: List<String>
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        rel:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+        type:
+          type:
+          - 'null'
+          - string
+          title: String
+      required:
+      - href
+      title: Link.LinkObject
+    jsonapi.Meta:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            type: object
+            title: Any
+          title: Map<String,Any>
+      required:
+      - members
+      title: Meta
+    no.elhub.ds.energy.data.models.Status:
+      type: string
+      enum:
+      - Initiated
+      - InProgress
+      - OnHold
+      - Rejected
+      - Completed
+      - Cancelled
+      title: Status
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
+      type: object
+      properties:
+        header:
+          type:
+          - 'null'
+          - string
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
+externalDocs:
+  url: /

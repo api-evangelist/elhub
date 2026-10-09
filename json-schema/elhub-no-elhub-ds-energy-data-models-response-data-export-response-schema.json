@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-no-elhub-ds-energy-data-models-response-data-export-response-schema.json",
+  "title": "DataExportResponse",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-data-export-api-openapi.yml#/components/schemas/no.elhub.ds.energy.data.models.response.DataExportResponse",
+  "type": "object",
+  "properties": {
+    "creationTime": {
+      "type": "string",
+      "description": "timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format",
+      "title": "String"
+    },
+    "currentLink": {
+      "type": "string",
+      "description": "link to the current resource",
+      "title": "String"
+    },
+    "file": {
+      "description": "File attached to this job",
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/no.elhub.ds.energy.data.models.File"
+        }
+      ]
+    },
+    "job": {
+      "type": [
+        "null",
+        "array"
+      ],
+      "description": "Job information",
+      "items": {
+        "$ref": "#/$defs/no.elhub.ds.energy.data.models.DataExportJob"
+      },
+      "title": "List<DataExportJob>"
+    }
+  },
+  "required": [
+    "creationTime",
+    "currentLink"
+  ],
+  "$defs": {
+    "no.elhub.ds.energy.data.models.DataExportJob": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": [
+            "null",
+            "array"
+          ],
+          "description": "List of files for the job",
+          "items": {
+            "$ref": "#/$defs/no.elhub.ds.energy.data.models.File"
+          },
+          "title": "List<File>"
+        },
+        "jobId": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "Job id",
+          "title": "String"
+        },
+        "status": {
+          "$ref": "#/$defs/no.elhub.ds.energy.data.models.Status",
+          "description": "Data export job status, which is one of these strings: Initiated, InProgress, OnHold, Reject, Completed, Cancelled"
+        },
+        "type": {
+          "type": "string",
+          "description": "Data export job type",
+          "title": "String"
+        }
+      },
+      "required": [
+        "status",
+        "type"
+      ],
+      "title": "DataExportJob"
+    },
+    "no.elhub.ds.energy.data.models.File": {
+      "type": "object",
+      "properties": {
+        "filename": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "File name",
+          "title": "String"
+        },
+        "id": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "File identification string",
+          "title": "String"
+        },
+        "location": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "File location URI",
+          "title": "String"
+        }
+      },
+      "title": "File"
+    },
+    "no.elhub.ds.energy.data.models.Status": {
+      "type": "string",
+      "enum": [
+        "Initiated",
+        "InProgress",
+        "OnHold",
+        "Rejected",
+        "Completed",
+        "Cancelled"
+      ],
+      "title": "Status"
+    }
+  }
+}

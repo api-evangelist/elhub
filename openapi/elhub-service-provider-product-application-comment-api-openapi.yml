@@ -1,0 +1,1803 @@
+openapi: 3.2.0
+info:
+  title: Elhub Service Provider Product Application Comment API
+  version: '1.0'
+  description: 'Operations tagged service_provider_product_application_comment across 2 of this provider''s published API definitions: elhub-flex-information-system-main-api-openapi.json, elhub-postgrest-openapi-3-0-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://test.flex.internal:6443/api/v1
+  description: Development
+- url: http://localhost:3000/
+tags:
+- name: service_provider_product_application_comment
+  description: Service Provider Product Application Comment
+paths:
+  /service_provider_product_application_comment:
+    summary: Service Provider Product Application Comment
+    description: ''
+    get:
+      operationId: list_service_provider_product_application_comment
+      summary: List Service Provider Product Application Comment
+      tags:
+      - service_provider_product_application_comment
+      parameters:
+      - in: query
+        schema:
+          type: string
+          pattern: ^eq\.[0-9]+$
+        example: eq.55
+        description: Unique surrogate identifier.
+        name: id
+      - in: query
+        schema:
+          type: string
+          pattern: ^eq\.[0-9]+$
+        example: eq.55
+        description: Reference to the service provider product application.
+        name: service_provider_product_application_id
+      - description: Filtering Columns
+        in: query
+        name: select
+        schema:
+          type: string
+      - description: Ordering
+        in: query
+        name: order
+        schema:
+          type: string
+      - description: Limiting and Pagination
+        in: query
+        name: offset
+        schema:
+          type: string
+      - description: Limiting and Pagination
+        in: query
+        name: limit
+        schema:
+          type: string
+      - in: query
+        name: embed
+        schema:
+          type: string
+        description: Comma-separated list of related resources to embed in the response.
+      - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/service_provider_product_application_comment_response'
+                type: array
+          description: OK
+        '206':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/service_provider_product_application_comment_response'
+                type: array
+          description: Partial Content
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/error_message'
+                - $ref: '#/components/schemas/empty_object'
+          description: Not Found
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Not Acceptable
+        '416':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Range Not Satisfiable
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Internal Server Error
+      security:
+      - bearerAuth:
+        - read:data:service_provider_product_application_comment
+      - {}
+    post:
+      operationId: create_service_provider_product_application_comment
+      summary: Create Service Provider Product Application Comment
+      tags:
+      - service_provider_product_application_comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/service_provider_product_application_comment_create_request'
+        description: service_provider_product_application_comment
+        required: false
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/service_provider_product_application_comment_response'
+          description: Created
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/error_message'
+                - $ref: '#/components/schemas/empty_object'
+          description: Not Found
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Not Acceptable
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Conflict
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Internal Server Error
+      security:
+      - bearerAuth:
+        - manage:data:service_provider_product_application_comment
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+    delete:
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: string
+      - in: query
+        name: content
+        schema:
+          type: string
+      - in: query
+        name: created_at
+        schema:
+          type: string
+      - in: query
+        name: created_by
+        schema:
+          type: string
+      - in: query
+        name: service_provider_product_application_id
+        schema:
+          type: string
+      - in: query
+        name: visibility
+        schema:
+          type: string
+      - in: query
+        name: recorded_by
+        schema:
+          type: string
+      - in: query
+        name: recorded_at
+        schema:
+          type: string
+      - description: Preference
+        in: header
+        name: Prefer
+        schema:
+          enum:
+          - return=representation
+          - return=minimal
+          - return=none
+          type: string
+      responses:
+        '204':
+          content: {}
+          description: No Content
+      tags:
+      - service_provider_product_application_comment
+      summary: Delete service provider product application comment
+      x-summary-source: derived
+      operationId: deleteServiceProviderProductApplicationComment
+      x-operation-id-source: derived
+    patch:
+      parameters:
+      - in: query
+        name: id
+        schema:
+          type: string
+      - in: query
+        name: content
+        schema:
+          type: string
+      - in: query
+        name: created_at
+        schema:
+          type: string
+      - in: query
+        name: created_by
+        schema:
+          type: string
+      - in: query
+        name: service_provider_product_application_id
+        schema:
+          type: string
+      - in: query
+        name: visibility
+        schema:
+          type: string
+      - in: query
+        name: recorded_by
+        schema:
+          type: string
+      - in: query
+        name: recorded_at
+        schema:
+          type: string
+      - description: Preference
+        in: header
+        name: Prefer
+        schema:
+          enum:
+          - return=representation
+          - return=minimal
+          - return=none
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/service_provider_product_application_comment'
+          application/vnd.pgrst.object+json;nulls=stripped:
+            schema:
+              $ref: '#/components/schemas/service_provider_product_application_comment'
+          application/vnd.pgrst.object+json:
+            schema:
+              $ref: '#/components/schemas/service_provider_product_application_comment'
+          text/csv:
+            schema:
+              $ref: '#/components/schemas/service_provider_product_application_comment'
+        description: service_provider_product_application_comment
+        required: false
+      responses:
+        '204':
+          content: {}
+          description: No Content
+      tags:
+      - service_provider_product_application_comment
+      x-codegen-request-body-name: service_provider_product_application_comment
+      summary: Update service provider product application comment
+      x-summary-source: derived
+      operationId: patchServiceProviderProductApplicationComment
+      x-operation-id-source: derived
+    servers:
+    - url: https://test.flex.internal:6443/api/v1
+      description: Development
+  /service_provider_product_application_comment/{id}:
+    summary: Service Provider Product Application Comment - single
+    description: ''
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        format: bigint
+        type: integer
+      example: 14
+    get:
+      operationId: read_service_provider_product_application_comment
+      summary: Read Service Provider Product Application Comment
+      tags:
+      - service_provider_product_application_comment
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/service_provider_product_application_comment_response'
+          description: OK
+          links:
+            service_provider_product_application_id:
+              operationId: read_service_provider_product_application
+              parameters:
+                path.id: $response.body#/service_provider_product_application_id
+              description: The `service_provider_product_application_id` value returned in the response can be used as the `id` parameter in `GET /service_provider_product_application/{id}`.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/error_message'
+                - $ref: '#/components/schemas/empty_object'
+          description: Not Found
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Not Acceptable
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Internal Server Error
+      security:
+      - bearerAuth:
+        - read:data:service_provider_product_application_comment
+      - {}
+      parameters:
+      - in: query
+        name: embed
+        schema:
+          type: string
+        description: Comma-separated list of related resources to embed in the response.
+      - $ref: '#/components/parameters/ApiVersion'
+    patch:
+      operationId: update_service_provider_product_application_comment
+      summary: Update Service Provider Product Application Comment
+      tags:
+      - service_provider_product_application_comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/service_provider_product_application_comment_update_request'
+        description: service_provider_product_application_comment
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/service_provider_product_application_comment_response'
+          description: OK
+        '204':
+          content: {}
+          description: No Content
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/error_message'
+                - $ref: '#/components/schemas/empty_object'
+          description: Not Found
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Not Acceptable
+        '409':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Conflict
+      security:
+      - bearerAuth:
+        - manage:data:service_provider_product_application_comment
+      parameters:
+      - $ref: '#/components/parameters/ApiVersion'
+    servers:
+    - url: https://test.flex.internal:6443/api/v1
+      description: Development
+  /service_provider_product_application_comment_history:
+    summary: Service Provider Product Application Comment - history
+    description: ''
+    parameters:
+    - in: query
+      schema:
+        type: string
+        pattern: ^eq\.[0-9]+$
+      example: eq.55
+      description: Identifier of the history record.
+      name: id
+    - in: query
+      schema:
+        type: string
+        pattern: ^eq\.[0-9]+$
+      example: eq.55
+      description: Identifier of the Service Provider Product Application Comment whose history we want to inspect.
+      name: service_provider_product_application_comment_id
+    get:
+      operationId: list_service_provider_product_application_comment_history
+      summary: List Service Provider Product Application Comment - history
+      tags:
+      - service_provider_product_application_comment
+      parameters:
+      - in: query
+        schema:
+          type: string
+          pattern: ^eq\.[0-9]+$
+        example: eq.55
+        description: Unique surrogate identifier.
+        name: id
+      - in: query
+        schema:
+          type: string
+          pattern: ^eq\.[0-9]+$
+        example: eq.55
+        description: Reference to the service provider product application.
+        name: service_provider_product_application_id
+      - in: query
+        name: as_of
+        schema:
+          type: string
+          format: date-time
+        example: '2023-12-31T23:59:00+00:00'
+        description: Filter based on record time. Alternative to using recorded_at and replaced_at filters together.
+      - description: Filtering Columns
+        in: query
+        name: select
+        schema:
+          type: string
+      - description: Ordering
+        in: query
+        name: order
+        schema:
+          type: string
+      - description: Limiting and Pagination
+        in: query
+        name: offset
+        schema:
+          type: string
+      - description: Limiting and Pagination
+        in: query
+        name: limit
+        schema:
+          type: string
+      - in: query
+        name: embed
+        schema:
+          type: string
+        description: Comma-separated list of related resources to embed in the response.
+      - $ref: '#/components/parameters/ApiVersion'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/service_provider_product_application_comment_history_response'
+                type: array
+          description: OK
+        '206':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/service_provider_product_application_comment_history_response'
+                type: array
+          description: Partial Content
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/error_message'
+                - $ref: '#/components/schemas/empty_object'
+          description: Not Found
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Not Acceptable
+        '416':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Range Not Satisfiable
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Internal Server Error
+      security:
+      - bearerAuth:
+        - read:data:service_provider_product_application_comment_history
+      - {}
+    servers:
+    - url: https://test.flex.internal:6443/api/v1
+      description: Development
+  /service_provider_product_application_comment_history/{id}:
+    summary: Service Provider Product Application Comment - history record
+    description: ''
+    parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        format: bigint
+        type: integer
+      example: 14
+      description: Identifier of the history record we want to inspect.
+    get:
+      operationId: read_service_provider_product_application_comment_history
+      summary: Read Service Provider Product Application Comment - history
+      tags:
+      - service_provider_product_application_comment
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/service_provider_product_application_comment_history_response'
+          description: OK
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Bad Request
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Unauthorized
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Forbidden
+        '404':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/error_message'
+                - $ref: '#/components/schemas/empty_object'
+          description: Not Found
+        '406':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Not Acceptable
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+          description: Internal Server Error
+      security:
+      - bearerAuth:
+        - read:data:service_provider_product_application_comment_history
+      - {}
+      parameters:
+      - in: query
+        name: embed
+        schema:
+          type: string
+        description: Comma-separated list of related resources to embed in the response.
+      - $ref: '#/components/parameters/ApiVersion'
+    servers:
+    - url: https://test.flex.internal:6443/api/v1
+      description: Development
+components:
+  schemas:
+    identity_response:
+      summary: Response - Identity
+      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 44
+        entity_id:
+          description: Reference to the entity using the identity.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 3
+        entity_name:
+          description: Name of the entity using the identity.
+          format: text
+          type: string
+          readOnly: true
+          example: Martin Andersen
+        party_id:
+          description: Reference to the party assumed by the entity.
+          format: bigint
+          type: integer
+          readOnly: true
+          nullable: true
+          example: 17
+        party_name:
+          description: Name of the party assumed by the entity.
+          format: text
+          type: string
+          readOnly: true
+          nullable: true
+          example: Andersen SO
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - entity_id
+      - entity_name
+    service_provider_product_application_response:
+      summary: Response - Service Provider Product Application
+      description: Response schema - Relation between a service provider and a system operator, for the SP to apply for delivering the SO some of the types of product they want to buy on a flexibility market.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 89
+        service_provider_id:
+          description: Reference to the service provider.
+          format: bigint
+          type: integer
+          example: 18
+        system_operator_id:
+          description: Reference to the system operator.
+          format: bigint
+          type: integer
+          example: 39
+        product_type_ids:
+          description: References to the product types.
+          type: array
+          items:
+            format: bigint
+            type: integer
+          example:
+          - 2
+          - 4
+          - 5
+        status:
+          $ref: '#/components/schemas/service_provider_product_application_status'
+          default: requested
+        qualified_at:
+          description: When the product application was last validated.
+          format: date-time
+          type: string
+          nullable: true
+          example: '2022-08-08T12:00:00+02'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        service_provider:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        system_operator:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        comment:
+          description: Embedded service_provider_product_application_comment
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_provider_product_application_comment_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - service_provider_id
+      - system_operator_id
+      - product_type_ids
+      - status
+      - recorded_at
+      - recorded_by
+    service_provider_product_application_comment_history_response:
+      summary: Service Provider Product Application Comment - history
+      description: Service Provider Product Application Comment - history
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 9
+        service_provider_product_application_id:
+          description: Reference to the service provider product application.
+          format: bigint
+          type: integer
+          example: 7
+        created_by:
+          description: Reference to the identity that created the comment.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 94
+        created_at:
+          description: When the comment was added to the SPPA.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-08-08 12:00:00+02:00'
+        visibility:
+          $ref: '#/components/schemas/service_provider_product_application_comment_visibility'
+          default: same_party
+        content:
+          description: Free text content of the comment.
+          format: text
+          type: string
+          maxLength: 2048
+          example: Missing document.
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        service_provider_product_application_comment_id:
+          description: Reference to the resource that was updated.
+          format: bigint
+          type: integer
+          example: 48
+        replaced_by:
+          description: The identity that updated the resource when it was replaced.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 90
+        replaced_at:
+          description: When the resource was replaced in the system.
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-07-07T10:00:00+00:00'
+        service_provider_product_application_history:
+          description: Embedded service_provider_product_application_history
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_provider_product_application_history_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - service_provider_product_application_id
+      - created_by
+      - created_at
+      - visibility
+      - content
+      - recorded_at
+      - recorded_by
+      - service_provider_product_application_comment_id
+    error_message:
+      description: Error message returned from the API.
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]+$
+          description: The error code.
+          example: PT418
+        details:
+          type:
+          - string
+          - 'null'
+          description: Detailed information about the error.
+        hint:
+          type:
+          - string
+          - 'null'
+          description: A hint to help resolve the error.
+        message:
+          type: string
+          description: The error message.
+          example: error
+      required:
+      - code
+      - message
+    entity_response:
+      summary: Response - Entity
+      description: 'Response schema - Entity - Natural or legal person
+
+
+        An entity is a natural or legal person that can be a party in the Flexibility Information System.
+
+
+        Example entity types:
+
+
+        * Person
+
+        * Organisation'
+      type: object
+      properties:
+        id:
+          description: 'Unique surrogate identifier.
+
+
+            Note:
+
+            This is a Primary Key.'
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 14
+        business_id:
+          description: The business identifier of the entity. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '13370000000'
+        business_id_type:
+          $ref: '#/components/schemas/entity_business_id_type'
+        name:
+          description: Name of the entity. Maximum 128 characters.
+          format: text
+          type: string
+          example: John Smith
+        type:
+          $ref: '#/components/schemas/entity_type'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        client:
+          description: Embedded entity_client
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/entity_client_response'
+          - type: 'null'
+          nullable: true
+        party:
+          description: Embedded party
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        party_membership:
+          description: Embedded party_membership
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/party_membership_response'
+          - type: 'null'
+          nullable: true
+        identity:
+          description: Embedded identity
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/identity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - name
+      - type
+      - recorded_at
+      - recorded_by
+    auth_scope:
+      description: Authorization scopes.
+      format: text
+      type: string
+      enum:
+      - manage:attachment
+      - manage:attachment:service_providing_group_product_application_attachment
+      - manage:auth
+      - manage:data
+      - manage:data:accounting_point_grid_location
+      - manage:data:controllable_unit
+      - manage:data:controllable_unit_service_provider
+      - manage:data:controllable_unit_suspension
+      - manage:data:controllable_unit_suspension_comment
+      - manage:data:entity
+      - manage:data:entity_client
+      - manage:data:notification
+      - manage:data:party
+      - manage:data:party_membership
+      - manage:data:service_provider_product_application
+      - manage:data:service_provider_product_application_comment
+      - manage:data:service_provider_product_suspension
+      - manage:data:service_provider_product_suspension_comment
+      - manage:data:service_providing_group
+      - manage:data:service_providing_group_grid_prequalification
+      - manage:data:service_providing_group_grid_prequalification_comment
+      - manage:data:service_providing_group_grid_suspension
+      - manage:data:service_providing_group_grid_suspension_comment
+      - manage:data:service_providing_group_membership
+      - manage:data:service_providing_group_product_application
+      - manage:data:service_providing_group_product_application_comment
+      - manage:data:service_providing_group_product_suspension
+      - manage:data:service_providing_group_product_suspension_comment
+      - manage:data:system_operator_product_type
+      - manage:data:technical_resource
+      - read:attachment
+      - read:attachment:service_providing_group_product_application_attachment
+      - read:attachment:service_providing_group_product_application_attachment_history
+      - read:auth
+      - read:data
+      - read:data:accounting_point
+      - read:data:accounting_point_balance_responsible_party
+      - read:data:accounting_point_bidding_zone
+      - read:data:accounting_point_end_user
+      - read:data:accounting_point_energy_supplier
+      - read:data:accounting_point_grid_location
+      - read:data:accounting_point_grid_location_history
+      - read:data:accounting_point_metering_grid_area
+      - read:data:controllable_unit
+      - read:data:controllable_unit_history
+      - read:data:controllable_unit_service_provider
+      - read:data:controllable_unit_service_provider_history
+      - read:data:controllable_unit_summary
+      - read:data:controllable_unit_suspension
+      - read:data:controllable_unit_suspension_comment
+      - read:data:controllable_unit_suspension_comment_history
+      - read:data:controllable_unit_suspension_history
+      - read:data:entity
+      - read:data:entity_client
+      - read:data:event
+      - read:data:identity
+      - read:data:metering_grid_area
+      - read:data:notice
+      - read:data:notification
+      - read:data:party
+      - read:data:party_history
+      - read:data:party_membership
+      - read:data:party_membership_history
+      - read:data:product_type
+      - read:data:service_provider_product_application
+      - read:data:service_provider_product_application_comment
+      - read:data:service_provider_product_application_comment_history
+      - read:data:service_provider_product_application_history
+      - read:data:service_provider_product_suspension
+      - read:data:service_provider_product_suspension_comment
+      - read:data:service_provider_product_suspension_comment_history
+      - read:data:service_provider_product_suspension_history
+      - read:data:service_providing_group
+      - read:data:service_providing_group_grid_prequalification
+      - read:data:service_providing_group_grid_prequalification_comment
+      - read:data:service_providing_group_grid_prequalification_comment_history
+      - read:data:service_providing_group_grid_prequalification_history
+      - read:data:service_providing_group_grid_suspension
+      - read:data:service_providing_group_grid_suspension_comment
+      - read:data:service_providing_group_grid_suspension_comment_history
+      - read:data:service_providing_group_grid_suspension_history
+      - read:data:service_providing_group_history
+      - read:data:service_providing_group_membership
+      - read:data:service_providing_group_membership_history
+      - read:data:service_providing_group_power_per_substation
+      - read:data:service_providing_group_product_application
+      - read:data:service_providing_group_product_application_comment
+      - read:data:service_providing_group_product_application_comment_history
+      - read:data:service_providing_group_product_application_history
+      - read:data:service_providing_group_product_suspension
+      - read:data:service_providing_group_product_suspension_comment
+      - read:data:service_providing_group_product_suspension_comment_history
+      - read:data:service_providing_group_product_suspension_history
+      - read:data:service_providing_group_summary
+      - read:data:system_operator_product_type
+      - read:data:system_operator_product_type_history
+      - read:data:technical_resource
+      - read:data:technical_resource_history
+      - read:grid
+      - read:grid:line
+      - read:grid:substation
+      - read:grid:substation_cluster
+      - use:auth
+      - use:data
+      - use:data:controllable_unit
+      - use:data:controllable_unit:lookup
+      - use:data:entity
+      - use:data:entity:lookup
+    service_provider_product_application_status:
+      description: The status of the application.
+      format: text
+      type: string
+      default: requested
+      enum:
+      - requested
+      - in_progress
+      - communication_test
+      - not_qualified
+      - qualified
+      example: in_progress
+    party_response:
+      summary: Response - Party
+      description: 'Response schema - The body that interacts with the Flexibility Information System
+
+
+        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
+
+
+        Example party types:
+
+
+        * Service Provider
+
+        * System Operator
+
+        * End User'
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 11
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
+        entity_id:
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - entity_id
+      - name
+      - role
+      - type
+      - status
+      - recorded_at
+      - recorded_by
+    party_history_response:
+      summary: Party - history
+      description: Party - history
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 11
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
+        entity_id:
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        party_id:
+          description: Reference to the resource that was updated.
+          format: bigint
+          type: integer
+          example: 48
+        replaced_by:
+          description: The identity that updated the resource when it was replaced.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 90
+        replaced_at:
+          description: When the resource was replaced in the system.
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-07-07T10:00:00+00:00'
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - entity_id
+      - name
+      - role
+      - type
+      - status
+      - recorded_at
+      - recorded_by
+      - party_id
+    empty_object:
+      description: An empty object
+      type: object
+      properties: {}
+      additionalProperties: false
+    service_provider_product_application_comment_create_request:
+      summary: Create - Service Provider Product Application Comment
+      description: Request schema for create operations - Comment made by a party involved in a service provider product application.
+      type: object
+      properties:
+        service_provider_product_application_id:
+          description: Reference to the service provider product application.
+          format: bigint
+          type: integer
+          example: 7
+        visibility:
+          $ref: '#/components/schemas/service_provider_product_application_comment_visibility'
+          default: same_party
+        content:
+          description: Free text content of the comment.
+          format: text
+          type: string
+          maxLength: 2048
+          example: Missing document.
+      required:
+      - service_provider_product_application_id
+      - content
+    entity_type:
+      description: The type of the entity, e.g Person, Organisation
+      format: text
+      type: string
+      example: person
+      enum:
+      - person
+      - organisation
+    party_status:
+      description: The status of the party.
+      format: text
+      type: string
+      default: new
+      enum:
+      - new
+      - active
+      - inactive
+      - suspended
+      - terminated
+      example: active
+    party_type:
+      description: The type of the party, e.g SystemOperator, ServiceProvider
+      format: text
+      type: string
+      example: energy_supplier
+      enum:
+      - balance_responsible_party
+      - end_user
+      - energy_supplier
+      - flexibility_information_system_operator
+      - market_operator
+      - organisation
+      - service_provider
+      - system_operator
+      - third_party
+    entity_client_response:
+      summary: Response - Entity client
+      description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 14
+        entity_id:
+          description: Reference to the entity that this client is attached to.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the client.
+          format: text
+          type: string
+          maxLength: 256
+          nullable: true
+          example: Laptop
+        client_id:
+          description: The identifier of the entity. For use with client credentials authentication method.
+          format: text
+          type: string
+          readOnly: true
+          example: addr@flex.test
+        party_id:
+          description: Reference to the party this client allows to assume. A null value means the client cannot assume any party.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 30
+        scopes:
+          description: 'List of scopes granted to the user when it logs in as an entity or when it acts as the party. When assuming a party through party membership, the least privileged set of scopes will be kept.
+
+            Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.'
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
+        client_secret:
+          description: The secret of the entity. For use with client credentials authentication method. Input as plain text but stored encrypted.
+          format: text
+          type: string
+          minLength: 12
+          nullable: true
+          example: mysupersecretpassword
+        public_key:
+          description: The public key of the entity (X.509 SubjectPublicKeyInfo). For use with JWT grant authentication method.
+          format: text
+          type: string
+          nullable: true
+          pattern: ^-----BEGIN PUBLIC KEY-----\nMIIB[-A-Za-z0-9+/\n]*={0,3}\n-----END PUBLIC KEY-----$
+          example: '-----BEGIN PUBLIC KEY-----
+
+            MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAq3DnhgYgLVJknvDA3clA
+
+            TozPtjI7yauqD/ZuqgZn4KzzzkQ4BzJar4jRygpzbghlFn0Luk1mdVKzPUgYj0V
+
+            kbRlHyYfxahbgOHixOOnXkKXrtZW7yWGjXPqy/ZJ/+kFBNPAzxy7fDuAzKfU3Rn5
+
+            0sBakg95pua14W1oE4rtd4/U+sg2maCq6HgGdCLLxRWwXA8IBtvHZ48i6kxiz9tu
+
+            -----END PUBLIC KEY-----'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - entity_id
+      - client_id
+      - scopes
+      - recorded_at
+      - recorded_by
+    service_provider_product_application_comment_response:
+      summary: Response - Service Provider Product Application Comment
+      description: Response schema - Comment made by a party involved in a service provider product application.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 9
+        service_provider_product_application_id:
+          description: Reference to the service provider product application.
+          format: bigint
+          type: integer
+          example: 7
+        created_by:
+          description: Reference to the identity that created the comment.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 94
+        created_at:
+          description: When the comment was added to the SPPA.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-08-08 12:00:00+02:00'
+        visibility:
+          $ref: '#/components/schemas/service_provider_product_application_comment_visibility'
+          default: same_party
+        content:
+          description: Free text content of the comment.
+          format: text
+          type: string
+          maxLength: 2048
+          example: Missing document.
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        service_provider_product_application:
+          description: Embedded service_provider_product_application
+          oneOf:
+          - $ref: '#/components/schemas/service_provider_product_application_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - service_provider_product_application_id
+      - created_by
+      - created_at
+      - visibility
+      - content
+      - recorded_at
+      - recorded_by
+    service_provider_product_application_comment_update_request:
+      summary: Update - Service Provider Product Application Comment
+      description: Request schema for update operations - Comment made by a party involved in a service provider product application.
+      type: object
+      properties:
+        visibility:
+          $ref: '#/components/schemas/service_provider_product_application_comment_visibility'
+          default: same_party
+        content:
+          description: Free text content of the comment.
+          format: text
+          type: string
+          maxLength: 2048
+          example: Missing document.
+    entity_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      example: pid
+      enum:
+      - pid
+      - org
+      - email
+    service_provider_product_application_history_response:
+      summary: Service Provider Product Application - history
+      description: Service Provider Product Application - history
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 89
+        service_provider_id:
+          description: Reference to the service provider.
+          format: bigint
+          type: integer
+          example: 18
+        system_operator_id:
+          description: Reference to the system operator.
+          format: bigint
+          type: integer
+          example: 39
+        product_type_ids:
+          description: References to the product types.
+          type: array
+          items:
+            format: bigint
+            type: integer
+          example:
+          - 2
+          - 4
+          - 5
+        status:
+          $ref: '#/components/schemas/service_provider_product_application_status'
+          default: requested
+        qualified_at:
+          description: When the product application was last validated.
+          format: date-time
+          type: string
+          nullable: true
+          example: '2022-08-08T12:00:00+02'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        service_provider_product_application_id:
+          description: Reference to the resource that was updated.
+          format: bigint
+          type: integer
+          example: 48
+        replaced_by:
+          description: The identity that updated the resource when it was replaced.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 90
+        replaced_at:
+          description: When the resource was replaced in the system.
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-07-07T10:00:00+00:00'
+        service_provider_history:
+          description: Embedded party_history
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/party_history_response'
+          - type: 'null'
+          nullable: true
+        system_operator_history:
+          description: Embedded party_history
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/party_history_response'
+          - type: 'null'
+          nullable: true
+        comment_history:
+          description: Embedded service_provider_product_application_comment_history
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_provider_product_application_comment_history_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - service_provider_id
+      - system_operator_id
+      - product_type_ids
+      - status
+      - recorded_at
+      - recorded_by
+      - service_provider_product_application_id
+    service_provider_product_application_comment_visibility:
+      description: The level of visibility of the comment.
+      format: text
+      type: string
+      default: same_party
+      enum:
+      - same_party
+      - any_involved_party
+      example: same_party
+    party_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      default: uuid
+      enum:
+      - gln
+      - uuid
+      - eic_x
+      - org
+      example: gln
+    party_role:
+      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
+      format: text
+      type: string
+      example: flex_energy_supplier
+      enum:
+      - flex_balance_responsible_party
+      - flex_end_user
+      - flex_energy_supplier
+      - flex_flexibility_information_system_operator
+      - flex_market_operator
+      - flex_organisation
+      - flex_service_provider
+      - flex_system_operator
+      - flex_third_party
+    party_membership_response:
+      summary: Response - Party Membership
+      description: Response schema - The relation between a party and entity.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 44
+        party_id:
+          description: Reference to the party that the membership links to an entity.
+          format: bigint
+          type: integer
+          example: 379
+        entity_id:
+          description: Reference to the entity that the party represents.
+          format: bigint
+          type: integer
+          example: 30
+        scopes:
+          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - party_id
+      - entity_id
+      - scopes
+      - recorded_at
+      - recorded_by
+    service_provider_product_application_comment:
+      properties:
+        id:
+          description: 'Note:
+
+            This is a Primary Key.<pk/>'
+          format: bigint
+          type: integer
+        content:
+          format: text
+          type: string
+        created_at:
+          format: timestamp with time zone
+          type: string
+        created_by:
+          format: bigint
+          type: integer
+        service_provider_product_application_id:
+          description: 'Note:
+
+            This is a Foreign Key to `service_provider_product_application.id`.<fk table=''service_provider_product_application'' column=''id''/>'
+          format: bigint
+          type: integer
+        visibility:
+          format: text
+          type: string
+        recorded_by:
+          format: bigint
+          type: integer
+        recorded_at:
+          format: timestamp with time zone
+          type: string
+      type: object
+  parameters:
+    ApiVersion:
+      name: Api-Version
+      in: header
+      required: true
+      description: 'The API version to use. Must be a supported version date. See the [changelog](https://elhub.github.io/flex-information-system/changelog/) for available versions.
+
+        '
+      schema:
+        type: string
+        enum:
+        - '2026-06-08'
+        example: '2026-06-08'
+  securitySchemes:
+    bearerAuth:
+      description: Bearer token using a JWT
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
+    JWT:
+      description: Add the token prepending "Bearer " (without quotes) to it
+      in: header
+      name: Authorization
+      type: apiKey
+x-refined-from:
+- elhub-flex-information-system-main-api-openapi.json
+- elhub-postgrest-openapi-3-0-openapi.json

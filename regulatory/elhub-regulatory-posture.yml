@@ -1,0 +1,74 @@
+generated: '2026-10-09'
+method: searched
+probe: true
+source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+language: nb   # the privacy statement is published in Norwegian only; quotes are verbatim Norwegian
+signals:
+  data_subject_request:
+    url: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+    section: Dine rettigheter etter personopplysningsloven
+    channel: post@elhub.no / +47 23 90 30 40 / Elhubs Min Side
+    stated_sla: 'Krav om innsyn skal besvares kostnadsfritt og senest innen 30 dager.'
+    escalation: Datatilsynet (Norwegian Data Protection Authority)
+    evidence:
+    - source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: 'I tillegg har alle personer vi har registrert personopplysninger om i Elhub, rett til innsyn i de opplysningene som er registrert om seg.'
+    - source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: 'Hvis du ønsker innsyn på annen måte er du velkommen til å kontakte Elhubs supportsenter, på post@elhub.no eller telefon 23 90 30 40. Krav om innsyn skal besvares kostnadsfritt og senest innen 30 dager.'
+    - source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: 'Etter personvernforordningen har du i utgangspunktet rett til å få slettet dine opplysninger registrert i Elhub.'
+    note: >-
+      Published GDPR (personvernforordningen) access and erasure rights with a contact channel, self-service
+      viewing via Min Side, and a stated 30-day, free-of-charge response time for access requests. Erasure is
+      qualified: the next sentence says Elhub may keep data as long as the person is an electricity customer.
+      Correction is routed to the customer's supplier / grid company, not Elhub.
+  data_residency:
+    url: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+    regions: [no, de]
+    evidence:
+    - source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: 'Alle personopplysninger lagres i driftssentre i Norge og Tyskland.'
+    - source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: 'Elhub har databehandleravtaler med IT-leverandørene, og har også gjort nødvendige risikovurderinger av og innført relevante tiltak mot overføring av personopplysninger utenfor EU/ EØS/ EU-godkjente tredjeland.'
+    note: >-
+      States that all personal data is stored in data centres in Norway and Germany ("All personal data is stored
+      in operations centres in Norway and Germany"), with measures against transfer outside the EU/EEA/adequate
+      third countries. A statement of location, not a customer-selectable residency option.
+  data_retention:
+    url: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+    stated_period: 'Dersom du har sagt opp både kraft- og nettleieavtale vil opplysningene lagres i ytterligere 3 år og 41 dager for eventuell feilretting og mulighet for å korrigere økonomiske oppgjør.'
+    evidence:
+    - source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: 'Opplysningene skal ikke lagres lenger enn det som er nødvendig ut fra formålet de er blitt samlet inn for.'
+    - source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: 'Dersom du har sagt opp både kraft- og nettleieavtale vil opplysningene lagres i ytterligere 3 år og 41 dager for eventuell feilretting og mulighet for å korrigere økonomiske oppgjør.'
+    - source: https://elhub.no/personvern-og-sikkerhet/elhubs-personvernerklaering
+      http_status: 200
+      fetched: '2026-10-09'
+      quote: 'Dersom du ønsker å lagre måleverdier i Elhub i 10 år, vil tilhørende personopplysninger lagres tilsvarende lenge.'
+    note: >-
+      The statement carries a per-data-item retention table (Lagringstid column). Customer data is kept while the
+      customer has an obligation to supplier and grid company, plus 3 years and 41 days after both contracts end;
+      longer (10 years) only if the customer opts to keep meter values that long.
+not_recorded:
+  subprocessors: >-
+    The privacy statement says "Underleverandører til Elhub kan ha tilgang til personopplysninger, dersom dette er
+    nødvendig for at de skal få utført sine oppgaver. Elhub har da inngått databehandleravtaler med disse
+    leverandørene." but publishes no named sub-processor list, so the signal is not recorded.
+  accessibility_conformance: >-
+    No accessibility statement found on elhub.no (/en/accessibility, /tilgjengelighet, /tilgjengelighetserklaering
+    all 404 on 2026-10-09).

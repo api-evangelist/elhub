@@ -1,0 +1,708 @@
+---
+# API module overlay — deep-merged on top of openapi-base-common.yml by
+# resources_to_openapi.py at codegen time.
+
+openapi: 3.1.0
+info:
+  title: Flexibility Information System Main API
+  description: Norwegian Flexibility Information System Main API
+  contact:
+    name: Elhub AS
+    url: https://elhub.no
+    email: post@elhub.no
+  version: 2026-06-08
+externalDocs:
+  description: API Changelog
+  url: https://elhub.github.io/flex-information-system/changelog/
+tags:
+  - name: introspection
+    description: Introspection
+  - name: controllable_unit
+    description: Controllable unit
+  - name: entity
+    description: Entity
+components:
+  schemas:
+    category:
+      description: >-
+        Resource category classification. Derived from technologies.
+      format: text
+      type: string
+      enum:
+        - id: consumption
+          x-intl:
+            en: Consumption
+            nb: Forbruk
+            nn: Forbruk
+        - id: production
+          x-intl:
+            en: Production
+            nb: Produksjon
+            nn: Produksjon
+        - id: energy_storage
+          x-intl:
+            en: Energy storage
+            nb: Energilager
+            nn: Energilager
+    device_type:
+      description: >-
+        Type of device for technical resources.
+      format: text
+      type: string
+      enum:
+        - id: inverter
+          x-intl:
+            en: Inverter
+            nb: Inverter
+            nn: Inverter
+        - id: boiler
+          x-intl:
+            en: Boiler
+            nb: Kjele
+            nn: Kjele
+        - id: water_heater
+          x-intl:
+            en: Hot water heater
+            nb: Varmtvannsbereder
+            nn: Varmtvannsbereder
+        - id: socket
+          x-intl:
+            en: Socket
+            nb: Stikkontakt
+            nn: Stikkontakt
+        - id: hvac
+          x-intl:
+            en: HVAC
+            nb: HVAC
+            nn: HVAC
+        - id: ev_charging_device
+          x-intl:
+            en: EV Charger
+            nb: Elbillader
+            nn: Elbilladar
+        - id: energy_management_system
+          x-intl:
+            en: Energy management system
+            nb: Energistyringssystem
+            nn: Energistyringssystem
+        - id: other
+          x-intl:
+            en: Other
+            nb: Annet
+            nn: Anna
+    technology:
+      description: >-
+        Technology classification using ltree path notation.
+        Technologies are hierarchical (e.g., hydropower.pumped, hvac.heat_pump).
+        Use the most specific technology applicable to the technical resource.
+      format: text
+      type: string
+      enum:
+        - id: hydropower
+          x-intl:
+            en: Hydropower
+            nb: Vannkraft
+            nn: Vasskraft
+        - id: hydropower.pumped
+          x-intl:
+            en: Hydropower - Pumped
+            nb: Vannkraft - Pumpe
+            nn: Vasskraft - Pumpe
+        - id: hydropower.run_of_river
+          x-intl:
+            en: Hydropower - Run-of-river
+            nb: Vannkraft - Elvekraft
+            nn: Vasskraft - Elvekraft
+        - id: heat_power_plant
+          x-intl:
+            en: Heat power plant
+            nb: Varmekraftverk
+            nn: Varmekraftverk
+        - id: heat_power_plant.chp
+          x-intl:
+            en: Heat power plant - Combined heat and power
+            nb: Varmekraftverk - Kraftvarme
+            nn: Varmekraftverk - Kraftvarme
+        - id: solar
+          x-intl:
+            en: Solar
+            nb: Sol
+            nn: Sol
+        - id: wind
+          x-intl:
+            en: Wind
+            nb: Vind
+            nn: Vind
+        - id: backup_generator
+          x-intl:
+            en: Backup generator
+            nb: Reservegenerator
+            nn: Reservegenerator
+        - id: hvac
+          x-intl:
+            en: HVAC
+            nb: HVAC
+            nn: HVAC
+        - id: hvac.heat
+          x-intl:
+            en: HVAC - Heat
+            nb: HVAC - Varme
+            nn: HVAC - Varme
+        - id: hvac.heat_pump
+          x-intl:
+            en: HVAC - Heat pump
+            nb: HVAC - Varmepumpe
+            nn: HVAC - Varmepumpe
+        - id: lighting
+          x-intl:
+            en: Lighting
+            nb: Belysning
+            nn: Belysning
+        - id: water_heater
+          x-intl:
+            en: Hot water heater
+            nb: Varmtvannsbereder
+            nn: Varmtvannsbereder
+        - id: boiler
+          x-intl:
+            en: Boiler
+            nb: Kjele
+            nn: Kjele
+        # why "charging device"?
+        # https://www.gov.uk/government/publications/electric-vehicle-charging-device-statistics-information/electric-vehicle-charging-infrastructure-statistics-frequently-asked-questions
+        - id: ev_charging_device
+          x-intl:
+            en: Electric vehicle charger
+            nb: Elbillader
+            nn: Elbilladar
+        - id: ev_charging_device.v2g
+          x-intl:
+            en: Electric vehicle charger - Vehicle to grid
+            nb: Elbillader - Vehicle to grid
+            nn: Elbilladar - Vehicle to grid
+        - id: battery
+          x-intl:
+            en: Battery
+            nb: Batteri
+            nn: Batteri
+        - id: other.consumption
+          x-intl:
+            en: Other - Consumption
+            nb: Annet - Forbruk
+            nn: Anna - Forbruk
+        - id: other.production
+          x-intl:
+            en: Other - Production
+            nb: Annet - Produksjon
+            nn: Anna - Produksjon
+        - id: other.energy_storage
+          x-intl:
+            en: Other - Energy storage
+            nb: Annet - Energilager
+            nn: Anna - Energilager
+    controllable_unit_lookup_request:
+      summary: Controllable unit lookup
+      description: Request schema for controllable unit lookup operations
+      type: object
+      properties:
+        end_user:
+          description: >-
+            Birth date (DDMMYY) of the end user if a person, or organisation
+            number if an organisation.
+          format: text
+          type: string
+          pattern: "^[0-9]{6}$|^[1-9][0-9]{8}$"
+          example: "150190"
+        controllable_unit:
+          description: The business ID of the controllable unit to lookup.
+          format: text
+          type: string
+          # yamllint disable-line rule:line-length
+          pattern: "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+          example: "53919b79-876f-4dad-8bde-b29368367604"
+        accounting_point:
+          description: >-
+            The accounting point ID of the controllable unit(s) to lookup.
+            `GSRN` metering point id.
+          format: text
+          type: string
+          pattern: "^[1-9][0-9]{17}$"
+          example: "709000000000000057"
+      required:
+        - end_user
+    controllable_unit_lookup_response:
+      summary: Controllable unit lookup
+      description: Response schema for controllable unit lookup operations
+      type: object
+      properties:
+        accounting_point:
+          description: >-
+            The accounting point behind which the controllable units are
+            located.
+          type: object
+          properties:
+            id:
+              description: The surrogate key of the accounting point.
+              format: bigint
+              type: integer
+              example: 100351
+            business_id:
+              description: The GSRN metering point ID of the accounting point.
+              format: text
+              type: string
+              pattern: "^[1-9][0-9]{17}$"
+              example: "709000000000000057"
+          required:
+            - id
+            - business_id
+        end_user:
+          description: >-
+            The end user on the accounting point where the controllable units
+            are located.
+          type: object
+          properties:
+            id:
+              description: The surrogate key of the end user.
+              format: bigint
+              type: integer
+              example: 11
+          required:
+            - id
+        controllable_units:
+          description: >-
+            The controllable units that were found for the given end user or
+            accounting point.
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                description: The surrogate key of the controllable unit.
+                format: bigint
+                type: integer
+                example: 11
+              business_id:
+                description: The business ID of the controllable unit.
+                format: text
+                type: string
+                example: "53919b79-876f-4dad-8bde-b29368367604"
+              name:
+                description: The name of the controllable unit.
+                format: text
+                type: string
+                example: "Car Charger #54"
+              technical_resources:
+                description: >-
+                  The technical resources belonging to the controllable unit.
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      description: The surrogate key of the technical resource.
+                      format: bigint
+                      type: integer
+                      example: 17
+                    name:
+                      description: The name of the technical resource.
+                      format: text
+                      type: string
+                      example: "Battery Unit A"
+                  required:
+                    - id
+                    - name
+            required:
+              - id
+              - business_id
+              - name
+              - technical_resources
+      required:
+        - accounting_point
+        - end_user
+        - controllable_units
+    entity_lookup_request:
+      summary: Entity lookup
+      description: Request schema for entity lookup operations
+      type: object
+      properties:
+        business_id:
+          description: >-
+            The business identifier of the entity. Email address or organisation
+            number, according to `business_id_type`.
+          format: text
+          type: string
+          example: "john.smith@example.com"
+        business_id_type:
+          description: >-
+            The type of business identifier. For persons, `email`. For
+            organisations, `org` (organisation number, 9 digits).
+          format: text
+          type: string
+          enum:
+            - email
+            - org
+          example: email
+        name:
+          description: Name of the entity.
+          format: text
+          type: string
+          example: John Smith
+        type:
+          description: The type of the entity.
+          format: text
+          type: string
+          enum:
+            - person
+            - organisation
+          example: person
+      required:
+        - business_id
+        - business_id_type
+        - name
+        - type
+    entity_lookup_response:
+      summary: Entity lookup
+      description: Response schema for entity lookup operations
+      type: object
+      properties:
+        entity_id:
+          description: The surrogate key of the entity.
+          format: bigint
+          type: integer
+          example: 11
+      required:
+        - id
+    timeline_multi_range:
+      description: >-
+        Partial timeline data that is relevant to mention, in a notice for
+        instance. Multirange format, i.e., array of start/end timestamp pairs.
+      type: array
+      items:
+        type: object
+        properties:
+          valid_from:
+            type: string
+            format: date-time
+            description: The start time of the timeline section.
+            example: "2023-01-01T00:00:00+00:00"
+          valid_to:
+            type: string
+            format: date-time
+            description: The end time of the timeline section.
+            example: "2023-01-02T00:00:00+00:00"
+    notice_data_valid_time_outside_contract:
+      type: object
+      description: >-
+        Format of the data field in a notice with data.kind =
+        notice.data.valid_time.outside_contract
+      required:
+        - kind
+      properties:
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.valid_time.outside_contract
+        invalid_timeline:
+          description: >-
+            Part of the timeline where the end user on the CUSP relation does
+            not match the end user on the accounting point.
+          $ref: "#/components/schemas/timeline_multi_range"
+    notice_data_party_missing:
+      type: object
+      description: >-
+        Format of the data field in a notice with data.kind = notice.data.party.missing
+      required:
+        - kind
+      properties:
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.party.missing
+        entity:
+          description: Details about the entity owning the missing party.
+          $ref: "#/components/schemas/entity_response"
+        party:
+          description: Details about the missing party.
+          $ref: "#/components/schemas/party_response"
+    notice_data_party_outdated:
+      type: object
+      description: >-
+        Format of the data field in a notice with data.kind = notice.data.party.outdated
+      required:
+        - kind
+      properties:
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.party.outdated
+        entity:
+          description: Details about the possibly new entity owning the party.
+          $ref: "#/components/schemas/entity_response"
+        party:
+          description: Updated fields of the party.
+          $ref: "#/components/schemas/party_response"
+    notice_data_product_type_not_qualified:
+      type: object
+      description: >-
+        Format of the data field in a notice with data.kind =
+        notice.data.product_type.not_qualified
+      required:
+        - kind
+      properties:
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.product_type.not_qualified
+        product_type_ids:
+          description: List of product types that are not qualified.
+          type: array
+          items:
+            format: bigint
+            type: integer
+            example: 2
+    notice_data_controllable_unit_product_duplication:
+      type: object
+      description: >-
+        Format of the data field in a notice with data.kind =
+        notice.data.controllable_unit.product_duplication
+      required:
+        - kind
+      properties:
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.controllable_unit.product_duplication
+        product_type_id:
+          description: >-
+            The product type for which the controllable unit is registered in
+            multiple service providing groups with active applications.
+          format: bigint
+          type: integer
+          example: 2
+        service_providing_group_ids:
+          description: >-
+            The service providing groups the controllable unit is a member of
+            that have active applications for the product type.
+          type: array
+          items:
+            format: bigint
+            type: integer
+            example: 5
+    notice_data:
+      oneOf:
+        - $ref: "#/components/schemas/notice_data_valid_time_outside_contract"
+        - $ref: "#/components/schemas/notice_data_party_missing"
+        - $ref: "#/components/schemas/notice_data_party_outdated"
+        - $ref: "#/components/schemas/notice_data_product_type_not_qualified"
+        - $ref: "#/components/schemas/notice_data_controllable_unit_product_duplication"
+      discriminator:
+        propertyName: kind
+        mapping:
+          notice.data.valid_time.outside_contract: "#/components/schemas/notice_data_valid_time_outside_contract"
+          notice.data.party.missing: "#/components/schemas/notice_data_party_missing"
+          notice.data.party.outdated: "#/components/schemas/notice_data_party_outdated"
+          notice.data.product_type.not_qualified: "#/components/schemas/notice_data_product_type_not_qualified"
+          notice.data.controllable_unit.product_duplication: "#/components/schemas/notice_data_controllable_unit_product_duplication"
+    event_data_updated_fields:
+      type: object
+      description: >-
+        Common format of the data field in events concerning update operations.
+      required:
+        - kind
+        - updated_fields
+      properties:
+        kind:
+          description: Identifies the event data schema for discriminated union deserialization.
+          type: string
+          const: event.data.updated_fields
+        updated_fields:
+          description: Names of the fields that were modified by the update.
+          type: array
+          items:
+            type: string
+            format: text
+          example: ["status"]
+      additionalProperties: false
+    event_data_controllable_unit_lookup:
+      type: object
+      description: >-
+        Format of the data field in a controllable_unit.lookup event.
+      required:
+        - kind
+        - requesting_party_id
+      properties:
+        kind:
+          description: Identifies the event data schema for discriminated union deserialization.
+          type: string
+          const: event.data.controllable_unit.lookup
+        requesting_party_id:
+          description: The party that performed the controllable unit lookup.
+          type: integer
+          format: bigint
+          example: 42
+      additionalProperties: false
+    event_data:
+      oneOf:
+        - $ref: "#/components/schemas/event_data_updated_fields"
+        - $ref: "#/components/schemas/event_data_controllable_unit_lookup"
+      discriminator:
+        propertyName: kind
+        mapping:
+          event.data.updated_fields: "#/components/schemas/event_data_updated_fields"
+          event.data.controllable_unit.lookup: "#/components/schemas/event_data_controllable_unit_lookup"
+    numeric_aggregation:
+      type: object
+      properties:
+        sum:
+          type: number
+        average:
+          type: number
+        min:
+          type: number
+        max:
+          type: number
+      additionalProperties: false
+    geojson_point:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [Point]
+        coordinates:
+          type: array
+          description: "[longitude, latitude] in decimal degrees (WGS84)"
+          items:
+            type: number
+          minItems: 2
+          maxItems: 2
+      required:
+        - type
+        - coordinates
+paths:
+  /openapi.json:
+    get:
+      operationId: read_openapi_json
+      summary: Read OpenAPI JSON Document
+      description: >-
+        Introspection for the Flexibility Information System main API.
+        The document is following the OpenAPI 3.1 spec.
+      security:
+        - bearerAuth: ["read:data:openapi"]
+        - {}
+      tags:
+        - introspection
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+  /controllable_unit/lookup:
+    post:
+      operationId: call_controllable_unit_lookup
+      summary: Call - Controllable unit lookup
+      description: >-
+        Lookup a [controllable unit](https://elhub.github.io/flex-information-system/resources/controllable_unit/)
+        from end user ID and business and/or accounting point ID.
+      security:
+        - bearerAuth: ["use:data:controllable_unit:lookup"]
+      tags:
+        - controllable_unit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/controllable_unit_lookup_request"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/controllable_unit_lookup_response"
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+          description: Unauthorized
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+          description: Forbidden
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+          description: Not Found
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+          description: Internal Server Error
+  /entity/lookup:
+    post:
+      operationId: call_entity_lookup
+      summary: Call - Entity lookup
+      description: >-
+        Lookup an [entity](https://elhub.github.io/flex-information-system/resources/entity/)
+        from its business ID. Creates the entity if missing.
+      security:
+        - bearerAuth: ["use:data:entity:lookup"]
+      tags:
+        - entity
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/entity_lookup_request"
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/entity_lookup_response"
+          description: OK
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/entity_lookup_response"
+          description: Created
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+          description: Bad Request
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/error_message"
+          description: Internal Server Error

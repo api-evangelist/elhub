@@ -1,0 +1,101 @@
+openapi: 3.2.0
+info:
+  title: Elhub Introspection API
+  version: '1.0'
+  description: 'Operations tagged introspection across 4 of this provider''s published API definitions: elhub-flex-information-system-auth-api-openapi.json, elhub-flex-information-system-grid-api-openapi.json, elhub-flex-information-system-main-api-openapi.json, elhub-postgrest-openapi-3-0-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://localhost:7001/auth/v1
+  description: Development
+- url: https://test.flex.internal:6443/grid/v0
+  description: Development
+- url: https://test.flex.internal:6443/api/v1
+  description: Development
+- url: http://localhost:3000/
+tags:
+- name: introspection
+  description: Introspection
+paths:
+  /openapi.json:
+    get:
+      operationId: read_openapi_json
+      summary: Read OpenAPI JSON Document
+      description: Introspection for the Flexibility Information System authentication API. The document is following the OpenAPI 3.1 spec.
+      tags:
+      - introspection
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_message'
+      security:
+      - JWT: []
+    servers:
+    - url: https://localhost:7001/auth/v1
+      description: Development
+  /:
+    get:
+      responses:
+        '200':
+          content: {}
+          description: OK
+      summary: OpenAPI description (this document)
+      tags:
+      - introspection
+      security:
+      - JWT: []
+      operationId: getRoot
+      x-operation-id-source: derived
+    servers:
+    - url: http://localhost:3000/
+components:
+  schemas:
+    error_message:
+      description: Error message returned from the API.
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]+$
+          description: The error code.
+          example: PT418
+        details:
+          type:
+          - string
+          - 'null'
+          description: Detailed information about the error.
+        hint:
+          type:
+          - string
+          - 'null'
+          description: A hint to help resolve the error.
+        message:
+          type: string
+          description: The error message.
+          example: error
+      required:
+      - code
+      - message
+  securitySchemes:
+    bearerAuth:
+      description: Bearer token using a JWT
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
+    JWT:
+      description: Add the token prepending "Bearer " (without quotes) to it
+      in: header
+      name: Authorization
+      type: apiKey
+x-refined-from:
+- elhub-flex-information-system-auth-api-openapi.json
+- elhub-flex-information-system-grid-api-openapi.json
+- elhub-flex-information-system-main-api-openapi.json
+- elhub-postgrest-openapi-3-0-openapi.json

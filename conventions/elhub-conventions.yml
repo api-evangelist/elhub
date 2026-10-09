@@ -1,0 +1,102 @@
+generated: '2026-10-09'
+method: searched
+source: https://api.elhub.no/settlement-api/request-and-response-format
+docs:
+- https://api.elhub.no/intro
+- https://api.elhub.no/energy-data-api
+- https://api.elhub.no/settlement-api/request-and-response-format
+- https://api.elhub.no/settlement-api/authentication
+- https://api.elhub.no/access-api/getting-started
+- https://elhub.github.io/flex-information-system/api/api-design/
+- https://elhub.github.io/flex-information-system/api/query-parameters/
+- https://elhub.github.io/flex-information-system/api-versioning/
+- https://elhub.github.io/flex-information-system/api/guides/troubleshooting/
+name: Elhub API Conventions
+description: >-
+  Elhub runs two API families with different conventions: the API Portal APIs on api.elhub.no
+  (Energy Data, Data Export, Market Data, Access, Settlement), which follow JSON:API 1.1, and the
+  Flexibility Information System (FIS), a PostgREST-backed REST API with date-pinned rolling versions.
+base_url: https://api.elhub.no
+api_style:
+  api_portal: 'REST, JSON:API 1.1 (application/vnd.api+json). "This API returns JSON in the JSON:API v1.1 format."'
+  flex_information_system: REST backed by PostgREST; CRUD verbs (POST create, GET list/read, PATCH update, DELETE delete, no PUT); RPC-style "Call" operations
+authentication:
+  see: authentication/elhub-authentication.yml
+  summary: Public endpoints need no auth; protected endpoints use a Maskinporten bearer token plus SenderGLN (and OnBehalfOfGln for delegated calls). FIS uses JWT Bearer or client credentials against its own token endpoint.
+  required_headers:
+  - SenderGLN (Access, Settlement)
+  - OnBehalfOfGln (delegated service-provider calls)
+  - On-Behalf-Of (Energy Data, scope elhub:serviceprovider; introduced 22.10.25)
+  - Api-Version (FIS, date format, e.g. 2026-06-08)
+  - User-Agent (FIS; "The API requires a User-Agent header to be set." otherwise 403 with no error message)
+idempotency:
+  coverage: none
+  mechanism: none documented
+  note: No Idempotency-Key header or replay protection is documented in the API Portal, the FIS docs or any of the eight OpenAPI contracts.
+pagination:
+  settlement_api:
+    style: page-number (JSON:API)
+    params: ['page[number]', 'page[size]']
+    response_fields: [meta.page.number, meta.page.size, meta.total.pages, meta.total.items, links.self, links.first, links.next, links.last]
+    source: https://api.elhub.no/settlement-api/request-and-response-format
+  flex_information_system:
+    style: offset (PostgREST)
+    params: [limit, offset]
+    note: Default list limit of 2000 removed on 2026-09-17 (changelog).
+    source: https://elhub.github.io/flex-information-system/api/query-parameters/
+filtering:
+  settlement_api: 'filter[...] parameters, e.g. filter[name], filter[party-id], filter[version.status]'
+  flex_information_system: '<field>=<operator>.<value> (PostgREST operators eq, neq, lt, lte, gt, gte, like, ilike, is, in, not, and, or); order=<field>.asc|desc'
+  energy_data_api: 'dataset={dataset} query parameter selects the dataset for an entity: https://api.elhub.no/energy-data/v0/{entity}?dataset={dataset}'
+field_expansion:
+  settlement_api: 'JSON:API include parameter, dot-notation for nested relationships (e.g. ?include=versions,party)'
+  flex_information_system: 'embed parameter (comma-separated relations, ! for inner join, parentheses for nesting), rewritten to a PostgREST select'
+history:
+  flex_information_system: History is provided as a separate resource per resource (<resource>_history) with replaced_at timestamps.
+request_tracing:
+  documented: false
+versioning:
+  see: lifecycle/elhub-lifecycle.yml
+  api_portal: URL path (/v0/, /v1/)
+  flex_information_system: path major version + Api-Version date header for rolling minor versions
+error_envelope:
+  api_portal: 'JSON:API error format ("Error responses use the JSON:API error format.") — JsonApiErrorDocument in the Settlement contract'
+  flex_information_system: error_message / oauth_error_message schemas in the FIS contracts
+rate_limits:
+  see: rate-limits/elhub-rate-limits.yml
+  signaling: 429 with Retry-After (Settlement API contract)
+time:
+  flex_information_system: Datetimes accept a Norwegian-timezone form such as "YYYY-MM-DD 00:00 Europe/Oslo".
+reversibility:
+  read_only_surfaces:
+  - Energy Data API (all GET)
+  - Data Export API (all GET)
+  write_surfaces:
+  - surface: Market Data contracts (createContracts, updateContracts, patchContractById)
+    reversal: Cancellation is expressed as a contract state (isCancelled / status Cancelled with cancelledAt) set through PATCH (patchContractById / updateContracts).
+    operations: [patchContractById, updateContracts]
+    window: null
+    grade: documented
+    source: openapi/elhub-market-data-contracts-api-openapi.yml
+    note: No window within which a contract can be cancelled is stated in the docs.
+  - surface: Access API authorization grants/requests
+    reversal: Grants carry a Revoked status, but the update operations (updateV0AuthorizationGrant, updateV0AuthorizationRequest) are documented as internal and "not available to external integrators".
+    operations: []
+    window: null
+    grade: none
+    source: openapi/elhub-access-api-openapi.yml
+  - surface: Settlement virtual calculations (createVirtualCalculation, createSharedProductionVersion, updateSharedProductionVersion)
+    reversal: Versions have statuses Draft, Active, Inactive, Terminated and can be updated via updateSharedProductionVersion; no undo/cancel operation or window is documented.
+    operations: [updateSharedProductionVersion]
+    window: null
+    grade: none
+    source: openapi/elhub-settlement-virtual-calculations-api-openapi.yml
+  - surface: Flexibility Information System resources
+    reversal: DELETE operations exist for suspensions, memberships, entity clients, technical resources and attachments (e.g. delete_controllable_unit_suspension, delete_service_providing_group_membership); a revocation process is documented as a business process. No restore operation or window is documented.
+    operations: [delete_controllable_unit_suspension, delete_controllable_unit_service_provider, delete_service_providing_group_membership, delete_service_providing_group_grid_suspension, delete_entity_client, delete_party_membership, delete_technical_resource, delete_service_provider_product_suspension, delete_service_providing_group_product_suspension]
+    window: null
+    grade: documented
+    source: https://elhub.github.io/flex-information-system/processes/revocation/
+  overall: documented
+dry_run_mode:
+  documented: false

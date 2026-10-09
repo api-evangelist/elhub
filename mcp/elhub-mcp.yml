@@ -1,0 +1,737 @@
+name: Elhub MCP Server (candidate)
+type: MCPServer
+generated: '2026-10-09'
+method: derived
+source:
+- openapi/elhub-access-api-openapi.yml
+- openapi/elhub-data-export-api-openapi.yml
+- openapi/elhub-energy-data-api-openapi.yml
+- openapi/elhub-flex-information-system-auth-api-openapi.yml
+- openapi/elhub-flex-information-system-grid-api-openapi.yml
+- openapi/elhub-flex-information-system-main-api-openapi.yml
+- openapi/elhub-market-data-contracts-api-openapi.yml
+- openapi/elhub-settlement-virtual-calculations-api-openapi.yml
+status: candidate
+description: No official Elhub MCP server was found (web search 2026-10-09 returned nothing Elhub-specific; no MCP docs on api.elhub.no). This is a candidate tool list derived from the operations in the
+  saved Elhub OpenAPI contracts; nobody ships this server. Flexibility Information System main API (188 ops) is narrowed to its core resource and lookup operations.
+deployment:
+  mode: none
+  auth: unknown
+  verified: derived
+search:
+  query: Elhub MCP server "Model Context Protocol"
+  result: no Elhub MCP server found
+  date: '2026-10-09'
+tools:
+- name: listV0AuthorizationDocuments
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v0/authorization-documents
+    operationId: listV0AuthorizationDocuments
+  description: List authorization documents
+  readOnly: true
+- name: createV0AuthorizationDocument
+  api: access-api
+  operation:
+    method: POST
+    path: /access/v0/authorization-documents
+    operationId: createV0AuthorizationDocument
+  description: Create authorization document for signing
+  readOnly: false
+- name: getV0AuthorizationDocument
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v0/authorization-documents/{id}
+    operationId: getV0AuthorizationDocument
+  description: Get authorization document by id
+  readOnly: true
+- name: getV0AuthorizationDocumentPdf
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v0/authorization-documents/{id}.pdf
+    operationId: getV0AuthorizationDocumentPdf
+  description: Download authorization document PDF
+  readOnly: true
+- name: submitV0AuthorizationDocument
+  api: access-api
+  operation:
+    method: PUT
+    path: /access/v0/authorization-documents/{id}.pdf
+    operationId: submitV0AuthorizationDocument
+  description: Submit signed authorization document
+  readOnly: false
+- name: listV0AuthorizationGrants
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v0/authorization-grants
+    operationId: listV0AuthorizationGrants
+  description: List authorization grants
+  readOnly: true
+- name: getV0AuthorizationGrant
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v0/authorization-grants/{id}
+    operationId: getV0AuthorizationGrant
+  description: Get authorization grant by id
+  readOnly: true
+- name: updateV0AuthorizationGrant
+  api: access-api
+  operation:
+    method: PATCH
+    path: /access/v0/authorization-grants/{id}
+    operationId: updateV0AuthorizationGrant
+  description: Update authorization grant status
+  readOnly: false
+- name: listV0AuthorizationGrantScopes
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v0/authorization-grants/{id}/scopes
+    operationId: listV0AuthorizationGrantScopes
+  description: List scopes for authorization grant
+  readOnly: true
+- name: listV0AuthorizationRequests
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v0/authorization-requests
+    operationId: listV0AuthorizationRequests
+  description: List authorization requests
+  readOnly: true
+- name: createV0AuthorizationRequest
+  api: access-api
+  operation:
+    method: POST
+    path: /access/v0/authorization-requests
+    operationId: createV0AuthorizationRequest
+  description: Create authorization request for MinSide
+  readOnly: false
+- name: getV0AuthorizationRequest
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v0/authorization-requests/{id}
+    operationId: getV0AuthorizationRequest
+  description: Get authorization request by id
+  readOnly: true
+- name: updateV0AuthorizationRequest
+  api: access-api
+  operation:
+    method: PATCH
+    path: /access/v0/authorization-requests/{id}
+    operationId: updateV0AuthorizationRequest
+  description: Update authorization request
+  readOnly: false
+- name: createV1AuthorizationDocument
+  api: access-api
+  operation:
+    method: POST
+    path: /access/v1/authorization-documents
+    operationId: createV1AuthorizationDocument
+  description: '[WIP] Create an authorization document for signing'
+  readOnly: false
+- name: getV1AuthorizationDocument
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v1/authorization-documents/{id}
+    operationId: getV1AuthorizationDocument
+  description: '[WIP] Get an authorization document by ID'
+  readOnly: true
+- name: getV1AuthorizationGrant
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v1/authorization-grants/{id}
+    operationId: getV1AuthorizationGrant
+  description: '[WIP] Get an authorization grant by ID'
+  readOnly: true
+- name: createV1AuthorizationRequest
+  api: access-api
+  operation:
+    method: POST
+    path: /access/v1/authorization-requests
+    operationId: createV1AuthorizationRequest
+  description: '[WIP] Create an authorization request for approval'
+  readOnly: false
+- name: getV1AuthorizationRequest
+  api: access-api
+  operation:
+    method: GET
+    path: /access/v1/authorization-requests/{id}
+    operationId: getV1AuthorizationRequest
+  description: '[WIP] Get an authorization request by ID'
+  readOnly: true
+- name: energy_data
+  api: data-export-api
+  operation:
+    method: GET
+    path: /data-export/v0/energy-data
+    operationId: energy_data
+  description: Retrieve a list of available data export job and file IDs for your GLN.
+  readOnly: true
+- name: energy_data_file_id
+  api: data-export-api
+  operation:
+    method: GET
+    path: /data-export/v0/energy-data/files/{id}
+    operationId: energy_data_file_id
+  description: Retrieve a file associated with the specified fileId from a data export job.
+  readOnly: true
+- name: meta
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/meta/{entity}
+    operationId: meta
+  description: Meta Endpoint for entity and dataset
+  readOnly: true
+- name: parties
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/parties
+    operationId: parties
+  description: Get list of parties
+  readOnly: true
+- name: parties_id
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/parties/{id}
+    operationId: parties_id
+  description: Get list of parties
+  readOnly: true
+- name: price_areas
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/price-areas
+    operationId: price_areas
+  description: Get list of price areas and aggregations
+  readOnly: true
+- name: price_areas_id
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/price-areas/{id}
+    operationId: price_areas_id
+  description: Get list of price areas and aggregations
+  readOnly: true
+- name: price_areas_export
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/price-areas{suffix}
+    operationId: price_areas_export
+  description: Get list of price areas and aggregations
+  readOnly: true
+- name: grid_areas
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/grid-areas
+    operationId: grid_areas
+  description: Get list of Grid Areas
+  readOnly: true
+- name: grid_areas_id
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/grid-areas/{id}
+    operationId: grid_areas_id
+  description: Get list of Grid Areas
+  readOnly: true
+- name: grid_areas_export
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/grid-areas{suffix}
+    operationId: grid_areas_export
+  description: Get list of Grid Areas
+  readOnly: true
+- name: municipalities
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/municipalities
+    operationId: municipalities
+  description: Get list of Municipalities and aggregations
+  readOnly: true
+- name: municipalities_id
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/municipalities/{id}
+    operationId: municipalities_id
+  description: Get list of Municipalities and aggregations
+  readOnly: true
+- name: municipalities_export
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/municipalities{suffix}
+    operationId: municipalities_export
+  description: Get list of Municipalities and aggregations
+  readOnly: true
+- name: consumption_groups
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/consumption-groups
+    operationId: consumption_groups
+  description: List all consumption groups
+  readOnly: true
+- name: consumption_groups_id
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/consumption-groups/{id}
+    operationId: consumption_groups_id
+  description: Get a specific consumption group by ID
+  readOnly: true
+- name: metering_points
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/metering-points
+    operationId: metering_points
+  description: Get list of metering points
+  readOnly: true
+- name: metering_points_id
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/metering-points/{id}
+    operationId: metering_points_id
+  description: Get metering point by ID
+  readOnly: true
+- name: metering_points_id_address
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/metering-points/{id}/address/(Authorize token.validate)
+    operationId: metering_points_id_address
+  description: Get metering point geo data by ID
+  readOnly: true
+- name: production_groups
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/production-groups
+    operationId: production_groups
+  description: List of production groups
+  readOnly: true
+- name: production_groups_id
+  api: energy-data-api
+  operation:
+    method: GET
+    path: /energy-data/v0/production-groups/{id}
+    operationId: production_groups_id
+  description: Get a specific production group by ID
+  readOnly: true
+- name: read_session
+  api: flex-information-system-auth-api
+  operation:
+    method: GET
+    path: /session
+    operationId: read_session
+  description: Read session from cookie
+  readOnly: true
+- name: call_assume
+  api: flex-information-system-auth-api
+  operation:
+    method: POST
+    path: /assume
+    operationId: call_assume
+  description: Call assume
+  readOnly: false
+- name: delete_assume
+  api: flex-information-system-auth-api
+  operation:
+    method: DELETE
+    path: /assume
+    operationId: delete_assume
+  description: Delete assume
+  readOnly: false
+- name: call_login
+  api: flex-information-system-auth-api
+  operation:
+    method: GET
+    path: /login
+    operationId: call_login
+  description: Call login
+  readOnly: true
+- name: call_callback
+  api: flex-information-system-auth-api
+  operation:
+    method: GET
+    path: /callback
+    operationId: call_callback
+  description: Call callback
+  readOnly: true
+- name: call_logout
+  api: flex-information-system-auth-api
+  operation:
+    method: GET
+    path: /logout
+    operationId: call_logout
+  description: Call logout
+  readOnly: true
+- name: call_token
+  api: flex-information-system-auth-api
+  operation:
+    method: POST
+    path: /token
+    operationId: call_token
+  description: Call token
+  readOnly: false
+- name: read_userinfo
+  api: flex-information-system-auth-api
+  operation:
+    method: GET
+    path: /userinfo
+    operationId: read_userinfo
+  description: Read userinfo
+  readOnly: true
+- name: list_substation_cluster
+  api: flex-information-system-grid-api
+  operation:
+    method: GET
+    path: /substation_cluster
+    operationId: list_substation_cluster
+  description: List Substation Cluster
+  readOnly: true
+- name: read_substation_cluster
+  api: flex-information-system-grid-api
+  operation:
+    method: GET
+    path: /substation_cluster/{id}
+    operationId: read_substation_cluster
+  description: Read Substation Cluster
+  readOnly: true
+- name: list_substation
+  api: flex-information-system-grid-api
+  operation:
+    method: GET
+    path: /substation
+    operationId: list_substation
+  description: List Substation
+  readOnly: true
+- name: read_substation
+  api: flex-information-system-grid-api
+  operation:
+    method: GET
+    path: /substation/{id}
+    operationId: read_substation
+  description: Read Substation
+  readOnly: true
+- name: list_line
+  api: flex-information-system-grid-api
+  operation:
+    method: GET
+    path: /line
+    operationId: list_line
+  description: List Line
+  readOnly: true
+- name: read_line
+  api: flex-information-system-grid-api
+  operation:
+    method: GET
+    path: /line/{id}
+    operationId: read_line
+  description: Read Line
+  readOnly: true
+- name: call_controllable_unit_lookup
+  api: flex-information-system-main-api
+  operation:
+    method: POST
+    path: /controllable_unit/lookup
+    operationId: call_controllable_unit_lookup
+  description: Call - Controllable unit lookup
+  readOnly: false
+- name: call_entity_lookup
+  api: flex-information-system-main-api
+  operation:
+    method: POST
+    path: /entity/lookup
+    operationId: call_entity_lookup
+  description: Call - Entity lookup
+  readOnly: false
+- name: list_controllable_unit
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /controllable_unit
+    operationId: list_controllable_unit
+  description: List Controllable unit
+  readOnly: true
+- name: create_controllable_unit
+  api: flex-information-system-main-api
+  operation:
+    method: POST
+    path: /controllable_unit
+    operationId: create_controllable_unit
+  description: Create Controllable unit
+  readOnly: false
+- name: read_controllable_unit
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /controllable_unit/{id}
+    operationId: read_controllable_unit
+  description: Read Controllable unit
+  readOnly: true
+- name: update_controllable_unit
+  api: flex-information-system-main-api
+  operation:
+    method: PATCH
+    path: /controllable_unit/{id}
+    operationId: update_controllable_unit
+  description: Update Controllable unit
+  readOnly: false
+- name: list_service_providing_group
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /service_providing_group
+    operationId: list_service_providing_group
+  description: List Service providing group
+  readOnly: true
+- name: create_service_providing_group
+  api: flex-information-system-main-api
+  operation:
+    method: POST
+    path: /service_providing_group
+    operationId: create_service_providing_group
+  description: Create Service providing group
+  readOnly: false
+- name: read_service_providing_group
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /service_providing_group/{id}
+    operationId: read_service_providing_group
+  description: Read Service providing group
+  readOnly: true
+- name: update_service_providing_group
+  api: flex-information-system-main-api
+  operation:
+    method: PATCH
+    path: /service_providing_group/{id}
+    operationId: update_service_providing_group
+  description: Update Service providing group
+  readOnly: false
+- name: list_service_providing_group_membership
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /service_providing_group_membership
+    operationId: list_service_providing_group_membership
+  description: List Membership relation of controllable unit in service providing group
+  readOnly: true
+- name: create_service_providing_group_membership
+  api: flex-information-system-main-api
+  operation:
+    method: POST
+    path: /service_providing_group_membership
+    operationId: create_service_providing_group_membership
+  description: Create Membership relation of controllable unit in service providing group
+  readOnly: false
+- name: read_service_providing_group_membership
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /service_providing_group_membership/{id}
+    operationId: read_service_providing_group_membership
+  description: Read Membership relation of controllable unit in service providing group
+  readOnly: true
+- name: update_service_providing_group_membership
+  api: flex-information-system-main-api
+  operation:
+    method: PATCH
+    path: /service_providing_group_membership/{id}
+    operationId: update_service_providing_group_membership
+  description: Update Membership relation of controllable unit in service providing group
+  readOnly: false
+- name: list_technical_resource
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /technical_resource
+    operationId: list_technical_resource
+  description: List Technical Resource
+  readOnly: true
+- name: create_technical_resource
+  api: flex-information-system-main-api
+  operation:
+    method: POST
+    path: /technical_resource
+    operationId: create_technical_resource
+  description: Create Technical Resource
+  readOnly: false
+- name: read_technical_resource
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /technical_resource/{id}
+    operationId: read_technical_resource
+  description: Read Technical Resource
+  readOnly: true
+- name: update_technical_resource
+  api: flex-information-system-main-api
+  operation:
+    method: PATCH
+    path: /technical_resource/{id}
+    operationId: update_technical_resource
+  description: Update Technical Resource
+  readOnly: false
+- name: list_service_provider_product_application
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /service_provider_product_application
+    operationId: list_service_provider_product_application
+  description: List Service Provider Product Application
+  readOnly: true
+- name: create_service_provider_product_application
+  api: flex-information-system-main-api
+  operation:
+    method: POST
+    path: /service_provider_product_application
+    operationId: create_service_provider_product_application
+  description: Create Service Provider Product Application
+  readOnly: false
+- name: read_service_provider_product_application
+  api: flex-information-system-main-api
+  operation:
+    method: GET
+    path: /service_provider_product_application/{id}
+    operationId: read_service_provider_product_application
+  description: Read Service Provider Product Application
+  readOnly: true
+- name: update_service_provider_product_application
+  api: flex-information-system-main-api
+  operation:
+    method: PATCH
+    path: /service_provider_product_application/{id}
+    operationId: update_service_provider_product_application
+  description: Update Service Provider Product Application
+  readOnly: false
+- name: getContracts
+  api: market-data-contracts-api
+  operation:
+    method: GET
+    path: /contracts
+    operationId: getContracts
+  description: Get all contracts
+  readOnly: true
+- name: createContracts
+  api: market-data-contracts-api
+  operation:
+    method: POST
+    path: /contracts
+    operationId: createContracts
+  description: Create a contract
+  readOnly: false
+- name: updateContracts
+  api: market-data-contracts-api
+  operation:
+    method: PATCH
+    path: /contracts
+    operationId: updateContracts
+  description: Update contracts
+  readOnly: false
+- name: getContractById
+  api: market-data-contracts-api
+  operation:
+    method: GET
+    path: /contracts/{contractId}
+    operationId: getContractById
+  description: Get a single contract by ID
+  readOnly: true
+- name: patchContractById
+  api: market-data-contracts-api
+  operation:
+    method: PATCH
+    path: /contracts/{contractId}
+    operationId: patchContractById
+  description: Update a contract by ID
+  readOnly: false
+- name: summary
+  api: market-data-contracts-api
+  operation:
+    method: GET
+    path: /contracts/summary
+    operationId: summary
+  description: A summary of contracts by type and state.
+  readOnly: true
+- name: getVersionByUdcIdAndNumber
+  api: settlement-virtual-calculations-api
+  operation:
+    method: GET
+    path: /settlement/v0/virtual-calculations/{udcId}/versions/{versionNumber}
+    operationId: getVersionByUdcIdAndNumber
+  description: Get a specific version of a virtual calculation
+  readOnly: true
+- name: updateSharedProductionVersion
+  api: settlement-virtual-calculations-api
+  operation:
+    method: PATCH
+    path: /settlement/v0/virtual-calculations/{udcId}/versions/{versionNumber}
+    operationId: updateSharedProductionVersion
+  description: Update a shared production version
+  readOnly: false
+- name: createSharedProductionVersion
+  api: settlement-virtual-calculations-api
+  operation:
+    method: POST
+    path: /settlement/v0/virtual-calculations/{udcId}/versions
+    operationId: createSharedProductionVersion
+  description: Create a new shared production version
+  readOnly: false
+- name: getAllVersionsByUdcId
+  api: settlement-virtual-calculations-api
+  operation:
+    method: GET
+    path: /settlement/v0/virtual-calculations/{udcId}/versions
+    operationId: getAllVersionsByUdcId
+  description: List versions for a virtual calculation
+  readOnly: true
+- name: subscribeToResourceChanges
+  api: settlement-virtual-calculations-api
+  operation:
+    method: GET
+    path: /settlement/v0/virtual-calculations/events
+    operationId: subscribeToResourceChanges
+  description: Subscribe to resource change events
+  readOnly: true
+- name: getVirtualCalculation
+  api: settlement-virtual-calculations-api
+  operation:
+    method: GET
+    path: /settlement/v0/virtual-calculations/{udcId}
+    operationId: getVirtualCalculation
+  description: Get virtual calculation by id
+  readOnly: true
+- name: createVirtualCalculation
+  api: settlement-virtual-calculations-api
+  operation:
+    method: POST
+    path: /settlement/v0/virtual-calculations
+    operationId: createVirtualCalculation
+  description: Create a virtual calculation
+  readOnly: false
+- name: listVirtualCalculations
+  api: settlement-virtual-calculations-api
+  operation:
+    method: GET
+    path: /settlement/v0/virtual-calculations
+    operationId: listVirtualCalculations
+  description: List virtual calculations
+  readOnly: true

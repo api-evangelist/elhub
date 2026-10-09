@@ -1,0 +1,80 @@
+# harvested from https://github.com/elhub/flex-information-system/blob/141eb37366ceb3e725c62906026eb89b1db106df/.spectral.yaml on 2026-10-09 — a Spectral ruleset published in the provider's own GitHub repository (elhub/flex-information-system); found by GitHub code search, fetched verbatim
+x-method: harvested
+x-stamped: 2026-10-09
+x-source-url: https://github.com/elhub/flex-information-system/blob/141eb37366ceb3e725c62906026eb89b1db106df/.spectral.yaml
+# Rules for spectral
+# https://meta.stoplight.io/docs/spectral/01baf06bdd05a-create-a-ruleset
+# https://github.com/stoplightio/spectral?tab=readme-ov-file#-real-world-rulesets
+extends: ["spectral:oas"]
+rules:
+  # Modify default rules
+  # https://docs.stoplight.io/docs/spectral/4dec24461f3af-open-api-rules
+  operation-description: false
+
+  oas3-unused-component: info
+
+  # According to https://github.com/MikeRalphson/OpenAPI-Specification/blob/main/examples/v3.1/non-oauth-scopes.yaml
+  # non-oauth scopes are not defined at the securityScheme level
+  oas3-operation-security-defined: false
+
+  elhub-paths-snake-case:
+    description: Paths must be snake_case.
+    message: "Path '{{property}}' must be snake_case"
+    severity: error
+    given: $.paths[*]~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(\/|[a-z0-9_.]+|{[a-z0-9_]+})+$"
+
+  flex-operation-id-format:
+    description: operationId format
+    message: >-
+      operationId '{{value}}' must
+      be snake_case
+      and starting with list_, read_, create_, update_, delete_ or call_.
+    severity: error
+    given: $.paths[*][*].operationId
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(list|read|create|update|delete|call)_[a-z0-9_.]+$"
+
+  flex-operation-summary-format:
+    description: operationId format
+    message: >-
+      Summary '{{value}}' must start with
+      List, Read, Create, Update, Delete or Call.
+    severity: error
+    given: $.paths[*][*].summary
+    then:
+      function: pattern
+      functionOptions:
+        match: "^(List|Read|Create|Update|Delete|Call) .+$"
+
+  flex-reusable-links-snake-case:
+    message: >-
+      Reusable link should have <linked_resource>-<linking_field> format.
+    description: >-
+      Reusable links name should be combination of snake_case and spinal-case.
+      snake_case are used to reference resource and field,
+      but it is separated by dash.
+
+      NOTE: This naming standard assumes that all links are used to
+      reference id on the target resource.
+    severity: error
+    given: $.components.links[*]~
+    then:
+      function: pattern
+      functionOptions:
+        match: "^[a-z0-9_]+-[a-z0-9_]+$"
+
+  flex-links-snake-case:
+    description: Links name must be snake_case
+    message: "Link name '{{property}}' must be snake_case"
+    severity: error
+    given: $.paths[*][*].responses[*].links[*]~
+    then:
+      function: casing
+      functionOptions:
+        type: snake

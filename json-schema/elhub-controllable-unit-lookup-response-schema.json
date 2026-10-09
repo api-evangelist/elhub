@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-controllable-unit-lookup-response-schema.json",
+  "title": "controllable_unit_lookup_response",
+  "description": "Response schema for controllable unit lookup operations",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/_original/elhub-openapi-api-base-openapi.yml#/components/schemas/controllable_unit_lookup_response",
+  "summary": "Controllable unit lookup",
+  "type": "object",
+  "properties": {
+    "accounting_point": {
+      "description": "The accounting point behind which the controllable units are located.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The surrogate key of the accounting point.",
+          "format": "bigint",
+          "type": "integer"
+        },
+        "business_id": {
+          "description": "The GSRN metering point ID of the accounting point.",
+          "format": "text",
+          "type": "string",
+          "pattern": "^[1-9][0-9]{17}$"
+        }
+      },
+      "required": [
+        "id",
+        "business_id"
+      ]
+    },
+    "end_user": {
+      "description": "The end user on the accounting point where the controllable units are located.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The surrogate key of the end user.",
+          "format": "bigint",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "controllable_units": {
+      "description": "The controllable units that were found for the given end user or accounting point.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "description": "The surrogate key of the controllable unit.",
+            "format": "bigint",
+            "type": "integer"
+          },
+          "business_id": {
+            "description": "The business ID of the controllable unit.",
+            "format": "text",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the controllable unit.",
+            "format": "text",
+            "type": "string"
+          },
+          "technical_resources": {
+            "description": "The technical resources belonging to the controllable unit.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "The surrogate key of the technical resource.",
+                  "format": "bigint",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "The name of the technical resource.",
+                  "format": "text",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "business_id",
+          "name",
+          "technical_resources"
+        ]
+      }
+    }
+  },
+  "required": [
+    "accounting_point",
+    "end_user",
+    "controllable_units"
+  ]
+}

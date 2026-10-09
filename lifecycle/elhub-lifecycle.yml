@@ -1,0 +1,55 @@
+generated: '2026-10-09'
+method: searched
+source: https://elhub.github.io/flex-information-system/api-versioning/
+docs:
+- https://api.elhub.no/intro
+- https://api.elhub.no/energy-data-api
+- https://api.elhub.no/planned-changes/overview
+- https://api.elhub.no/planned-changes/market-data
+- https://api.elhub.no/market-data-api/contracts
+- https://elhub.github.io/flex-information-system/api-versioning/
+name: Elhub API Lifecycle
+versioning:
+  api_portal:
+    scheme: URL path version (/v0/, /v1/)
+    statement: This is a v0 API. Breaking changes may come to the API endpoints in the future
+    statement_source: https://api.elhub.no/energy-data-api
+    current:
+      energy-data: v0
+      data-export: v0
+      access: v0 and v1
+      settlement: v0
+      market-data: v1
+  flex_information_system:
+    scheme: path versioning (major, /v1/) plus rolling date-pinned minor versions via the Api-Version header
+    statement: >-
+      Our endpoints then require an Api-Version header in a date format to navigate between all small
+      changes introduced since the last major version of the API. This is called rolling versions and
+      allows clients to progressively move to newer versions of the API at their own pace.
+    current_api_version: '2026-06-08'
+    major_version_policy: >-
+      The timeline for such a change will be communicated well in advance, and users will be able to run
+      major versions in parallel for a period.
+deprecation:
+  policy: >-
+    Planned changes are published in advance on the API Portal "Planned changes" page "to ensure
+    transparency and allow market parties sufficient time to assess and implement necessary adjustments."
+    For FIS minor versions: "The exact schedule for removing older minor versions will be communicated
+    explicitly for each version." No fixed deprecation window and no Sunset/Deprecation headers are documented.
+  sunset_header: false
+  deprecated:
+  - item: Market Data contracts base URL https://api.elhub.no/v1/contracts
+    replacement: https://api.elhub.no/market-data/v1/contracts
+    statement: The old base URL https://api.elhub.no/v1/contracts is deprecated.
+    source: https://api.elhub.no/market-data-api/contracts
+  deprecated_operations_in_openapi: 0
+planned_changes:
+- api: Market Data contracts
+  change: New optional cancelledAt ISO 8601 timestamp field on market-data-contracts responses (non-breaking)
+  planned_availability: 10.02.2026
+  source: https://api.elhub.no/planned-changes/market-data
+sla:
+  published: false
+  statement: The service is intended to have high uptime, but there are no guarantees of availability.
+  source: https://api.elhub.no/intro
+status_page: https://elhub.no/driftsmeldinger

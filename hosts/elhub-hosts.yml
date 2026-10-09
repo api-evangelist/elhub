@@ -1,0 +1,111 @@
+generated: '2026-10-09'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 7
+  own: 4
+  other_domain: 1
+  platform: 2
+  roles:
+  - data
+  - other
+  - portal
+  - sandbox
+  - source
+  - website
+hosts:
+- host: api.elhub.no
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types:
+  - DeveloperPortal
+  - Documentation
+  - GettingStarted
+  - Roadmap
+  serves:
+  - api
+  - docs
+  registrable_domain: elhub.no
+  role: portal
+  relation: own
+- host: data.elhub.no
+  found_by:
+  - probed
+  - site-links
+  - namespace-probe
+  - contract-discovery
+  - well-known
+  types: []
+  serves: []
+  title: Datakatalog | Data og innsikt | Elhub
+  status: 200
+  registrable_domain: elhub.no
+  role: data
+  relation: own
+- host: elhub.no
+  found_by:
+  - pointer
+  - probed
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - StatusPage
+  - Blog
+  - Support
+  - PrivacyPolicy
+  - OpenData
+  serves:
+  - hosting
+  vendor: vercel
+  registrable_domain: elhub.no
+  role: website
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  - apis[]
+  types:
+  - GitHubOrganization
+  - SpectralRules
+  serves:
+  - docs
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: minside.elhub.no
+  found_by:
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: elhub.no
+  role: other
+  relation: own
+- host: test.flex.internal:6443
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: flex.internal:6443
+  role: sandbox
+  relation: other-domain
+- host: www.linkedin.com
+  found_by:
+  - pointer
+  types:
+  - LinkedIn
+  serves: []
+  registrable_domain: linkedin.com
+  role: other
+  relation: platform

@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-v1-authorization-request-submission-schema.json",
+  "title": "V1AuthorizationRequestSubmission",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationRequestSubmission",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "attributes",
+        "meta"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "AuthorizationRequest"
+        },
+        "attributes": {
+          "$ref": "#/$defs/V1AuthorizationRequestSubmissionAttributes",
+          "unevaluatedProperties": false
+        },
+        "meta": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requestedFrom",
+            "requestedTo",
+            "language"
+          ],
+          "properties": {
+            "requestedFrom": {
+              "$ref": "#/$defs/requestedFrom"
+            },
+            "requestedTo": {
+              "$ref": "#/$defs/requestedTo"
+            },
+            "language": {
+              "$ref": "#/$defs/language"
+            },
+            "redirectURI": {
+              "$ref": "#/$defs/redirectURI"
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "V1AllowedChanges": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "description": "Changes authorized for the listed resources.",
+      "required": [
+        "validFrom"
+      ],
+      "properties": {
+        "validFrom": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    },
+    "V1AppliesTo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "meteringPointId"
+      ],
+      "properties": {
+        "meteringPointId": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "description": "Metering points to which the authorization applies.",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "V1AuthorizationRequestSubmissionAttributes": {
+      "type": "object",
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "requestType": {
+                "const": "ChangeOfEnergySupplierForOrganization"
+              }
+            },
+            "required": [
+              "requestType"
+            ]
+          },
+          "then": {
+            "properties": {
+              "allowedChanges": {
+                "not": {}
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "requestType": {
+                "const": "MoveInAndChangeOfEnergySupplierForOrganization"
+              }
+            },
+            "required": [
+              "requestType"
+            ]
+          },
+          "then": {
+            "required": [
+              "allowedChanges"
+            ]
+          }
+        }
+      ],
+      "required": [
+        "requestType",
+        "appliesTo",
+        "externalReference"
+      ],
+      "properties": {
+        "requestType": {
+          "type": "string",
+          "enum": [
+            "ChangeOfEnergySupplierForOrganization",
+            "MoveInAndChangeOfEnergySupplierForOrganization"
+          ]
+        },
+        "appliesTo": {
+          "$ref": "#/$defs/V1AppliesTo"
+        },
+        "allowedChanges": {
+          "$ref": "#/$defs/V1AllowedChanges"
+        },
+        "externalReference": {
+          "$ref": "#/$defs/externalReference"
+        }
+      }
+    }
+  }
+}

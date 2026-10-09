@@ -1,0 +1,441 @@
+openapi: 3.2.0
+info:
+  title: Access Authorization Requests API
+  version: 0.1.0
+  description: 'The Authorization Grant Manager provides APIs for creating, managing, and retrieving authorization documents, authorization grants, and authorization requests used within Elhub''s access control ecosystem.
+
+    Note: The authorization-grant APIs are under active development. Schemas and parameters may still change.'
+  x-status: Development
+  contact:
+    name: team-devxp
+  license:
+    name: MIT
+    url: https://github.com/elhub/auth-grant-manager?tab=MIT-1-ov-file
+servers:
+- url: https://api.elhub.no
+  description: Production
+- url: https://api-mt1.elhub.no
+  description: MT1
+security:
+- bearerAuth: []
+tags:
+- name: Authorization Requests
+  description: Operations for creating, retrieving, and managing authorization requests.
+paths:
+  /access/v0/authorization-requests:
+    get:
+      tags:
+      - Authorization Requests
+      summary: List authorization requests
+      operationId: listV0AuthorizationRequests
+      description: Retrieve a list of authorization requests. The result is constrained by the caller's token and, where applicable, GLN context. Results are returned ordered by createdAt DESC (newest first) and support offset-based pagination.
+      parameters:
+      - $ref: '#/components/parameters/UserAgent'
+      - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUser'
+      - $ref: '#/components/parameters/SenderGlnOptional'
+      - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+      - name: filter[status]
+        in: query
+        required: false
+        description: 'Filter results by one or more statuses. When omitted, requests of all statuses are returned. Multiple statuses can be specified as a comma-separated list (e.g. `filter[status]=Pending,Expired`).
+
+          '
+        style: form
+        explode: false
+        schema:
+          type: array
+          items:
+            $ref: ./schemas/requests/authorization-request-common.schema.json#/$defs/authorizationRequestStatus
+      - name: page[number]
+        in: query
+        required: false
+        description: Zero-based page number. Defaults to 0.
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      - name: page[size]
+        in: query
+        required: false
+        description: Number of items per page. Defaults to 100, maximum 100.
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 100
+      responses:
+        '200':
+          description: A list of authorization requests.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: ./schemas/requests/authorization-request-collection.schema.json
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    post:
+      tags:
+      - Authorization Requests
+      summary: Create authorization request for MinSide
+      operationId: createV0AuthorizationRequest
+      description: Initiate a new authorization request flow. This creates an authorization request that is associated with a user in MinSide and returns the created authorization request, including its ID, which can be used to start the Elhub Min Side flow.
+      parameters:
+      - $ref: '#/components/parameters/UserAgent'
+      - $ref: '#/components/parameters/AuthorizationMaskinporten'
+      - $ref: '#/components/parameters/SenderGlnRequired'
+      - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: ./schemas/requests/authorization-request-submission.schema.json
+      responses:
+        '201':
+          description: 'The authorization request was created and the response contains details of the request, including the authorization request ID used to start the Elhub Min Side flow
+
+            '
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: ./schemas/requests/authorization-request-resource.schema.json
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '415':
+          $ref: '#/components/responses/415UnsupportedMediaTypeError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+  /access/v0/authorization-requests/{id}:
+    get:
+      tags:
+      - Authorization Requests
+      summary: Get authorization request by id
+      operationId: getV0AuthorizationRequest
+      description: Retrieve information about a specific authorization request. This can be used to check the status of the request.
+      parameters:
+      - $ref: '#/components/parameters/UserAgent'
+      - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUser'
+      - $ref: '#/components/parameters/SenderGlnOptional'
+      - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier of the authorization request to retrieve.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Details of the requested authorization request.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: ./schemas/requests/authorization-request-resource.schema.json
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    patch:
+      tags:
+      - Authorization Requests
+      summary: Update authorization request
+      operationId: updateV0AuthorizationRequest
+      description: Update an authorization request. This endpoint is intended for internal MinSide usage with an end-user token and is not available to external integrators.
+      parameters:
+      - $ref: '#/components/parameters/UserAgent'
+      - name: Authorization
+        in: header
+        required: true
+        description: End-user bearer token associated with the MinSide user.
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: Unique identifier of the authorization request to update.
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: ./schemas/requests/authorization-request-update.schema.json
+      responses:
+        '200':
+          description: The authorization request was successfully updated.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: ./schemas/requests/authorization-request-resource.schema.json
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '415':
+          $ref: '#/components/responses/415UnsupportedMediaTypeError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+components:
+  parameters:
+    UserAgent:
+      name: User-Agent
+      in: header
+      required: true
+      schema:
+        type: string
+    AuthorizationMaskinporten:
+      name: Authorization
+      in: header
+      required: true
+      description: Bearer Maskinporten token identifying the calling organization.
+      schema:
+        type: string
+    SenderGlnOptional:
+      name: SenderGln
+      in: header
+      required: false
+      description: GLN of the party issuing the request.
+      schema:
+        type: string
+    SenderGlnRequired:
+      name: SenderGln
+      in: header
+      required: true
+      description: GLN of the party issuing the request.
+      schema:
+        type: string
+    AuthorizationMaskinportenOrEndUser:
+      name: Authorization
+      in: header
+      required: true
+      description: 'Bearer token identifying the caller. This can be either a Maskinporten token or an end-user token, depending on the endpoint.
+
+        '
+      schema:
+        type: string
+    OnBehalfOfGlnOptional:
+      name: OnBehalfOfGln
+      in: header
+      required: false
+      description: 'GLN of the organization on whose behalf the sender is acting, used in delegated Maskinporten flows.
+
+        '
+      schema:
+        type: string
+  responses:
+    422UnprocessableEntityError:
+      description: 'Unprocessable Entity. The request was well-formed but could not be followed due to semantic errors.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            unprocessableEntity:
+              summary: Unprocessable entity error example
+              value:
+                errors:
+                - status: '422'
+                  title: Unprocessable Entity
+                  detail: The request could not be processed due to semantic errors.
+                meta:
+                  createdAt: '2025-12-17T12:51:57+01:00'
+            unsupportedDocumentType:
+              summary: Unsupported document type
+              value:
+                errors:
+                - status: '422'
+                  title: Unsupported document type
+                  detail: The authorization document type is not currently supported.
+                meta:
+                  createdAt: '2025-12-17T12:51:57+01:00'
+            unsupportedRequestType:
+              summary: Unsupported request type
+              value:
+                errors:
+                - status: '422'
+                  title: Unsupported request type
+                  detail: The authorization request type is not currently supported.
+                meta:
+                  createdAt: '2025-12-17T12:51:57+01:00'
+    406NotAcceptableError:
+      description: 'Not Acceptable. The server cannot produce a response matching the list of acceptable values defined in the request''s proactive content negotiation headers.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            notAcceptable:
+              summary: Not acceptable error example
+              value:
+                errors:
+                - status: '406'
+                  title: Not Acceptable
+                  detail: The requested media type is not supported.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    400BadRequestError:
+      description: 'Bad request. The request body is invalid or missing required fields.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            badRequest:
+              summary: Bad request error example
+              value:
+                errors:
+                - status: '400'
+                  title: Bad Request
+                  detail: A required field is missing or invalid.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    500InternalServerError:
+      description: 'Internal server error. An unexpected error occurred while processing the request.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            internalServerError:
+              summary: Internal server error example
+              value:
+                errors:
+                - status: '500'
+                  title: Internal Server Error
+                  detail: An unexpected error occurred.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    409ConflictError:
+      description: 'Conflict. The request could not be completed due to a conflict with the current state of the resource.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            conflict:
+              summary: Conflict error example
+              value:
+                errors:
+                - status: '409'
+                  title: Conflict
+                  detail: An authorization document already exists for the specified parties and validity period.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    404NotFoundError:
+      description: 'Not found. The requested resource does not exist or is not accessible to the caller.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            notFound:
+              summary: Not found error example
+              value:
+                errors:
+                - status: '404'
+                  title: Not Found
+                  detail: The requested resource could not be found.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    401UnauthorizedError:
+      description: 'Unauthorized. The caller is not authenticated or the provided token is invalid or expired.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            unauthorized:
+              summary: Unauthorized error example
+              value:
+                errors:
+                - status: '401'
+                  title: Unauthorized
+                  detail: Authentication credentials are missing or invalid.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    415UnsupportedMediaTypeError:
+      description: 'Unsupported Media Type. The request body uses a media type the server or resource does not support.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            unsupportedMediaType:
+              summary: Unsupported media type error example
+              value:
+                errors:
+                - status: '415'
+                  title: Unsupported Media Type
+                  detail: The submitted content type is not supported.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    403ForbiddenError:
+      description: 'Forbidden. The caller is authenticated but does not have permission to perform this operation.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            forbidden:
+              summary: Forbidden error example
+              value:
+                errors:
+                - status: '403'
+                  title: Forbidden
+                  detail: A detailed description for getting forbidden
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

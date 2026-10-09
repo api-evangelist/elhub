@@ -1,0 +1,54 @@
+generated: '2026-10-09'
+method: searched
+source: https://github.com/elhub/designsystem
+name: Elhub Packages
+description: >-
+  No first-party API client SDK for the Elhub APIs (Energy Data, Data Export, Market Data, Access,
+  Settlement, Flexibility Information System) was found on npm (registry.npmjs.org/elhub -> 404),
+  PyPI (pypi.org/pypi/elhub/json -> 404; flex-information-system-client -> 404) or in the API Portal
+  (api.elhub.no). The flex-information-system repository contains a generated Python test client
+  (test/flex) that is not published to a registry. The only first-party packages Elhub publishes are
+  the Elhub Design System (EDS) npm packages under the @elhub scope, which are UI building blocks for
+  Elhub's own front-ends, NOT API clients.
+api_client_sdk: false
+packages:
+- name: '@elhub/ds-components'
+  registry: npm
+  url: https://www.npmjs.com/package/@elhub/ds-components
+  language: TypeScript
+  official: true
+  kind: design-system
+  api_client: false
+  version: 4.20.0
+  published: '2026-10-05'
+  source_repo: https://github.com/elhub/designsystem
+- name: '@elhub/ds-css'
+  registry: npm
+  url: https://www.npmjs.com/package/@elhub/ds-css
+  language: CSS
+  official: true
+  kind: design-system
+  api_client: false
+  version: 6.7.0
+  published: '2026-10-05'
+  source_repo: https://github.com/elhub/designsystem
+- name: '@elhub/ds-icons'
+  registry: npm
+  url: https://www.npmjs.com/package/@elhub/ds-icons
+  language: TypeScript
+  official: true
+  kind: design-system
+  api_client: false
+  version: 4.10.0
+  published: '2026-09-01'
+  source_repo: https://github.com/elhub/designsystem
+- name: '@elhub/ds-tokens'
+  registry: npm
+  url: https://www.npmjs.com/package/@elhub/ds-tokens
+  language: JSON
+  official: true
+  kind: design-system
+  api_client: false
+  version: 7.2.2
+  published: '2026-05-06'
+  source_repo: https://github.com/elhub/designsystem

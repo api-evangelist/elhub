@@ -1,0 +1,1089 @@
+---
+openapi: 3.1.1
+info:
+  title: Access API
+  version: 0.1.0
+  description: >
+    The Authorization Grant Manager provides APIs for creating, managing, and retrieving authorization
+    documents, authorization grants, and authorization requests used within Elhub's access control
+    ecosystem.
+
+    Note: The authorization-grant APIs are under active development. Schemas and parameters may still
+    change.
+  x-status: Development
+  contact:
+    name: team-devxp
+  license:
+    name: MIT
+    url: https://github.com/elhub/auth-grant-manager?tab=MIT-1-ov-file
+
+servers:
+  - url: https://api.elhub.no
+    description: Production
+  - url: https://api-mt1.elhub.no
+    description: MT1
+
+tags:
+  - name: Authorization Documents
+    description: Operations for creating, retrieving, managing, and submitting authorization documents.
+  - name: Authorization Grants
+    description: Operations for listing and retrieving authorization grants and their scopes.
+  - name: Authorization Requests
+    description: Operations for creating, retrieving, and managing authorization requests.
+  - name: Work in Progress
+    description: Endpoints under development and not yet part of the stable API contract.
+
+security:
+  - bearerAuth: []
+
+paths:
+  '/access/v0/authorization-documents':
+    get:
+      tags:
+        - Authorization Documents
+      summary: List authorization documents
+      operationId: listV0AuthorizationDocuments
+      description: >
+        Retrieve a list of authorization document objects available to the calling party.
+        The result is constrained by the caller's authorization context.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: page[number]
+          in: query
+          required: false
+          description: Zero-based page number. Defaults to 0.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: page[size]
+          in: query
+          required: false
+          description: Number of items per page. Defaults to 100, maximum 100.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        '200':
+          description: A list of authorization document objects.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/documents/authorization-document-collection.schema.json'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    post:
+      tags:
+        - Authorization Documents
+      summary: Create authorization document for signing
+      operationId: createV0AuthorizationDocument
+      description: >
+        Create a new authorization document that will later be signed by the appropriate party.
+        The response includes the identifier of the document and links to the document resource
+        and its generated PDF file.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: './schemas/v0/documents/authorization-document-submission.schema.json'
+      responses:
+        '201':
+          description: >
+            The authorization document was created successfully. The response includes the
+            identifier of the new document and links to the resource and its PDF representation.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/documents/authorization-document-resource.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '415':
+          $ref: '#/components/responses/415UnsupportedMediaTypeError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v0/authorization-documents/{id}':
+    get:
+      tags:
+        - Authorization Documents
+      summary: Get authorization document by id
+      operationId: getV0AuthorizationDocument
+      description: >
+        Retrieve information about a specific authorization document. This can be used to
+        check the document status and other attributes such as involved parties and validity.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization document to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details of the requested authorization document.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/documents/authorization-document-resource.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v0/authorization-documents/{id}.pdf':
+    get:
+      tags:
+        - Authorization Documents
+      summary: Download authorization document PDF
+      operationId: getV0AuthorizationDocumentPdf
+      description: >
+        Retrieve the PDF representation of an authorization document. The PDF reflects the
+        current state of the document at the time of retrieval.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization document whose PDF should be retrieved.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The PDF file representing the authorization document. Error responses are returned as application/vnd.api+json.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    put:
+      tags:
+        - Authorization Documents
+      summary: Submit signed authorization document
+      operationId: submitV0AuthorizationDocument
+      description: >
+        Submit a signed authorization document as a PDF file. Elhub validates the signature,
+        generates any required authorization grants, and stores the document if the validation succeeds.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization document to be submitted.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/pdf:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '204':
+          description: >
+            The signature was successfully validated and the document was registered and accepted.
+            No content is returned in the response body.
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '413':
+          $ref: '#/components/responses/413ContentTooLargeError'
+        '415':
+          $ref: '#/components/responses/415UnsupportedMediaTypeError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v0/authorization-grants':
+    get:
+      tags:
+        - Authorization Grants
+      summary: List authorization grants
+      operationId: listV0AuthorizationGrants
+      description: >
+        Retrieve a list of authorization grants available to the caller. The result is constrained
+        by the caller's token and GLN context. Results are returned ordered by createdAt DESC
+        (newest first) and support offset-based pagination.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUser'
+        - $ref: '#/components/parameters/SenderGlnOptional'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: page[number]
+          in: query
+          required: false
+          description: Zero-based page number. Defaults to 0.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: page[size]
+          in: query
+          required: false
+          description: Number of items per page. Defaults to 100, maximum 100.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        '200':
+          description: A list of authorization grants.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/grants/authorization-grant-collection.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v0/authorization-grants/{id}':
+    get:
+      tags:
+        - Authorization Grants
+      summary: Get authorization grant by id
+      operationId: getV0AuthorizationGrant
+      description: >
+        Retrieve a specific authorization grant by its identifier.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUserOptional'
+        - $ref: '#/components/parameters/SenderGlnOptional'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization grant to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The requested authorization grant.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/grants/authorization-grant-resource.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    patch:
+      tags:
+        - Authorization Grants
+      summary: Update authorization grant status
+      operationId: updateV0AuthorizationGrant
+      description: >
+        Update the status of an authorization grant. This endpoint is intended for internal
+        Elhub systems (BRS) and is not available to external integrators.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization grant to update.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: './schemas/v0/grants/authorization-grant-update.schema.json'
+      responses:
+        '200':
+          description: The authorization grant was successfully updated.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/grants/authorization-grant-resource.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v0/authorization-grants/{id}/scopes':
+    get:
+      tags:
+        - Authorization Grants
+      summary: List scopes for authorization grant
+      operationId: listV0AuthorizationGrantScopes
+      description: >
+        Retrieve all scopes associated with a specific authorization grant.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUser'
+        - $ref: '#/components/parameters/SenderGlnOptional'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization grant whose scopes should be retrieved.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of authorization scopes associated with the grant.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/grants/authorization-scope-collection.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v0/authorization-requests':
+    get:
+      tags:
+        - Authorization Requests
+      summary: List authorization requests
+      operationId: listV0AuthorizationRequests
+      description: >
+        Retrieve a list of authorization requests. The result is constrained by the caller's
+        token and, where applicable, GLN context. Results are returned ordered by createdAt DESC
+        (newest first) and support offset-based pagination.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUser'
+        - $ref: '#/components/parameters/SenderGlnOptional'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: filter[status]
+          in: query
+          required: false
+          description: >
+            Filter results by one or more statuses. When omitted, requests of all statuses are returned.
+            Multiple statuses can be specified as a comma-separated list (e.g. `filter[status]=Pending,Expired`).
+          style: form
+          explode: false
+          schema:
+            type: array
+            items:
+              $ref: './schemas/v0/requests/authorization-request-common.schema.json#/$defs/authorizationRequestStatus'
+        - name: page[number]
+          in: query
+          required: false
+          description: Zero-based page number. Defaults to 0.
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: page[size]
+          in: query
+          required: false
+          description: Number of items per page. Defaults to 100, maximum 100.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 100
+      responses:
+        '200':
+          description: A list of authorization requests.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/requests/authorization-request-collection.schema.json'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    post:
+      tags:
+        - Authorization Requests
+      summary: Create authorization request for MinSide
+      operationId: createV0AuthorizationRequest
+      description: >
+        Initiate a new authorization request flow. This creates an authorization request that
+        is associated with a user in MinSide and returns the created authorization request,
+        including its ID, which can be used to start the Elhub Min Side flow.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: './schemas/v0/requests/authorization-request-submission.schema.json'
+      responses:
+        '201':
+          description: >
+            The authorization request was created and the response contains details of the
+            request, including the authorization request ID used to start the Elhub Min Side flow
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/requests/authorization-request-resource.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '415':
+          $ref: '#/components/responses/415UnsupportedMediaTypeError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v0/authorization-requests/{id}':
+    get:
+      tags:
+        - Authorization Requests
+      summary: Get authorization request by id
+      operationId: getV0AuthorizationRequest
+      description: >
+        Retrieve information about a specific authorization request. This can be used to
+        check the status of the request.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUser'
+        - $ref: '#/components/parameters/SenderGlnOptional'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization request to retrieve.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details of the requested authorization request.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/requests/authorization-request-resource.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+    patch:
+      tags:
+        - Authorization Requests
+      summary: Update authorization request
+      operationId: updateV0AuthorizationRequest
+      description: >
+        Update an authorization request. This endpoint is intended for internal MinSide usage
+        with an end-user token and is not available to external integrators.
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - name: Authorization
+          in: header
+          required: true
+          description: End-user bearer token associated with the MinSide user.
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization request to update.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: './schemas/v0/requests/authorization-request-update.schema.json'
+      responses:
+        '200':
+          description: The authorization request was successfully updated.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v0/requests/authorization-request-resource.schema.json'
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '415':
+          $ref: '#/components/responses/415UnsupportedMediaTypeError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v1/authorization-documents':
+    post:
+      tags:
+        - Work in Progress
+      summary: '[WIP] Create an authorization document for signing'
+      description: Create an authorization document for signing.
+      operationId: createV1AuthorizationDocument
+      x-status: Work in progress
+      x-availability: Not deployed to Production or MT1
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: './schemas/v1/documents/authorization-document-submission.schema.json'
+            examples:
+              changeOfEnergySupplierForOrganization:
+                externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/documents/examples/change-of-energy-supplier/create.json
+              moveInAndChangeOfEnergySupplierForOrganization:
+                externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/documents/examples/move-in-and-change-of-energy-supplier/create.json
+      responses:
+        '201':
+          description: The authorization document was created successfully.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v1/documents/authorization-document-resource.schema.json'
+              examples:
+                changeOfEnergySupplierForOrganization:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/documents/examples/change-of-energy-supplier/created.json
+                moveInAndChangeOfEnergySupplierForOrganization:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/documents/examples/move-in-and-change-of-energy-supplier/created.json
+
+  '/access/v1/authorization-documents/{id}':
+    get:
+      tags:
+        - Work in Progress
+      summary: '[WIP] Get an authorization document by ID'
+      description: Get an authorization document by ID.
+      operationId: getV1AuthorizationDocument
+      x-status: Work in progress
+      x-availability: Not deployed to Production or MT1
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization document to retrieve.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The requested authorization document.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v1/documents/authorization-document-resource.schema.json'
+              examples:
+                changeOfEnergySupplierForOrganization:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/documents/examples/change-of-energy-supplier/get-signed.json
+                moveInAndChangeOfEnergySupplierForOrganization:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/documents/examples/move-in-and-change-of-energy-supplier/get-signed.json
+
+  '/access/v1/authorization-grants/{id}':
+    get:
+      tags:
+        - Work in Progress
+      summary: '[WIP] Get an authorization grant by ID'
+      description: Get an authorization grant and its permissions.
+      operationId: getV1AuthorizationGrant
+      x-status: Work in progress
+      x-availability: Not deployed to Production or MT1
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUserOptional'
+        - $ref: '#/components/parameters/SenderGlnOptional'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization grant to retrieve.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The requested authorization grant.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v1/grants/authorization-grant-resource.schema.json'
+              examples:
+                authorizationGrant:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/grants/examples/get.json
+
+  '/access/v1/authorization-requests':
+    post:
+      tags:
+        - Work in Progress
+      summary: '[WIP] Create an authorization request for approval'
+      description: Create an authorization request for approval.
+      operationId: createV1AuthorizationRequest
+      x-status: Work in progress
+      x-availability: Not deployed to Production or MT1
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinporten'
+        - $ref: '#/components/parameters/SenderGlnRequired'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+      requestBody:
+        required: true
+        content:
+          application/vnd.api+json:
+            schema:
+              $ref: './schemas/v1/requests/authorization-request-submission.schema.json'
+            examples:
+              changeOfEnergySupplierForOrganization:
+                externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/requests/examples/change-of-energy-supplier/create.json
+              moveInAndChangeOfEnergySupplierForOrganization:
+                externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/requests/examples/move-in-and-change-of-energy-supplier/create.json
+      responses:
+        '201':
+          description: A Pending authorization request.
+          headers:
+            Location:
+              description: URI of the created authorization request, also returned as links.self.
+              schema:
+                type: string
+                format: uri-reference
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v1/requests/authorization-request-resource.schema.json'
+              examples:
+                changeOfEnergySupplierForOrganization:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/requests/examples/change-of-energy-supplier/created.json
+                moveInAndChangeOfEnergySupplierForOrganization:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/requests/examples/move-in-and-change-of-energy-supplier/created.json
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '409':
+          $ref: '#/components/responses/409ConflictError'
+        '415':
+          $ref: '#/components/responses/415UnsupportedMediaTypeError'
+        '422':
+          $ref: '#/components/responses/422UnprocessableEntityError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+  '/access/v1/authorization-requests/{id}':
+    get:
+      tags:
+        - Work in Progress
+      summary: '[WIP] Get an authorization request by ID'
+      description: Get an authorization request by ID.
+      operationId: getV1AuthorizationRequest
+      x-status: Work in progress
+      x-availability: Not deployed to Production or MT1
+      parameters:
+        - $ref: '#/components/parameters/UserAgent'
+        - $ref: '#/components/parameters/AuthorizationMaskinportenOrEndUser'
+        - $ref: '#/components/parameters/SenderGlnOptional'
+        - $ref: '#/components/parameters/OnBehalfOfGlnOptional'
+        - name: id
+          in: path
+          required: true
+          description: Unique identifier of the authorization request to retrieve.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The authorization request, including its current approval outcome.
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: './schemas/v1/requests/authorization-request-resource.schema.json'
+              examples:
+                changeOfEnergySupplierForOrganization:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/requests/examples/change-of-energy-supplier/get-accepted.json
+                moveInAndChangeOfEnergySupplierForOrganization:
+                  externalValue: https://api.elhub.no/access/v0/openapi/schemas/v1/requests/examples/move-in-and-change-of-energy-supplier/get-accepted.json
+        '400':
+          $ref: '#/components/responses/400BadRequestError'
+        '401':
+          $ref: '#/components/responses/401UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/403ForbiddenError'
+        '404':
+          $ref: '#/components/responses/404NotFoundError'
+        '406':
+          $ref: '#/components/responses/406NotAcceptableError'
+        '500':
+          $ref: '#/components/responses/500InternalServerError'
+
+components:
+  parameters:
+    UserAgent:
+      name: User-Agent
+      in: header
+      required: true
+      schema:
+        type: string
+
+    AuthorizationMaskinporten:
+      name: Authorization
+      in: header
+      required: true
+      description: Bearer Maskinporten token identifying the calling organization.
+      schema:
+        type: string
+
+    AuthorizationMaskinportenOrEndUser:
+      name: Authorization
+      in: header
+      required: true
+      description: >
+        Bearer token identifying the caller. This can be either a Maskinporten token
+        or an end-user token, depending on the endpoint.
+      schema:
+        type: string
+
+    AuthorizationMaskinportenOrEndUserOptional:
+      name: Authorization
+      in: header
+      required: false
+      description: >
+        Optional bearer token identifying the caller. This can be either a Maskinporten token
+        or an end-user token, depending on the endpoint.
+      schema:
+        type: string
+
+    SenderGlnRequired:
+      name: SenderGln
+      in: header
+      required: true
+      description: GLN of the party issuing the request.
+      schema:
+        type: string
+
+    SenderGlnOptional:
+      name: SenderGln
+      in: header
+      required: false
+      description: GLN of the party issuing the request.
+      schema:
+        type: string
+
+    OnBehalfOfGlnOptional:
+      name: OnBehalfOfGln
+      in: header
+      required: false
+      description: >
+        GLN of the organization on whose behalf the sender is acting,
+        used in delegated Maskinporten flows.
+      schema:
+        type: string
+
+  responses:
+    400BadRequestError:
+      description: >
+        Bad request. The request body is invalid or missing required fields.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            badRequest:
+              summary: Bad request error example
+              value:
+                errors:
+                  - status: '400'
+                    title: 'Bad Request'
+                    detail: 'A required field is missing or invalid.'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+
+    401UnauthorizedError:
+      description: >
+        Unauthorized. The caller is not authenticated or the provided token is invalid or expired.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            unauthorized:
+              summary: Unauthorized error example
+              value:
+                errors:
+                  - status: '401'
+                    title: 'Unauthorized'
+                    detail: 'Authentication credentials are missing or invalid.'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+
+    403ForbiddenError:
+      description: >
+        Forbidden. The caller is authenticated but does not have permission to perform this operation.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            forbidden:
+              summary: Forbidden error example
+              value:
+                errors:
+                  - status: '403'
+                    title: 'Forbidden'
+                    detail: 'A detailed description for getting forbidden'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+
+    404NotFoundError:
+      description: >
+        Not found. The requested resource does not exist or is not accessible to the caller.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            notFound:
+              summary: Not found error example
+              value:
+                errors:
+                  - status: '404'
+                    title: 'Not Found'
+                    detail: 'The requested resource could not be found.'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+    406NotAcceptableError:
+      description: >
+        Not Acceptable. The server cannot produce a response matching the list of acceptable
+        values defined in the request's proactive content negotiation headers.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            notAcceptable:
+              summary: Not acceptable error example
+              value:
+                errors:
+                  - status: '406'
+                    title: 'Not Acceptable'
+                    detail: 'The requested media type is not supported.'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+    413ContentTooLargeError:
+      description: >
+        Content Too Large. The request body exceeds the maximum allowed size.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            contentTooLarge:
+              summary: Content too large error example
+              value:
+                errors:
+                  - status: '413'
+                    title: 'Content Too Large'
+                    detail: 'Signed PDF upload size is limited to 1 MB.'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+    409ConflictError:
+      description: >
+        Conflict. The request could not be completed due to a conflict with the current state
+        of the resource.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            conflict:
+              summary: Conflict error example
+              value:
+                errors:
+                  - status: '409'
+                    title: 'Conflict'
+                    detail: 'An authorization document already exists for the specified parties and validity period.'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+    422UnprocessableEntityError:
+      description: >
+        Unprocessable Entity. The request was well-formed but could not be followed due to semantic errors.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            unprocessableEntity:
+              summary: Unprocessable entity error example
+              value:
+                errors:
+                  - status: '422'
+                    title: 'Unprocessable Entity'
+                    detail: 'The request could not be processed due to semantic errors.'
+                meta:
+                  createdAt: '2025-12-17T12:51:57+01:00'
+            unsupportedDocumentType:
+              summary: Unsupported document type
+              value:
+                errors:
+                  - status: '422'
+                    title: 'Unsupported document type'
+                    detail: 'The authorization document type is not currently supported.'
+                meta:
+                  createdAt: '2025-12-17T12:51:57+01:00'
+            unsupportedRequestType:
+              summary: Unsupported request type
+              value:
+                errors:
+                  - status: '422'
+                    title: 'Unsupported request type'
+                    detail: 'The authorization request type is not currently supported.'
+                meta:
+                  createdAt: '2025-12-17T12:51:57+01:00'
+    415UnsupportedMediaTypeError:
+      description: >
+        Unsupported Media Type. The request body uses a media type the server or resource does not support.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            unsupportedMediaType:
+              summary: Unsupported media type error example
+              value:
+                errors:
+                  - status: '415'
+                    title: 'Unsupported Media Type'
+                    detail: 'The submitted content type is not supported.'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+    500InternalServerError:
+      description: >
+        Internal server error. An unexpected error occurred while processing the request.
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: './schemas/json-api-error.schema.json'
+          examples:
+            internalServerError:
+              summary: Internal server error example
+              value:
+                errors:
+                  - status: '500'
+                    title: 'Internal Server Error'
+                    detail: 'An unexpected error occurred.'
+                    meta:
+                      createdAt: '2025-12-17T12:51:57+01:00'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

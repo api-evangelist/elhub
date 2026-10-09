@@ -1,0 +1,67 @@
+name: Elhub Agent Skills
+generated: '2026-10-09'
+method: generated
+source: openapi/
+skills:
+- name: elhub-explore-energy-data
+  file: skills/elhub-explore-energy-data.md
+  api: elhub:energy-data-api
+  operations:
+  - price_areas
+  - grid_areas
+  - municipalities
+  - parties
+  - metering_points
+  - metering_points_id
+- name: elhub-request-customer-authorization
+  file: skills/elhub-request-customer-authorization.md
+  api: elhub:access-api
+  operations:
+  - createV1AuthorizationRequest
+  - getV1AuthorizationRequest
+  - listV0AuthorizationGrants
+  - getV1AuthorizationGrant
+  - listV0AuthorizationGrantScopes
+- name: elhub-sign-authorization-document
+  file: skills/elhub-sign-authorization-document.md
+  api: elhub:access-api
+  operations:
+  - createV1AuthorizationDocument
+  - getV0AuthorizationDocumentPdf
+  - submitV0AuthorizationDocument
+  - getV1AuthorizationDocument
+- name: elhub-export-energy-data
+  file: skills/elhub-export-energy-data.md
+  api: elhub:data-export-api
+  operations:
+  - energy_data
+  - energy_data_file_id
+- name: elhub-manage-virtual-calculation
+  file: skills/elhub-manage-virtual-calculation.md
+  api: elhub:settlement-virtual-calculations-api
+  operations:
+  - createVirtualCalculation
+  - getVirtualCalculation
+  - createSharedProductionVersion
+  - getAllVersionsByUdcId
+  - updateSharedProductionVersion
+  - subscribeToResourceChanges
+- name: elhub-manage-contracts
+  file: skills/elhub-manage-contracts.md
+  api: elhub:market-data-contracts-api
+  operations:
+  - getContracts
+  - getContractById
+  - createContracts
+  - patchContractById
+  - summary
+- name: elhub-register-flexible-resource
+  file: skills/elhub-register-flexible-resource.md
+  api: elhub:flex-information-system-main-api
+  operations:
+  - call_controllable_unit_lookup
+  - create_controllable_unit
+  - create_technical_resource
+  - create_service_providing_group
+  - create_service_providing_group_membership
+  - read_controllable_unit

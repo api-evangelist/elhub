@@ -1,0 +1,119 @@
+generated: '2026-10-09'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/elhub-access-api-openapi.yml
+- openapi/elhub-data-export-api-openapi.yml
+- openapi/elhub-energy-data-api-openapi.yml
+- openapi/elhub-flex-information-system-auth-api-openapi.yml
+- openapi/elhub-flex-information-system-grid-api-openapi.yml
+- openapi/elhub-flex-information-system-main-api-openapi.yml
+- openapi/elhub-market-data-contracts-api-openapi.yml
+- openapi/elhub-settlement-virtual-calculations-api-openapi.yml
+format: custom
+envelope:
+  media_type: application/json
+  schema: error_message
+coverage:
+  operations: 263
+  statuses_declared: 13
+problems:
+- status: 400
+  title: Bad Request
+  description: Bad Request
+  operations: 248
+  media_types:
+  - application/json
+  - application/vnd.api+json
+  schema: error_message
+- status: 401
+  title: Unauthorized
+  description: Unauthorized
+  operations: 245
+  media_types:
+  - application/json
+  - application/vnd.api+json
+  schema: error_message
+- status: 403
+  title: Forbidden
+  description: Forbidden
+  operations: 232
+  media_types:
+  - application/json
+  - application/vnd.api+json
+  schema: error_message
+- status: 404
+  title: Not Found
+  description: Not Found
+  operations: 211
+  media_types:
+  - application/json
+  - application/vnd.api+json
+  schema: json-api-error.schema.json
+- status: 406
+  title: Not Acceptable
+  description: Not Acceptable
+  operations: 199
+  media_types:
+  - application/json
+  - application/vnd.api+json
+  schema: error_message
+- status: 409
+  title: Conflict
+  description: Conflict
+  operations: 64
+  media_types:
+  - application/json
+  - application/vnd.api+json
+  schema: error_message
+- status: 413
+  title: Content Too Large
+  description: Content Too Large. The request body exceeds the maximum allowed size.
+  operations: 1
+  media_types:
+  - application/vnd.api+json
+  schema: json-api-error.schema.json
+- status: 415
+  title: Unsupported Media Type
+  description: Unsupported Media Type. The request body uses a media type the server or resource does not support.
+  operations: 8
+  media_types:
+  - application/vnd.api+json
+  schema: json-api-error.schema.json
+- status: 416
+  title: Range Not Satisfiable
+  description: Range Not Satisfiable
+  operations: 65
+  media_types:
+  - application/json
+  schema: error_message
+- status: 422
+  title: Unprocessable Content
+  description: Unprocessable Entity. The request was well-formed but could not be followed due to semantic errors.
+  operations: 9
+  media_types:
+  - application/vnd.api+json
+  schema: json-api-error.schema.json
+- status: 429
+  title: Too Many Requests
+  description: Per-client rate limit exceeded. Retry after the period indicated by the `Retry-After` header.
+  operations: 9
+  media_types:
+  - application/vnd.api+json
+  - application/json
+  schema: JsonApiErrorDocument
+- status: 500
+  title: Internal Server Error
+  description: Internal Server Error
+  operations: 218
+  media_types:
+  - application/json
+  - application/vnd.api+json
+  schema: error_message
+- status: 502
+  title: Bad Gateway
+  description: An upstream service (e.g. metering points service) returned an error.
+  operations: 3
+  media_types:
+  - application/vnd.api+json
+  schema: JsonApiErrorDocument

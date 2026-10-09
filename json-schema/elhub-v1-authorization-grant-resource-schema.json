@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/elhub/main/json-schema/elhub-v1-authorization-grant-resource-schema.json",
+  "title": "V1AuthorizationGrantResource",
+  "x-generated": "2026-10-09",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/elhub-access-api-openapi.yml#/components/schemas/V1AuthorizationGrantResource",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "data"
+  ],
+  "properties": {
+    "data": {
+      "$ref": "#/$defs/V1AuthorizationGrant"
+    }
+  },
+  "$defs": {
+    "V1AgentRelationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "id"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "Person",
+                "Organization",
+                "MarketEntity"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "V1AuthorizationGrant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "attributes",
+        "relationships",
+        "links"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "type": "string",
+          "const": "AuthorizationGrant"
+        },
+        "attributes": {
+          "$ref": "#/$defs/V1AuthorizationGrantAttributes"
+        },
+        "relationships": {
+          "$ref": "#/$defs/V1AuthorizationGrantRelationships"
+        },
+        "links": {
+          "$ref": "#/$defs/V1AuthorizationGrantLinks"
+        }
+      }
+    },
+    "V1AuthorizationGrantAttributes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "grantedAt",
+        "validFrom",
+        "validTo",
+        "createdAt",
+        "updatedAt",
+        "scopes"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "Active",
+            "Exhausted",
+            "Expired",
+            "Revoked"
+          ]
+        },
+        "grantedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validTo": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/V1AuthorizationScope"
+          }
+        }
+      }
+    },
+    "V1AuthorizationGrantLinks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "self"
+      ],
+      "properties": {
+        "self": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      }
+    },
+    "V1AuthorizationGrantRelationships": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grantedFor",
+        "grantedBy",
+        "grantedTo",
+        "source"
+      ],
+      "properties": {
+        "grantedFor": {
+          "$ref": "#/$defs/V1AgentRelationship"
+        },
+        "grantedBy": {
+          "$ref": "#/$defs/V1AgentRelationship"
+        },
+        "grantedTo": {
+          "$ref": "#/$defs/V1AgentRelationship"
+        },
+        "source": {
+          "$ref": "#/$defs/V1AuthorizationGrantSourceRelationship"
+        }
+      }
+    },
+    "V1AuthorizationGrantSourceRelationship": {
+      "type": "object",
+      "description": "Evidence from which this grant was created: either a signed document or an accepted interactive request. The source technology does not change the meaning of the grant's parties or scopes.\n",
+      "additionalProperties": false,
+      "required": [
+        "data"
+      ],
+      "properties": {
+        "data": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "id"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "AuthorizationDocument",
+                "AuthorizationRequest"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "links": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "self": {
+              "type": "string",
+              "format": "uri-reference"
+            }
+          }
+        }
+      }
+    },
+    "V1AuthorizationScope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability",
+        "resourceType",
+        "appliesTo",
+        "allowedChanges"
+      ],
+      "properties": {
+        "capability": {
+          "type": "string",
+          "enum": [
+            "Read",
+            "Write"
+          ]
+        },
+        "resourceType": {
+          "type": "string"
+        },
+        "appliesTo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/V1AuthorizationScopeConstraint"
+          }
+        },
+        "allowedChanges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/V1AuthorizationScopeConstraint"
+          }
+        }
+      }
+    },
+    "V1AuthorizationScopeConstraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attribute",
+        "value"
+      ],
+      "properties": {
+        "attribute": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
