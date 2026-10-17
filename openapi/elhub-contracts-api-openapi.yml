@@ -772,86 +772,6 @@ paths:
       - Contracts
 components:
   examples:
-    invalidEndDate:
-      summary: End Date is before Start Date
-      value:
-        errors:
-        - status: '400'
-          code: INVALID_END_DATE
-          title: End Date is before Start Date
-          detail: endDate must be after or equal to startDate.
-          source:
-            pointer: /data/attributes/endDate
-    missingAttributes:
-      summary: Missing Attributes in Contract Creation
-      value:
-        errors:
-        - status: '400'
-          code: INVALID_INPUT
-          title: Missing Attributes in Contract Creation
-          detail: No attributes have been detected.
-          source:
-            pointer: /data/attributes
-    meteringPointMismatch:
-      summary: Mismatched Metering Point in Contract Update
-      value:
-        errors:
-        - status: '409'
-          code: METERING_POINT_MISMATCH
-          title: Mismatched Metering Point in Contract Update
-          detail: Contract metering point ID does not match update request.
-          source:
-            pointer: /data/relationships/meteringPoint
-    contractTypeMismatch:
-      summary: Mismatched Contract Type in Update
-      value:
-        errors:
-        - status: '409'
-          code: CONTRACT_TYPE_MISMATCH
-          title: Mismatched Contract Type in Update
-          detail: Contract type Norgespris does not match update request type GridAccessContract.
-          source:
-            pointer: /data/attributes/contractType
-    unauthorizedStatusUpdate:
-      summary: Unauthorized Status Update by User
-      value:
-        errors:
-        - status: '403'
-          code: INVALID_STATUS_UPDATE
-          title: Unauthorized Status Update by User
-          detail: User GLN1234567890123 is not authorized to update status to Activated.
-          source:
-            pointer: /data/attributes/status
-    endUserRestrictedFieldUpdate:
-      summary: End User Restricted Field Update
-      value:
-        errors:
-        - status: '403'
-          code: END_USER_RESTRICTED_FIELD_UPDATE
-          title: End User Restricted Field Update
-          detail: End user GLN1234567890123 is not allowed to update startDate.
-          source:
-            pointer: /data/attributes/startDate
-    missingRelationships:
-      summary: Missing Relationships in Contract Creation
-      value:
-        errors:
-        - status: '400'
-          code: INVALID_INPUT
-          title: Missing Relationships in Contract Creation
-          detail: Relationships can't be empty.
-          source:
-            pointer: /data/relationships
-    missingStatus:
-      summary: Missing Status in Contract Update
-      value:
-        errors:
-        - status: '400'
-          code: INVALID_INPUT
-          title: Missing Status in Contract Update
-          detail: Status is required.
-          source:
-            pointer: /data/attributes/status
     contractNotFound:
       summary: Contract Not Found
       value:
@@ -862,6 +782,16 @@ components:
           detail: 'Contract not found for ID: 4ef727d1-b672-4166-a973-aa6e412b09bb'
           source:
             pointer: /data/id
+    missingAttributes:
+      summary: Missing Attributes in Contract Creation
+      value:
+        errors:
+        - status: '400'
+          code: INVALID_INPUT
+          title: Missing Attributes in Contract Creation
+          detail: No attributes have been detected.
+          source:
+            pointer: /data/attributes
     contractAlreadyExists:
       summary: Contract Already Exists
       value:
@@ -872,6 +802,16 @@ components:
           detail: 'Contract for metering point: 845123456789323423 with contract type: Norgespris already exists.'
           source:
             pointer: /data/relationships/meteringPoint
+    unauthorizedStatusUpdate:
+      summary: Unauthorized Status Update by User
+      value:
+        errors:
+        - status: '403'
+          code: INVALID_STATUS_UPDATE
+          title: Unauthorized Status Update by User
+          detail: User GLN1234567890123 is not authorized to update status to Activated.
+          source:
+            pointer: /data/attributes/status
     invalidStatusTransition:
       summary: Invalid Contract Status Transition
       value:
@@ -890,6 +830,36 @@ components:
           code: ''
           title: Internal error – try again
           detail: An unexpected error occurred. Please try again later.
+    meteringPointMismatch:
+      summary: Mismatched Metering Point in Contract Update
+      value:
+        errors:
+        - status: '409'
+          code: METERING_POINT_MISMATCH
+          title: Mismatched Metering Point in Contract Update
+          detail: Contract metering point ID does not match update request.
+          source:
+            pointer: /data/relationships/meteringPoint
+    endUserRestrictedFieldUpdate:
+      summary: End User Restricted Field Update
+      value:
+        errors:
+        - status: '403'
+          code: END_USER_RESTRICTED_FIELD_UPDATE
+          title: End User Restricted Field Update
+          detail: End user GLN1234567890123 is not allowed to update startDate.
+          source:
+            pointer: /data/attributes/startDate
+    contractTypeMismatch:
+      summary: Mismatched Contract Type in Update
+      value:
+        errors:
+        - status: '409'
+          code: CONTRACT_TYPE_MISMATCH
+          title: Mismatched Contract Type in Update
+          detail: Contract type Norgespris does not match update request type GridAccessContract.
+          source:
+            pointer: /data/attributes/contractType
     contractNotFoundForMeteringPoint:
       summary: No Contract Found for Metering Point
       value:
@@ -900,6 +870,26 @@ components:
           detail: 'No contract found for metering point: 845123456789323423, contract type: Norgespris, user: GLN1234567890123'
           source:
             pointer: /data/relationships/meteringPoint
+    missingStatus:
+      summary: Missing Status in Contract Update
+      value:
+        errors:
+        - status: '400'
+          code: INVALID_INPUT
+          title: Missing Status in Contract Update
+          detail: Status is required.
+          source:
+            pointer: /data/attributes/status
+    missingRelationships:
+      summary: Missing Relationships in Contract Creation
+      value:
+        errors:
+        - status: '400'
+          code: INVALID_INPUT
+          title: Missing Relationships in Contract Creation
+          detail: Relationships can't be empty.
+          source:
+            pointer: /data/relationships
     unauthorized:
       summary: Unauthorized
       value:
@@ -908,36 +898,39 @@ components:
           code: ''
           title: Unauthorized
           detail: Authentication credentials are missing or invalid.
+    invalidEndDate:
+      summary: End Date is before Start Date
+      value:
+        errors:
+        - status: '400'
+          code: INVALID_END_DATE
+          title: End Date is before Start Date
+          detail: endDate must be after or equal to startDate.
+          source:
+            pointer: /data/attributes/endDate
   schemas:
+    ContractSummaryResponse:
+      allOf:
+      - $ref: ./schemas/contracts/summary/contracts-summary.schema.json#/definitions/response
+    Error:
+      allOf:
+      - $ref: ./schemas/json-api-error.schema.json
+    SingleContractResponse:
+      allOf:
+      - $ref: ./schemas/contracts/norgespris/response/contract-single.schema.json#/definitions/response
     UpdateContractRequests:
       allOf:
       - $ref: ./schemas/contracts/norgespris/request/contracts-list.schema.json#/definitions/updateRequest
     ContractResponses:
       allOf:
       - $ref: ./schemas/contracts/norgespris/response/contracts-list.schema.json#/definitions/response
-    Error:
-      allOf:
-      - $ref: ./schemas/json-api-error.schema.json
-    SingleUpdateContractRequest:
-      allOf:
-      - $ref: ./schemas/contracts/norgespris/request/contract-single.schema.json#/definitions/updateRequest
-    ContractSummaryResponse:
-      allOf:
-      - $ref: ./schemas/contracts/summary/contracts-summary.schema.json#/definitions/response
     CreateContractRequests:
       allOf:
       - $ref: ./schemas/contracts/norgespris/request/contracts-list.schema.json#/definitions/createRequest
-    SingleContractResponse:
+    SingleUpdateContractRequest:
       allOf:
-      - $ref: ./schemas/contracts/norgespris/response/contract-single.schema.json#/definitions/response
+      - $ref: ./schemas/contracts/norgespris/request/contract-single.schema.json#/definitions/updateRequest
   parameters:
-    OnBehalfOf:
-      name: On-Behalf-Of
-      in: header
-      description: Global Location Number (GLN) of the party on whose behalf the request is made
-      schema:
-        type: string
-        pattern: ^[0-9]{13}$
     UserAgent:
       name: User-Agent
       in: header
@@ -946,6 +939,13 @@ components:
       schema:
         type: string
         example: ExampleCompany-ElhubClient/1.0.0
+    OnBehalfOf:
+      name: On-Behalf-Of
+      in: header
+      description: Global Location Number (GLN) of the party on whose behalf the request is made
+      schema:
+        type: string
+        pattern: ^[0-9]{13}$
     Sender:
       name: Sender
       in: header

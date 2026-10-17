@@ -208,31 +208,11 @@ paths:
           $ref: '#/components/responses/500InternalServerError'
 components:
   parameters:
-    UserAgent:
-      name: User-Agent
-      in: header
-      required: true
-      schema:
-        type: string
     AuthorizationMaskinporten:
       name: Authorization
       in: header
       required: true
       description: Bearer Maskinporten token identifying the calling organization.
-      schema:
-        type: string
-    SenderGlnOptional:
-      name: SenderGln
-      in: header
-      required: false
-      description: GLN of the party issuing the request.
-      schema:
-        type: string
-    SenderGlnRequired:
-      name: SenderGln
-      in: header
-      required: true
-      description: GLN of the party issuing the request.
       schema:
         type: string
     AuthorizationMaskinportenOrEndUser:
@@ -242,6 +222,26 @@ components:
       description: 'Bearer token identifying the caller. This can be either a Maskinporten token or an end-user token, depending on the endpoint.
 
         '
+      schema:
+        type: string
+    SenderGlnOptional:
+      name: SenderGln
+      in: header
+      required: false
+      description: GLN of the party issuing the request.
+      schema:
+        type: string
+    UserAgent:
+      name: User-Agent
+      in: header
+      required: true
+      schema:
+        type: string
+    SenderGlnRequired:
+      name: SenderGln
+      in: header
+      required: true
+      description: GLN of the party issuing the request.
       schema:
         type: string
     OnBehalfOfGlnOptional:
@@ -254,6 +254,24 @@ components:
       schema:
         type: string
   responses:
+    404NotFoundError:
+      description: 'Not found. The requested resource does not exist or is not accessible to the caller.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            notFound:
+              summary: Not found error example
+              value:
+                errors:
+                - status: '404'
+                  title: Not Found
+                  detail: The requested resource could not be found.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
     422UnprocessableEntityError:
       description: 'Unprocessable Entity. The request was well-formed but could not be followed due to semantic errors.
 
@@ -290,8 +308,8 @@ components:
                   detail: The authorization request type is not currently supported.
                 meta:
                   createdAt: '2025-12-17T12:51:57+01:00'
-    406NotAcceptableError:
-      description: 'Not Acceptable. The server cannot produce a response matching the list of acceptable values defined in the request''s proactive content negotiation headers.
+    409ConflictError:
+      description: 'Conflict. The request could not be completed due to a conflict with the current state of the resource.
 
         '
       content:
@@ -299,13 +317,13 @@ components:
           schema:
             $ref: ./schemas/json-api-error.schema.json
           examples:
-            notAcceptable:
-              summary: Not acceptable error example
+            conflict:
+              summary: Conflict error example
               value:
                 errors:
-                - status: '406'
-                  title: Not Acceptable
-                  detail: The requested media type is not supported.
+                - status: '409'
+                  title: Conflict
+                  detail: An authorization document already exists for the specified parties and validity period.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
     400BadRequestError:
@@ -326,60 +344,6 @@ components:
                   detail: A required field is missing or invalid.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
-    500InternalServerError:
-      description: 'Internal server error. An unexpected error occurred while processing the request.
-
-        '
-      content:
-        application/vnd.api+json:
-          schema:
-            $ref: ./schemas/json-api-error.schema.json
-          examples:
-            internalServerError:
-              summary: Internal server error example
-              value:
-                errors:
-                - status: '500'
-                  title: Internal Server Error
-                  detail: An unexpected error occurred.
-                  meta:
-                    createdAt: '2025-12-17T12:51:57+01:00'
-    409ConflictError:
-      description: 'Conflict. The request could not be completed due to a conflict with the current state of the resource.
-
-        '
-      content:
-        application/vnd.api+json:
-          schema:
-            $ref: ./schemas/json-api-error.schema.json
-          examples:
-            conflict:
-              summary: Conflict error example
-              value:
-                errors:
-                - status: '409'
-                  title: Conflict
-                  detail: An authorization document already exists for the specified parties and validity period.
-                  meta:
-                    createdAt: '2025-12-17T12:51:57+01:00'
-    404NotFoundError:
-      description: 'Not found. The requested resource does not exist or is not accessible to the caller.
-
-        '
-      content:
-        application/vnd.api+json:
-          schema:
-            $ref: ./schemas/json-api-error.schema.json
-          examples:
-            notFound:
-              summary: Not found error example
-              value:
-                errors:
-                - status: '404'
-                  title: Not Found
-                  detail: The requested resource could not be found.
-                  meta:
-                    createdAt: '2025-12-17T12:51:57+01:00'
     401UnauthorizedError:
       description: 'Unauthorized. The caller is not authenticated or the provided token is invalid or expired.
 
@@ -398,8 +362,8 @@ components:
                   detail: Authentication credentials are missing or invalid.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
-    415UnsupportedMediaTypeError:
-      description: 'Unsupported Media Type. The request body uses a media type the server or resource does not support.
+    500InternalServerError:
+      description: 'Internal server error. An unexpected error occurred while processing the request.
 
         '
       content:
@@ -407,13 +371,13 @@ components:
           schema:
             $ref: ./schemas/json-api-error.schema.json
           examples:
-            unsupportedMediaType:
-              summary: Unsupported media type error example
+            internalServerError:
+              summary: Internal server error example
               value:
                 errors:
-                - status: '415'
-                  title: Unsupported Media Type
-                  detail: The submitted content type is not supported.
+                - status: '500'
+                  title: Internal Server Error
+                  detail: An unexpected error occurred.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
     403ForbiddenError:
@@ -432,6 +396,42 @@ components:
                 - status: '403'
                   title: Forbidden
                   detail: A detailed description for getting forbidden
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    406NotAcceptableError:
+      description: 'Not Acceptable. The server cannot produce a response matching the list of acceptable values defined in the request''s proactive content negotiation headers.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            notAcceptable:
+              summary: Not acceptable error example
+              value:
+                errors:
+                - status: '406'
+                  title: Not Acceptable
+                  detail: The requested media type is not supported.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    415UnsupportedMediaTypeError:
+      description: 'Unsupported Media Type. The request body uses a media type the server or resource does not support.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            unsupportedMediaType:
+              summary: Unsupported media type error example
+              value:
+                errors:
+                - status: '415'
+                  title: Unsupported Media Type
+                  detail: The submitted content type is not supported.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
   securitySchemes:

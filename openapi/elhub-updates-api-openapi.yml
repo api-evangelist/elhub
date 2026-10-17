@@ -70,6 +70,15 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
     jsonapi.Links:
       type: object
       properties:
@@ -81,45 +90,6 @@ components:
       required:
       - members
       title: Links
-    jsonapi.Link.URI:
-      type: object
-      properties:
-        value:
-          type: string
-          title: String
-      required:
-      - value
-      title: Link.URI
-    no.elhub.ds.energy.data.models.response.UpdatesResponse:
-      type: object
-      properties:
-        creationTime:
-          type: string
-          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
-          title: String
-        currentLink:
-          type:
-          - 'null'
-          - string
-          description: link to the current resource
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format
-          title: String
-        updates:
-          type:
-          - 'null'
-          - array
-          description: list of updates
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.Update'
-          title: List<Update>
-      required:
-      - creationTime
-      title: UpdatesResponse
     no.elhub.ds.energy.data.models.Update:
       type: object
       properties:
@@ -171,6 +141,60 @@ components:
           description: Usage date the update happened
           title: String
       title: Update
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
+      type: object
+      properties:
+        header:
+          type:
+          - 'null'
+          - string
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
+    no.elhub.ds.energy.data.models.response.UpdatesResponse:
+      type: object
+      properties:
+        creationTime:
+          type: string
+          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        currentLink:
+          type:
+          - 'null'
+          - string
+          description: link to the current resource
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        updates:
+          type:
+          - 'null'
+          - array
+          description: list of updates
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.Update'
+          title: List<Update>
+      required:
+      - creationTime
+      title: UpdatesResponse
     jsonapi.Error:
       type: object
       properties:
@@ -264,29 +288,5 @@ components:
       required:
       - members
       title: Meta
-    jsonapi.Link:
-      anyOf:
-      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
-      - $ref: '#/components/schemas/jsonapi.Link.URI'
-      title: Link
-    jsonapi.Error.Source:
-      type: object
-      properties:
-        header:
-          type:
-          - 'null'
-          - string
-          title: String
-        parameter:
-          type:
-          - 'null'
-          - string
-          title: String
-        pointer:
-          type:
-          - 'null'
-          - string
-          title: String
-      title: Error.Source
 externalDocs:
   url: /

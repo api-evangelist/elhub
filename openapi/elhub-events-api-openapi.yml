@@ -231,16 +231,9 @@ paths:
       - maskinporten: []
 components:
   schemas:
-    JsonApiErrorDocument:
+    JsonElement:
       type: object
-      title: JsonApiErrorDocument
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/JsonApiError'
+      title: JsonElement
     JsonApiError:
       type: object
       title: JsonApiError
@@ -271,9 +264,16 @@ components:
           - 'null'
           additionalProperties:
             $ref: '#/components/schemas/JsonElement'
-    JsonElement:
+    JsonApiErrorDocument:
       type: object
-      title: JsonElement
+      title: JsonApiErrorDocument
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonApiError'
   securitySchemes:
     maskinporten:
       scheme: bearer

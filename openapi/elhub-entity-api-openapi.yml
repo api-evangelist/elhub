@@ -520,9 +520,22 @@ paths:
       description: Development
 components:
   schemas:
-    identity_response:
-      summary: Response - Identity
-      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
+    party_response:
+      summary: Response - Party
+      description: 'Response schema - The body that interacts with the Flexibility Information System
+
+
+        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
+
+
+        Example party types:
+
+
+        * Service Provider
+
+        * System Operator
+
+        * End User'
       type: object
       properties:
         id:
@@ -530,33 +543,142 @@ components:
           format: bigint
           type: integer
           readOnly: true
-          example: 44
+          example: 11
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
         entity_id:
-          description: Reference to the entity using the identity.
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
           format: bigint
           type: integer
           readOnly: true
-          example: 3
-        entity_name:
-          description: Name of the entity using the identity.
+          example: 145
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - entity_id
+      - name
+      - role
+      - type
+      - status
+      - recorded_at
+      - recorded_by
+    entity_client_response:
+      summary: Response - Entity client
+      description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 14
+        entity_id:
+          description: Reference to the entity that this client is attached to.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the client.
+          format: text
+          type: string
+          maxLength: 256
+          nullable: true
+          example: Laptop
+        client_id:
+          description: The identifier of the entity. For use with client credentials authentication method.
           format: text
           type: string
           readOnly: true
-          example: Martin Andersen
+          example: addr@flex.test
         party_id:
-          description: Reference to the party assumed by the entity.
+          description: Reference to the party this client allows to assume. A null value means the client cannot assume any party.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 30
+        scopes:
+          description: 'List of scopes granted to the user when it logs in as an entity or when it acts as the party. When assuming a party through party membership, the least privileged set of scopes will be kept.
+
+            Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.'
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
+        client_secret:
+          description: The secret of the entity. For use with client credentials authentication method. Input as plain text but stored encrypted.
+          format: text
+          type: string
+          minLength: 12
+          nullable: true
+          example: mysupersecretpassword
+        public_key:
+          description: The public key of the entity (X.509 SubjectPublicKeyInfo). For use with JWT grant authentication method.
+          format: text
+          type: string
+          nullable: true
+          pattern: ^-----BEGIN PUBLIC KEY-----\nMIIB[-A-Za-z0-9+/\n]*={0,3}\n-----END PUBLIC KEY-----$
+          example: '-----BEGIN PUBLIC KEY-----
+
+            MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAq3DnhgYgLVJknvDA3clA
+
+            TozPtjI7yauqD/ZuqgZn4KzzzkQ4BzJar4jRygpzbghlFn0Luk1mdVKzPUgYj0V
+
+            kbRlHyYfxahbgOHixOOnXkKXrtZW7yWGjXPqy/ZJ/+kFBNPAzxy7fDuAzKfU3Rn5
+
+            0sBakg95pua14W1oE4rtd4/U+sg2maCq6HgGdCLLxRWwXA8IBtvHZ48i6kxiz9tu
+
+            -----END PUBLIC KEY-----'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
           format: bigint
           type: integer
           readOnly: true
-          nullable: true
-          example: 17
-        party_name:
-          description: Name of the party assumed by the entity.
-          format: text
-          type: string
-          readOnly: true
-          nullable: true
-          example: Andersen SO
+          example: 145
         entity:
           description: Embedded entity
           oneOf:
@@ -572,33 +694,10 @@ components:
       required:
       - id
       - entity_id
-      - entity_name
-    error_message:
-      description: Error message returned from the API.
-      type: object
-      properties:
-        code:
-          type: string
-          pattern: ^[A-Z0-9]+$
-          description: The error code.
-          example: PT418
-        details:
-          type:
-          - string
-          - 'null'
-          description: Detailed information about the error.
-        hint:
-          type:
-          - string
-          - 'null'
-          description: A hint to help resolve the error.
-        message:
-          type: string
-          description: The error message.
-          example: error
-      required:
-      - code
-      - message
+      - client_id
+      - scopes
+      - recorded_at
+      - recorded_by
     entity_response:
       summary: Response - Entity
       description: 'Response schema - Entity - Natural or legal person
@@ -692,6 +791,89 @@ components:
       - type
       - recorded_at
       - recorded_by
+    error_message:
+      description: Error message returned from the API.
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]+$
+          description: The error code.
+          example: PT418
+        details:
+          type:
+          - string
+          - 'null'
+          description: Detailed information about the error.
+        hint:
+          type:
+          - string
+          - 'null'
+          description: A hint to help resolve the error.
+        message:
+          type: string
+          description: The error message.
+          example: error
+      required:
+      - code
+      - message
+    entity_update_request:
+      summary: Update - Entity
+      description: 'Request schema for update operations - Entity - Natural or legal person
+
+
+        An entity is a natural or legal person that can be a party in the Flexibility Information System.
+
+
+        Example entity types:
+
+
+        * Person
+
+        * Organisation'
+      type: object
+      properties:
+        name:
+          description: Name of the entity. Maximum 128 characters.
+          format: text
+          type: string
+          example: John Smith
+    entity_lookup_response:
+      summary: Entity lookup
+      description: Response schema for entity lookup operations
+      type: object
+      properties:
+        entity_id:
+          description: The surrogate key of the entity.
+          format: bigint
+          type: integer
+          example: 11
+      required:
+      - id
+    entity_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      example: pid
+      enum:
+      - pid
+      - org
+      - email
+    party_role:
+      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
+      format: text
+      type: string
+      example: flex_energy_supplier
+      enum:
+      - flex_balance_responsible_party
+      - flex_end_user
+      - flex_energy_supplier
+      - flex_flexibility_information_system_operator
+      - flex_market_operator
+      - flex_organisation
+      - flex_service_provider
+      - flex_system_operator
+      - flex_third_party
     auth_scope:
       description: Authorization scopes.
       format: text
@@ -805,97 +987,6 @@ components:
       - use:data:controllable_unit:lookup
       - use:data:entity
       - use:data:entity:lookup
-    party_response:
-      summary: Response - Party
-      description: 'Response schema - The body that interacts with the Flexibility Information System
-
-
-        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
-
-
-        Example party types:
-
-
-        * Service Provider
-
-        * System Operator
-
-        * End User'
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 11
-        business_id:
-          description: The business identifier of the party. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '1337099000000'
-        business_id_type:
-          $ref: '#/components/schemas/party_business_id_type'
-          default: uuid
-        entity_id:
-          description: Reference to the entity that is the parent of the party.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the party. Maximum 128 characters.
-          format: text
-          type: string
-          example: Flex Energy Supplier
-        role:
-          $ref: '#/components/schemas/party_role'
-        type:
-          $ref: '#/components/schemas/party_type'
-        status:
-          $ref: '#/components/schemas/party_status'
-          default: new
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - business_id_type
-      - entity_id
-      - name
-      - role
-      - type
-      - status
-      - recorded_at
-      - recorded_by
-    empty_object:
-      description: An empty object
-      type: object
-      properties: {}
-      additionalProperties: false
-    entity_type:
-      description: The type of the entity, e.g Person, Organisation
-      format: text
-      type: string
-      example: person
-      enum:
-      - person
-      - organisation
     party_status:
       description: The status of the party.
       format: text
@@ -908,24 +999,9 @@ components:
       - suspended
       - terminated
       example: active
-    party_type:
-      description: The type of the party, e.g SystemOperator, ServiceProvider
-      format: text
-      type: string
-      example: energy_supplier
-      enum:
-      - balance_responsible_party
-      - end_user
-      - energy_supplier
-      - flexibility_information_system_operator
-      - market_operator
-      - organisation
-      - service_provider
-      - system_operator
-      - third_party
-    entity_client_response:
-      summary: Response - Entity client
-      description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
+    identity_response:
+      summary: Response - Identity
+      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
       type: object
       properties:
         id:
@@ -933,77 +1009,33 @@ components:
           format: bigint
           type: integer
           readOnly: true
-          example: 14
+          example: 44
         entity_id:
-          description: Reference to the entity that this client is attached to.
+          description: Reference to the entity using the identity.
           format: bigint
           type: integer
-          example: 30
-        name:
-          description: Name of the client.
-          format: text
-          type: string
-          maxLength: 256
-          nullable: true
-          example: Laptop
-        client_id:
-          description: The identifier of the entity. For use with client credentials authentication method.
+          readOnly: true
+          example: 3
+        entity_name:
+          description: Name of the entity using the identity.
           format: text
           type: string
           readOnly: true
-          example: addr@flex.test
+          example: Martin Andersen
         party_id:
-          description: Reference to the party this client allows to assume. A null value means the client cannot assume any party.
-          format: bigint
-          type: integer
-          nullable: true
-          example: 30
-        scopes:
-          description: 'List of scopes granted to the user when it logs in as an entity or when it acts as the party. When assuming a party through party membership, the least privileged set of scopes will be kept.
-
-            Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.'
-          type: array
-          items:
-            $ref: '#/components/schemas/auth_scope'
-          nullable: false
-          example:
-          - read:data
-        client_secret:
-          description: The secret of the entity. For use with client credentials authentication method. Input as plain text but stored encrypted.
-          format: text
-          type: string
-          minLength: 12
-          nullable: true
-          example: mysupersecretpassword
-        public_key:
-          description: The public key of the entity (X.509 SubjectPublicKeyInfo). For use with JWT grant authentication method.
-          format: text
-          type: string
-          nullable: true
-          pattern: ^-----BEGIN PUBLIC KEY-----\nMIIB[-A-Za-z0-9+/\n]*={0,3}\n-----END PUBLIC KEY-----$
-          example: '-----BEGIN PUBLIC KEY-----
-
-            MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAq3DnhgYgLVJknvDA3clA
-
-            TozPtjI7yauqD/ZuqgZn4KzzzkQ4BzJar4jRygpzbghlFn0Luk1mdVKzPUgYj0V
-
-            kbRlHyYfxahbgOHixOOnXkKXrtZW7yWGjXPqy/ZJ/+kFBNPAzxy7fDuAzKfU3Rn5
-
-            0sBakg95pua14W1oE4rtd4/U+sg2maCq6HgGdCLLxRWwXA8IBtvHZ48i6kxiz9tu
-
-            -----END PUBLIC KEY-----'
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
+          description: Reference to the party assumed by the entity.
           format: bigint
           type: integer
           readOnly: true
-          example: 145
+          nullable: true
+          example: 17
+        party_name:
+          description: Name of the party assumed by the entity.
+          format: text
+          type: string
+          readOnly: true
+          nullable: true
+          example: Andersen SO
         entity:
           description: Embedded entity
           oneOf:
@@ -1019,116 +1051,7 @@ components:
       required:
       - id
       - entity_id
-      - client_id
-      - scopes
-      - recorded_at
-      - recorded_by
-    entity_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      example: pid
-      enum:
-      - pid
-      - org
-      - email
-    entity_lookup_request:
-      summary: Entity lookup
-      description: Request schema for entity lookup operations
-      type: object
-      properties:
-        business_id:
-          description: The business identifier of the entity. Email address or organisation number, according to `business_id_type`.
-          format: text
-          type: string
-          example: john.smith@example.com
-        business_id_type:
-          description: The type of business identifier. For persons, `email`. For organisations, `org` (organisation number, 9 digits).
-          format: text
-          type: string
-          enum:
-          - email
-          - org
-          example: email
-        name:
-          description: Name of the entity.
-          format: text
-          type: string
-          example: John Smith
-        type:
-          description: The type of the entity.
-          format: text
-          type: string
-          enum:
-          - person
-          - organisation
-          example: person
-      required:
-      - business_id
-      - business_id_type
-      - name
-      - type
-    party_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      default: uuid
-      enum:
-      - gln
-      - uuid
-      - eic_x
-      - org
-      example: gln
-    party_role:
-      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
-      format: text
-      type: string
-      example: flex_energy_supplier
-      enum:
-      - flex_balance_responsible_party
-      - flex_end_user
-      - flex_energy_supplier
-      - flex_flexibility_information_system_operator
-      - flex_market_operator
-      - flex_organisation
-      - flex_service_provider
-      - flex_system_operator
-      - flex_third_party
-    entity_create_request:
-      summary: Create - Entity
-      description: 'Request schema for create operations - Entity - Natural or legal person
-
-
-        An entity is a natural or legal person that can be a party in the Flexibility Information System.
-
-
-        Example entity types:
-
-
-        * Person
-
-        * Organisation'
-      type: object
-      properties:
-        business_id:
-          description: The business identifier of the entity. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '13370000000'
-        business_id_type:
-          $ref: '#/components/schemas/entity_business_id_type'
-        name:
-          description: Name of the entity. Maximum 128 characters.
-          format: text
-          type: string
-          example: John Smith
-        type:
-          $ref: '#/components/schemas/entity_type'
-      required:
-      - business_id
-      - business_id_type
-      - name
-      - type
+      - entity_name
     party_membership_response:
       summary: Response - Party Membership
       description: Response schema - The relation between a party and entity.
@@ -1189,21 +1112,84 @@ components:
       - scopes
       - recorded_at
       - recorded_by
-    entity_lookup_response:
+    empty_object:
+      description: An empty object
+      type: object
+      properties: {}
+      additionalProperties: false
+    party_type:
+      description: The type of the party, e.g SystemOperator, ServiceProvider
+      format: text
+      type: string
+      example: energy_supplier
+      enum:
+      - balance_responsible_party
+      - end_user
+      - energy_supplier
+      - flexibility_information_system_operator
+      - market_operator
+      - organisation
+      - service_provider
+      - system_operator
+      - third_party
+    entity_lookup_request:
       summary: Entity lookup
-      description: Response schema for entity lookup operations
+      description: Request schema for entity lookup operations
       type: object
       properties:
-        entity_id:
-          description: The surrogate key of the entity.
-          format: bigint
-          type: integer
-          example: 11
+        business_id:
+          description: The business identifier of the entity. Email address or organisation number, according to `business_id_type`.
+          format: text
+          type: string
+          example: john.smith@example.com
+        business_id_type:
+          description: The type of business identifier. For persons, `email`. For organisations, `org` (organisation number, 9 digits).
+          format: text
+          type: string
+          enum:
+          - email
+          - org
+          example: email
+        name:
+          description: Name of the entity.
+          format: text
+          type: string
+          example: John Smith
+        type:
+          description: The type of the entity.
+          format: text
+          type: string
+          enum:
+          - person
+          - organisation
+          example: person
       required:
-      - id
-    entity_update_request:
-      summary: Update - Entity
-      description: 'Request schema for update operations - Entity - Natural or legal person
+      - business_id
+      - business_id_type
+      - name
+      - type
+    entity_type:
+      description: The type of the entity, e.g Person, Organisation
+      format: text
+      type: string
+      example: person
+      enum:
+      - person
+      - organisation
+    party_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      default: uuid
+      enum:
+      - gln
+      - uuid
+      - eic_x
+      - org
+      example: gln
+    entity_create_request:
+      summary: Create - Entity
+      description: 'Request schema for create operations - Entity - Natural or legal person
 
 
         An entity is a natural or legal person that can be a party in the Flexibility Information System.
@@ -1217,11 +1203,25 @@ components:
         * Organisation'
       type: object
       properties:
+        business_id:
+          description: The business identifier of the entity. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '13370000000'
+        business_id_type:
+          $ref: '#/components/schemas/entity_business_id_type'
         name:
           description: Name of the entity. Maximum 128 characters.
           format: text
           type: string
           example: John Smith
+        type:
+          $ref: '#/components/schemas/entity_type'
+      required:
+      - business_id
+      - business_id_type
+      - name
+      - type
     entity:
       properties:
         id:

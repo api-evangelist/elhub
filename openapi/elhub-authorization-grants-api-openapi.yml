@@ -186,47 +186,6 @@ paths:
         '500':
           $ref: '#/components/responses/500InternalServerError'
 components:
-  parameters:
-    UserAgent:
-      name: User-Agent
-      in: header
-      required: true
-      schema:
-        type: string
-    SenderGlnOptional:
-      name: SenderGln
-      in: header
-      required: false
-      description: GLN of the party issuing the request.
-      schema:
-        type: string
-    AuthorizationMaskinportenOrEndUser:
-      name: Authorization
-      in: header
-      required: true
-      description: 'Bearer token identifying the caller. This can be either a Maskinporten token or an end-user token, depending on the endpoint.
-
-        '
-      schema:
-        type: string
-    AuthorizationMaskinportenOrEndUserOptional:
-      name: Authorization
-      in: header
-      required: false
-      description: 'Optional bearer token identifying the caller. This can be either a Maskinporten token or an end-user token, depending on the endpoint.
-
-        '
-      schema:
-        type: string
-    OnBehalfOfGlnOptional:
-      name: OnBehalfOfGln
-      in: header
-      required: false
-      description: 'GLN of the organization on whose behalf the sender is acting, used in delegated Maskinporten flows.
-
-        '
-      schema:
-        type: string
   responses:
     422UnprocessableEntityError:
       description: 'Unprocessable Entity. The request was well-formed but could not be followed due to semantic errors.
@@ -264,8 +223,8 @@ components:
                   detail: The authorization request type is not currently supported.
                 meta:
                   createdAt: '2025-12-17T12:51:57+01:00'
-    406NotAcceptableError:
-      description: 'Not Acceptable. The server cannot produce a response matching the list of acceptable values defined in the request''s proactive content negotiation headers.
+    404NotFoundError:
+      description: 'Not found. The requested resource does not exist or is not accessible to the caller.
 
         '
       content:
@@ -273,49 +232,13 @@ components:
           schema:
             $ref: ./schemas/json-api-error.schema.json
           examples:
-            notAcceptable:
-              summary: Not acceptable error example
+            notFound:
+              summary: Not found error example
               value:
                 errors:
-                - status: '406'
-                  title: Not Acceptable
-                  detail: The requested media type is not supported.
-                  meta:
-                    createdAt: '2025-12-17T12:51:57+01:00'
-    400BadRequestError:
-      description: 'Bad request. The request body is invalid or missing required fields.
-
-        '
-      content:
-        application/vnd.api+json:
-          schema:
-            $ref: ./schemas/json-api-error.schema.json
-          examples:
-            badRequest:
-              summary: Bad request error example
-              value:
-                errors:
-                - status: '400'
-                  title: Bad Request
-                  detail: A required field is missing or invalid.
-                  meta:
-                    createdAt: '2025-12-17T12:51:57+01:00'
-    500InternalServerError:
-      description: 'Internal server error. An unexpected error occurred while processing the request.
-
-        '
-      content:
-        application/vnd.api+json:
-          schema:
-            $ref: ./schemas/json-api-error.schema.json
-          examples:
-            internalServerError:
-              summary: Internal server error example
-              value:
-                errors:
-                - status: '500'
-                  title: Internal Server Error
-                  detail: An unexpected error occurred.
+                - status: '404'
+                  title: Not Found
+                  detail: The requested resource could not be found.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
     409ConflictError:
@@ -336,8 +259,8 @@ components:
                   detail: An authorization document already exists for the specified parties and validity period.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
-    404NotFoundError:
-      description: 'Not found. The requested resource does not exist or is not accessible to the caller.
+    400BadRequestError:
+      description: 'Bad request. The request body is invalid or missing required fields.
 
         '
       content:
@@ -345,13 +268,13 @@ components:
           schema:
             $ref: ./schemas/json-api-error.schema.json
           examples:
-            notFound:
-              summary: Not found error example
+            badRequest:
+              summary: Bad request error example
               value:
                 errors:
-                - status: '404'
-                  title: Not Found
-                  detail: The requested resource could not be found.
+                - status: '400'
+                  title: Bad Request
+                  detail: A required field is missing or invalid.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
     401UnauthorizedError:
@@ -372,6 +295,24 @@ components:
                   detail: Authentication credentials are missing or invalid.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
+    500InternalServerError:
+      description: 'Internal server error. An unexpected error occurred while processing the request.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            internalServerError:
+              summary: Internal server error example
+              value:
+                errors:
+                - status: '500'
+                  title: Internal Server Error
+                  detail: An unexpected error occurred.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
     403ForbiddenError:
       description: 'Forbidden. The caller is authenticated but does not have permission to perform this operation.
 
@@ -390,6 +331,65 @@ components:
                   detail: A detailed description for getting forbidden
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
+    406NotAcceptableError:
+      description: 'Not Acceptable. The server cannot produce a response matching the list of acceptable values defined in the request''s proactive content negotiation headers.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            notAcceptable:
+              summary: Not acceptable error example
+              value:
+                errors:
+                - status: '406'
+                  title: Not Acceptable
+                  detail: The requested media type is not supported.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+  parameters:
+    AuthorizationMaskinportenOrEndUserOptional:
+      name: Authorization
+      in: header
+      required: false
+      description: 'Optional bearer token identifying the caller. This can be either a Maskinporten token or an end-user token, depending on the endpoint.
+
+        '
+      schema:
+        type: string
+    AuthorizationMaskinportenOrEndUser:
+      name: Authorization
+      in: header
+      required: true
+      description: 'Bearer token identifying the caller. This can be either a Maskinporten token or an end-user token, depending on the endpoint.
+
+        '
+      schema:
+        type: string
+    SenderGlnOptional:
+      name: SenderGln
+      in: header
+      required: false
+      description: GLN of the party issuing the request.
+      schema:
+        type: string
+    UserAgent:
+      name: User-Agent
+      in: header
+      required: true
+      schema:
+        type: string
+    OnBehalfOfGlnOptional:
+      name: OnBehalfOfGln
+      in: header
+      required: false
+      description: 'GLN of the organization on whose behalf the sender is acting, used in delegated Maskinporten flows.
+
+        '
+      schema:
+        type: string
   securitySchemes:
     bearerAuth:
       type: http

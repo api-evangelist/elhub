@@ -357,6 +357,49 @@ paths:
       - Authentication
 components:
   schemas:
+    jwt_bearer_request:
+      description: JWT Bearer authorization grant request
+      properties:
+        grant_type:
+          type: string
+          enum:
+          - urn:ietf:params:oauth:grant-type:jwt-bearer
+          description: The grant type for JWT Bearer authorization grant requests.
+          example: urn:ietf:params:oauth:grant-type:jwt-bearer
+        assertion:
+          type: string
+          description: The JWT grant to exchange for an access token.
+          example: a.jwt.token
+      example: grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=a.jwt.token
+      required:
+      - grant_type
+      - assertion
+    error_message:
+      description: Error message returned from the API.
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]+$
+          description: The error code.
+          example: PT418
+        details:
+          type:
+          - string
+          - 'null'
+          description: Detailed information about the error.
+        hint:
+          type:
+          - string
+          - 'null'
+          description: A hint to help resolve the error.
+        message:
+          type: string
+          description: The error message.
+          example: error
+      required:
+      - code
+      - message
     userinfo_response:
       description: Information about the current user
       type: object
@@ -402,68 +445,6 @@ components:
           example: Flex System Operator
         current_role:
           $ref: '#/components/schemas/flex_role'
-    error_message:
-      description: Error message returned from the API.
-      type: object
-      properties:
-        code:
-          type: string
-          pattern: ^[A-Z0-9]+$
-          description: The error code.
-          example: PT418
-        details:
-          type:
-          - string
-          - 'null'
-          description: Detailed information about the error.
-        hint:
-          type:
-          - string
-          - 'null'
-          description: A hint to help resolve the error.
-        message:
-          type: string
-          description: The error message.
-          example: error
-      required:
-      - code
-      - message
-    oauth_error_message:
-      description: Error message returned from the API for oAuth errors.
-      type: object
-      properties:
-        error:
-          type: string
-          description: The error code.
-          example: invalid_request
-        error_description:
-          type: string
-          description: Detailed information about the error.
-          example: The request is missing a required parameter, includes an unsupported parameter value, or is otherwise malformed.
-        error_uri:
-          type: string
-          description: A URL to a page with information about the error code.
-          example: https://tools.ietf.org/html/rfc6749#section-1
-        scope:
-          type: string
-          description: The scope of the error.
-          example: assume:party:1
-    flex_role:
-      description: The auth role in the Flexibility Information System
-      format: text
-      type: string
-      enum:
-      - flex_anonymous
-      - flex_balance_responsible_party
-      - flex_end_user
-      - flex_energy_supplier
-      - flex_entity
-      - flex_flexibility_information_system_operator
-      - flex_market_operator
-      - flex_system_operator
-      - flex_service_provider
-      - flex_third_party
-      example: flex_system_operator
     session_response:
       description: Session response
       type: object
@@ -497,23 +478,6 @@ components:
           nullable: true
         role:
           $ref: '#/components/schemas/flex_role'
-    jwt_bearer_request:
-      description: JWT Bearer authorization grant request
-      properties:
-        grant_type:
-          type: string
-          enum:
-          - urn:ietf:params:oauth:grant-type:jwt-bearer
-          description: The grant type for JWT Bearer authorization grant requests.
-          example: urn:ietf:params:oauth:grant-type:jwt-bearer
-        assertion:
-          type: string
-          description: The JWT grant to exchange for an access token.
-          example: a.jwt.token
-      example: grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=a.jwt.token
-      required:
-      - grant_type
-      - assertion
     client_credentials_request:
       description: Client credentials body
       properties:
@@ -568,6 +532,42 @@ components:
       - actor_token
       - actor_token_type
       - scope
+    flex_role:
+      description: The auth role in the Flexibility Information System
+      format: text
+      type: string
+      enum:
+      - flex_anonymous
+      - flex_balance_responsible_party
+      - flex_end_user
+      - flex_energy_supplier
+      - flex_entity
+      - flex_flexibility_information_system_operator
+      - flex_market_operator
+      - flex_system_operator
+      - flex_service_provider
+      - flex_third_party
+      example: flex_system_operator
+    oauth_error_message:
+      description: Error message returned from the API for oAuth errors.
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error code.
+          example: invalid_request
+        error_description:
+          type: string
+          description: Detailed information about the error.
+          example: The request is missing a required parameter, includes an unsupported parameter value, or is otherwise malformed.
+        error_uri:
+          type: string
+          description: A URL to a page with information about the error code.
+          example: https://tools.ietf.org/html/rfc6749#section-1
+        scope:
+          type: string
+          description: The scope of the error.
+          example: assume:party:1
   securitySchemes:
     bearerAuth:
       description: Bearer token using a JWT

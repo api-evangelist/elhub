@@ -530,16 +530,80 @@ paths:
       - maskinporten: []
 components:
   schemas:
-    JsonApiErrorDocument:
+    VirtualCalculationResponseAttributes:
       type: object
-      title: JsonApiErrorDocument
+      title: VirtualCalculationResponseAttributes
       required:
-      - errors
+      - udcId
+      - name
+      - managingParty
+      - partyType
       properties:
-        errors:
+        udcId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        managingParty:
+          type: string
+        partyType:
+          type: string
+    VersionGetResponse:
+      type: object
+      title: VersionGetResponse
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/VersionResourceData'
+        included:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionIncluded'
+        links:
+          $ref: '#/components/schemas/JsonApiDocumentLinks'
+    JsonApiToManyRelationship:
+      type: object
+      title: JsonApiToManyRelationship
+      required:
+      - data
+      properties:
+        data:
           type: array
           items:
-            $ref: '#/components/schemas/JsonApiError'
+            $ref: '#/components/schemas/JsonApiResourceIdentifier'
+    JsonApiDocumentLinks:
+      type:
+      - object
+      - 'null'
+      title: JsonApiDocumentLinks
+      properties:
+        self:
+          type:
+          - string
+          - 'null'
+        first:
+          type:
+          - string
+          - 'null'
+        prev:
+          type:
+          - string
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+        last:
+          type:
+          - string
+          - 'null'
     OrganisationsResponseDto.Data.Attributes:
       type: object
       title: OrganisationsResponseDto.Data.Attributes
@@ -557,6 +621,134 @@ components:
           type: string
         status:
           type: string
+    VersionIncluded.MeteringPointIncluded:
+      type: object
+      title: VersionIncluded.MeteringPointIncluded
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+          enum:
+          - MeteringPoint
+        id:
+          type: string
+        attributes:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+        relationships:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+        links:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+    VersionResourceData:
+      type: object
+      title: VersionResourceData
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/VersionResponseAttributesDto'
+        relationships:
+          $ref: '#/components/schemas/VersionRelationships'
+        links:
+          $ref: '#/components/schemas/JsonApiResourceLink'
+    JsonApiError:
+      type: object
+      title: JsonApiError
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        detail:
+          type:
+          - string
+          - 'null'
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+    JsonElement:
+      type: object
+      title: JsonElement
+    JsonApiResourceIdentifier:
+      type: object
+      title: JsonApiResourceIdentifier
+      required:
+      - type
+      - id
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+    VersionListResponse:
+      type: object
+      title: VersionListResponse
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionResourceData'
+        included:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VersionIncluded'
+        links:
+          $ref: '#/components/schemas/JsonApiDocumentLinks'
+    VersionIncluded.VcIncluded:
+      type: object
+      title: VersionIncluded.VcIncluded
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+          enum:
+          - VirtualCalculation
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/VirtualCalculationResponseAttributes'
+        relationships:
+          $ref: '#/components/schemas/VirtualCalculationRelationships'
     VersionResponseAttributesDto:
       type: object
       title: VersionResponseAttributesDto
@@ -620,32 +812,44 @@ components:
           - string
           - 'null'
           format: date
-    JsonApiDocumentLinks:
+    JsonApiErrorDocument:
+      type: object
+      title: JsonApiErrorDocument
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonApiError'
+    VirtualCalculationRelationships:
       type:
       - object
       - 'null'
-      title: JsonApiDocumentLinks
+      title: VirtualCalculationRelationships
+      required:
+      - party
+      properties:
+        party:
+          $ref: '#/components/schemas/JsonApiToOneRelationship'
+        versions:
+          $ref: '#/components/schemas/JsonApiToManyRelationship'
+    JsonApiResourceLink:
+      type:
+      - object
+      - 'null'
+      title: JsonApiResourceLink
+      required:
+      - self
       properties:
         self:
-          type:
-          - string
-          - 'null'
-        first:
-          type:
-          - string
-          - 'null'
-        prev:
-          type:
-          - string
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-        last:
-          type:
-          - string
-          - 'null'
+          type: string
+    JsonApiToOneRelationship:
+      type: object
+      title: JsonApiToOneRelationship
+      properties:
+        data:
+          $ref: '#/components/schemas/JsonApiResourceIdentifier'
     VersionRelationships:
       type:
       - object
@@ -659,49 +863,22 @@ components:
           $ref: '#/components/schemas/JsonApiToOneRelationship'
         meteringPoints:
           $ref: '#/components/schemas/JsonApiToManyRelationship'
-    JsonElement:
+    VersionIncluded.OrgIncluded:
       type: object
-      title: JsonElement
-    JsonApiToManyRelationship:
-      type: object
-      title: JsonApiToManyRelationship
+      title: VersionIncluded.OrgIncluded
       required:
-      - data
+      - type
+      - id
+      - attributes
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/JsonApiResourceIdentifier'
-    JsonApiError:
-      type: object
-      title: JsonApiError
-      properties:
+        type:
+          type: string
+          enum:
+          - Party
         id:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        detail:
-          type:
-          - string
-          - 'null'
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/JsonElement'
+          type: string
+        attributes:
+          $ref: '#/components/schemas/OrganisationsResponseDto.Data.Attributes'
     VersionIncluded:
       type: object
       title: VersionIncluded
@@ -715,87 +892,6 @@ components:
           MeteringPoint: '#/components/schemas/VersionIncluded.MeteringPointIncluded'
           Party: '#/components/schemas/VersionIncluded.OrgIncluded'
           VirtualCalculation: '#/components/schemas/VersionIncluded.VcIncluded'
-    VersionGetResponse:
-      type: object
-      title: VersionGetResponse
-      required:
-      - data
-      properties:
-        data:
-          $ref: '#/components/schemas/VersionResourceData'
-        included:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VersionIncluded'
-        links:
-          $ref: '#/components/schemas/JsonApiDocumentLinks'
-    VersionIncluded.MeteringPointIncluded:
-      type: object
-      title: VersionIncluded.MeteringPointIncluded
-      required:
-      - type
-      - id
-      - attributes
-      properties:
-        type:
-          type: string
-          enum:
-          - MeteringPoint
-        id:
-          type: string
-        attributes:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/JsonElement'
-        relationships:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/JsonElement'
-        links:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/JsonElement'
-    JsonApiToOneRelationship:
-      type: object
-      title: JsonApiToOneRelationship
-      properties:
-        data:
-          $ref: '#/components/schemas/JsonApiResourceIdentifier'
-    JsonApiResourceIdentifier:
-      type: object
-      title: JsonApiResourceIdentifier
-      required:
-      - type
-      - id
-      properties:
-        type:
-          type: string
-        id:
-          type: string
-    VersionResourceData:
-      type: object
-      title: VersionResourceData
-      required:
-      - type
-      - id
-      - attributes
-      properties:
-        type:
-          type: string
-        id:
-          type: string
-        attributes:
-          $ref: '#/components/schemas/VersionResponseAttributesDto'
-        relationships:
-          $ref: '#/components/schemas/VersionRelationships'
-        links:
-          $ref: '#/components/schemas/JsonApiResourceLink'
     VersionParticipantResponseDto:
       type: object
       title: VersionParticipantResponseDto
@@ -836,102 +932,6 @@ components:
           - EH.ELECTRIC.KWH.11.6
           - EH.ELECTRIC.KWH.11.7
           - EH.ELECTRIC.KWH.11.8
-    VirtualCalculationRelationships:
-      type:
-      - object
-      - 'null'
-      title: VirtualCalculationRelationships
-      required:
-      - party
-      properties:
-        party:
-          $ref: '#/components/schemas/JsonApiToOneRelationship'
-        versions:
-          $ref: '#/components/schemas/JsonApiToManyRelationship'
-    VirtualCalculationResponseAttributes:
-      type: object
-      title: VirtualCalculationResponseAttributes
-      required:
-      - udcId
-      - name
-      - managingParty
-      - partyType
-      properties:
-        udcId:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        managingParty:
-          type: string
-        partyType:
-          type: string
-    VersionIncluded.OrgIncluded:
-      type: object
-      title: VersionIncluded.OrgIncluded
-      required:
-      - type
-      - id
-      - attributes
-      properties:
-        type:
-          type: string
-          enum:
-          - Party
-        id:
-          type: string
-        attributes:
-          $ref: '#/components/schemas/OrganisationsResponseDto.Data.Attributes'
-    VersionIncluded.VcIncluded:
-      type: object
-      title: VersionIncluded.VcIncluded
-      required:
-      - type
-      - id
-      - attributes
-      properties:
-        type:
-          type: string
-          enum:
-          - VirtualCalculation
-        id:
-          type: string
-        attributes:
-          $ref: '#/components/schemas/VirtualCalculationResponseAttributes'
-        relationships:
-          $ref: '#/components/schemas/VirtualCalculationRelationships'
-    JsonApiResourceLink:
-      type:
-      - object
-      - 'null'
-      title: JsonApiResourceLink
-      required:
-      - self
-      properties:
-        self:
-          type: string
-    VersionListResponse:
-      type: object
-      title: VersionListResponse
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/VersionResourceData'
-        included:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VersionIncluded'
-        links:
-          $ref: '#/components/schemas/JsonApiDocumentLinks'
   securitySchemes:
     maskinporten:
       scheme: bearer

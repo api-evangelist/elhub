@@ -390,9 +390,38 @@ paths:
       description: Development
 components:
   schemas:
-    identity_response:
-      summary: Response - Identity
-      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
+    notice_data_party_missing:
+      type: object
+      description: Format of the data field in a notice with data.kind = notice.data.party.missing
+      required:
+      - kind
+      properties:
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.party.missing
+        entity:
+          description: Details about the entity owning the missing party.
+          $ref: '#/components/schemas/entity_response'
+        party:
+          description: Details about the missing party.
+          $ref: '#/components/schemas/party_response'
+    party_response:
+      summary: Response - Party
+      description: 'Response schema - The body that interacts with the Flexibility Information System
+
+
+        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
+
+
+        Example party types:
+
+
+        * Service Provider
+
+        * System Operator
+
+        * End User'
       type: object
       properties:
         id:
@@ -400,33 +429,142 @@ components:
           format: bigint
           type: integer
           readOnly: true
-          example: 44
+          example: 11
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
         entity_id:
-          description: Reference to the entity using the identity.
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
           format: bigint
           type: integer
           readOnly: true
-          example: 3
-        entity_name:
-          description: Name of the entity using the identity.
+          example: 145
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - entity_id
+      - name
+      - role
+      - type
+      - status
+      - recorded_at
+      - recorded_by
+    entity_client_response:
+      summary: Response - Entity client
+      description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 14
+        entity_id:
+          description: Reference to the entity that this client is attached to.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the client.
+          format: text
+          type: string
+          maxLength: 256
+          nullable: true
+          example: Laptop
+        client_id:
+          description: The identifier of the entity. For use with client credentials authentication method.
           format: text
           type: string
           readOnly: true
-          example: Martin Andersen
+          example: addr@flex.test
         party_id:
-          description: Reference to the party assumed by the entity.
+          description: Reference to the party this client allows to assume. A null value means the client cannot assume any party.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 30
+        scopes:
+          description: 'List of scopes granted to the user when it logs in as an entity or when it acts as the party. When assuming a party through party membership, the least privileged set of scopes will be kept.
+
+            Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.'
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
+        client_secret:
+          description: The secret of the entity. For use with client credentials authentication method. Input as plain text but stored encrypted.
+          format: text
+          type: string
+          minLength: 12
+          nullable: true
+          example: mysupersecretpassword
+        public_key:
+          description: The public key of the entity (X.509 SubjectPublicKeyInfo). For use with JWT grant authentication method.
+          format: text
+          type: string
+          nullable: true
+          pattern: ^-----BEGIN PUBLIC KEY-----\nMIIB[-A-Za-z0-9+/\n]*={0,3}\n-----END PUBLIC KEY-----$
+          example: '-----BEGIN PUBLIC KEY-----
+
+            MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAq3DnhgYgLVJknvDA3clA
+
+            TozPtjI7yauqD/ZuqgZn4KzzzkQ4BzJar4jRygpzbghlFn0Luk1mdVKzPUgYj0V
+
+            kbRlHyYfxahbgOHixOOnXkKXrtZW7yWGjXPqy/ZJ/+kFBNPAzxy7fDuAzKfU3Rn5
+
+            0sBakg95pua14W1oE4rtd4/U+sg2maCq6HgGdCLLxRWwXA8IBtvHZ48i6kxiz9tu
+
+            -----END PUBLIC KEY-----'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
           format: bigint
           type: integer
           readOnly: true
-          nullable: true
-          example: 17
-        party_name:
-          description: Name of the party assumed by the entity.
-          format: text
-          type: string
-          readOnly: true
-          nullable: true
-          example: Andersen SO
+          example: 145
         entity:
           description: Embedded entity
           oneOf:
@@ -442,33 +580,10 @@ components:
       required:
       - id
       - entity_id
-      - entity_name
-    error_message:
-      description: Error message returned from the API.
-      type: object
-      properties:
-        code:
-          type: string
-          pattern: ^[A-Z0-9]+$
-          description: The error code.
-          example: PT418
-        details:
-          type:
-          - string
-          - 'null'
-          description: Detailed information about the error.
-        hint:
-          type:
-          - string
-          - 'null'
-          description: A hint to help resolve the error.
-        message:
-          type: string
-          description: The error message.
-          example: error
-      required:
-      - code
-      - message
+      - client_id
+      - scopes
+      - recorded_at
+      - recorded_by
     entity_response:
       summary: Response - Entity
       description: 'Response schema - Entity - Natural or legal person
@@ -562,6 +677,115 @@ components:
       - type
       - recorded_at
       - recorded_by
+    timeline_multi_range:
+      description: Partial timeline data that is relevant to mention, in a notice for instance. Multirange format, i.e., array of start/end timestamp pairs.
+      type: array
+      items:
+        type: object
+        properties:
+          valid_from:
+            type: string
+            format: date-time
+            description: The start time of the timeline section.
+            example: '2023-01-01T00:00:00+00:00'
+          valid_to:
+            type: string
+            format: date-time
+            description: The end time of the timeline section.
+            example: '2023-01-02T00:00:00+00:00'
+    error_message:
+      description: Error message returned from the API.
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]+$
+          description: The error code.
+          example: PT418
+        details:
+          type:
+          - string
+          - 'null'
+          description: Detailed information about the error.
+        hint:
+          type:
+          - string
+          - 'null'
+          description: A hint to help resolve the error.
+        message:
+          type: string
+          description: The error message.
+          example: error
+      required:
+      - code
+      - message
+    notice_data_party_outdated:
+      type: object
+      description: Format of the data field in a notice with data.kind = notice.data.party.outdated
+      required:
+      - kind
+      properties:
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.party.outdated
+        entity:
+          description: Details about the possibly new entity owning the party.
+          $ref: '#/components/schemas/entity_response'
+        party:
+          description: Updated fields of the party.
+          $ref: '#/components/schemas/party_response'
+    entity_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      example: pid
+      enum:
+      - pid
+      - org
+      - email
+    party_role:
+      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
+      format: text
+      type: string
+      example: flex_energy_supplier
+      enum:
+      - flex_balance_responsible_party
+      - flex_end_user
+      - flex_energy_supplier
+      - flex_flexibility_information_system_operator
+      - flex_market_operator
+      - flex_organisation
+      - flex_service_provider
+      - flex_system_operator
+      - flex_third_party
+    party_status:
+      description: The status of the party.
+      format: text
+      type: string
+      default: new
+      enum:
+      - new
+      - active
+      - inactive
+      - suspended
+      - terminated
+      example: active
+    notice_data:
+      oneOf:
+      - $ref: '#/components/schemas/notice_data_valid_time_outside_contract'
+      - $ref: '#/components/schemas/notice_data_party_missing'
+      - $ref: '#/components/schemas/notice_data_party_outdated'
+      - $ref: '#/components/schemas/notice_data_product_type_not_qualified'
+      - $ref: '#/components/schemas/notice_data_controllable_unit_product_duplication'
+      discriminator:
+        propertyName: kind
+        mapping:
+          notice.data.valid_time.outside_contract: '#/components/schemas/notice_data_valid_time_outside_contract'
+          notice.data.party.missing: '#/components/schemas/notice_data_party_missing'
+          notice.data.party.outdated: '#/components/schemas/notice_data_party_outdated'
+          notice.data.product_type.not_qualified: '#/components/schemas/notice_data_product_type_not_qualified'
+          notice.data.controllable_unit.product_duplication: '#/components/schemas/notice_data_controllable_unit_product_duplication'
     auth_scope:
       description: Authorization scopes.
       format: text
@@ -675,22 +899,9 @@ components:
       - use:data:controllable_unit:lookup
       - use:data:entity
       - use:data:entity:lookup
-    party_response:
-      summary: Response - Party
-      description: 'Response schema - The body that interacts with the Flexibility Information System
-
-
-        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
-
-
-        Example party types:
-
-
-        * Service Provider
-
-        * System Operator
-
-        * End User'
+    identity_response:
+      summary: Response - Identity
+      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
       type: object
       properties:
         id:
@@ -698,253 +909,33 @@ components:
           format: bigint
           type: integer
           readOnly: true
-          example: 11
-        business_id:
-          description: The business identifier of the party. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '1337099000000'
-        business_id_type:
-          $ref: '#/components/schemas/party_business_id_type'
-          default: uuid
+          example: 44
         entity_id:
-          description: Reference to the entity that is the parent of the party.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the party. Maximum 128 characters.
-          format: text
-          type: string
-          example: Flex Energy Supplier
-        role:
-          $ref: '#/components/schemas/party_role'
-        type:
-          $ref: '#/components/schemas/party_type'
-        status:
-          $ref: '#/components/schemas/party_status'
-          default: new
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
+          description: Reference to the entity using the identity.
           format: bigint
           type: integer
           readOnly: true
-          example: 145
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - business_id_type
-      - entity_id
-      - name
-      - role
-      - type
-      - status
-      - recorded_at
-      - recorded_by
-    notice_data_party_outdated:
-      type: object
-      description: Format of the data field in a notice with data.kind = notice.data.party.outdated
-      required:
-      - kind
-      properties:
-        kind:
-          description: Identifies the notice data schema for discriminated union deserialization.
-          type: string
-          const: notice.data.party.outdated
-        entity:
-          description: Details about the possibly new entity owning the party.
-          $ref: '#/components/schemas/entity_response'
-        party:
-          description: Updated fields of the party.
-          $ref: '#/components/schemas/party_response'
-    notice_data_controllable_unit_product_duplication:
-      type: object
-      description: Format of the data field in a notice with data.kind = notice.data.controllable_unit.product_duplication
-      required:
-      - kind
-      properties:
-        kind:
-          description: Identifies the notice data schema for discriminated union deserialization.
-          type: string
-          const: notice.data.controllable_unit.product_duplication
-        product_type_id:
-          description: The product type for which the controllable unit is registered in multiple service providing groups with active applications.
-          format: bigint
-          type: integer
-          example: 2
-        service_providing_group_ids:
-          description: The service providing groups the controllable unit is a member of that have active applications for the product type.
-          type: array
-          items:
-            format: bigint
-            type: integer
-            example: 5
-    notice_data_party_missing:
-      type: object
-      description: Format of the data field in a notice with data.kind = notice.data.party.missing
-      required:
-      - kind
-      properties:
-        kind:
-          description: Identifies the notice data schema for discriminated union deserialization.
-          type: string
-          const: notice.data.party.missing
-        entity:
-          description: Details about the entity owning the missing party.
-          $ref: '#/components/schemas/entity_response'
-        party:
-          description: Details about the missing party.
-          $ref: '#/components/schemas/party_response'
-    empty_object:
-      description: An empty object
-      type: object
-      properties: {}
-      additionalProperties: false
-    entity_type:
-      description: The type of the entity, e.g Person, Organisation
-      format: text
-      type: string
-      example: person
-      enum:
-      - person
-      - organisation
-    notice_data_product_type_not_qualified:
-      type: object
-      description: Format of the data field in a notice with data.kind = notice.data.product_type.not_qualified
-      required:
-      - kind
-      properties:
-        kind:
-          description: Identifies the notice data schema for discriminated union deserialization.
-          type: string
-          const: notice.data.product_type.not_qualified
-        product_type_ids:
-          description: List of product types that are not qualified.
-          type: array
-          items:
-            format: bigint
-            type: integer
-            example: 2
-    party_status:
-      description: The status of the party.
-      format: text
-      type: string
-      default: new
-      enum:
-      - new
-      - active
-      - inactive
-      - suspended
-      - terminated
-      example: active
-    party_type:
-      description: The type of the party, e.g SystemOperator, ServiceProvider
-      format: text
-      type: string
-      example: energy_supplier
-      enum:
-      - balance_responsible_party
-      - end_user
-      - energy_supplier
-      - flexibility_information_system_operator
-      - market_operator
-      - organisation
-      - service_provider
-      - system_operator
-      - third_party
-    entity_client_response:
-      summary: Response - Entity client
-      description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 14
-        entity_id:
-          description: Reference to the entity that this client is attached to.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the client.
-          format: text
-          type: string
-          maxLength: 256
-          nullable: true
-          example: Laptop
-        client_id:
-          description: The identifier of the entity. For use with client credentials authentication method.
+          example: 3
+        entity_name:
+          description: Name of the entity using the identity.
           format: text
           type: string
           readOnly: true
-          example: addr@flex.test
+          example: Martin Andersen
         party_id:
-          description: Reference to the party this client allows to assume. A null value means the client cannot assume any party.
-          format: bigint
-          type: integer
-          nullable: true
-          example: 30
-        scopes:
-          description: 'List of scopes granted to the user when it logs in as an entity or when it acts as the party. When assuming a party through party membership, the least privileged set of scopes will be kept.
-
-            Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.'
-          type: array
-          items:
-            $ref: '#/components/schemas/auth_scope'
-          nullable: false
-          example:
-          - read:data
-        client_secret:
-          description: The secret of the entity. For use with client credentials authentication method. Input as plain text but stored encrypted.
-          format: text
-          type: string
-          minLength: 12
-          nullable: true
-          example: mysupersecretpassword
-        public_key:
-          description: The public key of the entity (X.509 SubjectPublicKeyInfo). For use with JWT grant authentication method.
-          format: text
-          type: string
-          nullable: true
-          pattern: ^-----BEGIN PUBLIC KEY-----\nMIIB[-A-Za-z0-9+/\n]*={0,3}\n-----END PUBLIC KEY-----$
-          example: '-----BEGIN PUBLIC KEY-----
-
-            MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAq3DnhgYgLVJknvDA3clA
-
-            TozPtjI7yauqD/ZuqgZn4KzzzkQ4BzJar4jRygpzbghlFn0Luk1mdVKzPUgYj0V
-
-            kbRlHyYfxahbgOHixOOnXkKXrtZW7yWGjXPqy/ZJ/+kFBNPAzxy7fDuAzKfU3Rn5
-
-            0sBakg95pua14W1oE4rtd4/U+sg2maCq6HgGdCLLxRWwXA8IBtvHZ48i6kxiz9tu
-
-            -----END PUBLIC KEY-----'
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
+          description: Reference to the party assumed by the entity.
           format: bigint
           type: integer
           readOnly: true
-          example: 145
+          nullable: true
+          example: 17
+        party_name:
+          description: Name of the party assumed by the entity.
+          format: text
+          type: string
+          readOnly: true
+          nullable: true
+          example: Andersen SO
         entity:
           description: Embedded entity
           oneOf:
@@ -960,19 +951,67 @@ components:
       required:
       - id
       - entity_id
-      - client_id
+      - entity_name
+    party_membership_response:
+      summary: Response - Party Membership
+      description: Response schema - The relation between a party and entity.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 44
+        party_id:
+          description: Reference to the party that the membership links to an entity.
+          format: bigint
+          type: integer
+          example: 379
+        entity_id:
+          description: Reference to the entity that the party represents.
+          format: bigint
+          type: integer
+          example: 30
+        scopes:
+          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - party_id
+      - entity_id
       - scopes
       - recorded_at
       - recorded_by
-    entity_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      example: pid
-      enum:
-      - pid
-      - org
-      - email
     notice_response:
       summary: Response - Notice
       description: Response schema - Notice to users about various issues or actions expected from them.
@@ -1041,21 +1080,35 @@ components:
       - type
       - recorded_at
       - recorded_by
-    notice_data:
-      oneOf:
-      - $ref: '#/components/schemas/notice_data_valid_time_outside_contract'
-      - $ref: '#/components/schemas/notice_data_party_missing'
-      - $ref: '#/components/schemas/notice_data_party_outdated'
-      - $ref: '#/components/schemas/notice_data_product_type_not_qualified'
-      - $ref: '#/components/schemas/notice_data_controllable_unit_product_duplication'
-      discriminator:
-        propertyName: kind
-        mapping:
-          notice.data.valid_time.outside_contract: '#/components/schemas/notice_data_valid_time_outside_contract'
-          notice.data.party.missing: '#/components/schemas/notice_data_party_missing'
-          notice.data.party.outdated: '#/components/schemas/notice_data_party_outdated'
-          notice.data.product_type.not_qualified: '#/components/schemas/notice_data_product_type_not_qualified'
-          notice.data.controllable_unit.product_duplication: '#/components/schemas/notice_data_controllable_unit_product_duplication'
+    empty_object:
+      description: An empty object
+      type: object
+      properties: {}
+      additionalProperties: false
+    party_type:
+      description: The type of the party, e.g SystemOperator, ServiceProvider
+      format: text
+      type: string
+      example: energy_supplier
+      enum:
+      - balance_responsible_party
+      - end_user
+      - energy_supplier
+      - flexibility_information_system_operator
+      - market_operator
+      - organisation
+      - service_provider
+      - system_operator
+      - third_party
+    notice_status:
+      description: The status of the notice.
+      format: text
+      type: string
+      default: active
+      enum:
+      - active
+      - resolved
+      example: active
     notice_data_valid_time_outside_contract:
       type: object
       description: Format of the data field in a notice with data.kind = notice.data.valid_time.outside_contract
@@ -1069,6 +1122,31 @@ components:
         invalid_timeline:
           description: Part of the timeline where the end user on the CUSP relation does not match the end user on the accounting point.
           $ref: '#/components/schemas/timeline_multi_range'
+    notice_data_product_type_not_qualified:
+      type: object
+      description: Format of the data field in a notice with data.kind = notice.data.product_type.not_qualified
+      required:
+      - kind
+      properties:
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.product_type.not_qualified
+        product_type_ids:
+          description: List of product types that are not qualified.
+          type: array
+          items:
+            format: bigint
+            type: integer
+            example: 2
+    entity_type:
+      description: The type of the entity, e.g Person, Organisation
+      format: text
+      type: string
+      example: person
+      enum:
+      - person
+      - organisation
     party_business_id_type:
       description: The type of the business identifier.
       format: text
@@ -1080,106 +1158,28 @@ components:
       - eic_x
       - org
       example: gln
-    timeline_multi_range:
-      description: Partial timeline data that is relevant to mention, in a notice for instance. Multirange format, i.e., array of start/end timestamp pairs.
-      type: array
-      items:
-        type: object
-        properties:
-          valid_from:
-            type: string
-            format: date-time
-            description: The start time of the timeline section.
-            example: '2023-01-01T00:00:00+00:00'
-          valid_to:
-            type: string
-            format: date-time
-            description: The end time of the timeline section.
-            example: '2023-01-02T00:00:00+00:00'
-    party_role:
-      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
-      format: text
-      type: string
-      example: flex_energy_supplier
-      enum:
-      - flex_balance_responsible_party
-      - flex_end_user
-      - flex_energy_supplier
-      - flex_flexibility_information_system_operator
-      - flex_market_operator
-      - flex_organisation
-      - flex_service_provider
-      - flex_system_operator
-      - flex_third_party
-    notice_status:
-      description: The status of the notice.
-      format: text
-      type: string
-      default: active
-      enum:
-      - active
-      - resolved
-      example: active
-    party_membership_response:
-      summary: Response - Party Membership
-      description: Response schema - The relation between a party and entity.
+    notice_data_controllable_unit_product_duplication:
       type: object
+      description: Format of the data field in a notice with data.kind = notice.data.controllable_unit.product_duplication
+      required:
+      - kind
       properties:
-        id:
-          description: Unique surrogate identifier.
+        kind:
+          description: Identifies the notice data schema for discriminated union deserialization.
+          type: string
+          const: notice.data.controllable_unit.product_duplication
+        product_type_id:
+          description: The product type for which the controllable unit is registered in multiple service providing groups with active applications.
           format: bigint
           type: integer
-          readOnly: true
-          example: 44
-        party_id:
-          description: Reference to the party that the membership links to an entity.
-          format: bigint
-          type: integer
-          example: 379
-        entity_id:
-          description: Reference to the entity that the party represents.
-          format: bigint
-          type: integer
-          example: 30
-        scopes:
-          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
+          example: 2
+        service_providing_group_ids:
+          description: The service providing groups the controllable unit is a member of that have active applications for the product type.
           type: array
           items:
-            $ref: '#/components/schemas/auth_scope'
-          nullable: false
-          example:
-          - read:data
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        party:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - party_id
-      - entity_id
-      - scopes
-      - recorded_at
-      - recorded_by
+            format: bigint
+            type: integer
+            example: 5
     notice:
       properties:
         id:

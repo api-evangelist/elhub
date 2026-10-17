@@ -218,17 +218,17 @@ paths:
           $ref: '#/components/responses/500InternalServerError'
 components:
   parameters:
-    UserAgent:
-      name: User-Agent
-      in: header
-      required: true
-      schema:
-        type: string
     AuthorizationMaskinporten:
       name: Authorization
       in: header
       required: true
       description: Bearer Maskinporten token identifying the calling organization.
+      schema:
+        type: string
+    UserAgent:
+      name: User-Agent
+      in: header
+      required: true
       schema:
         type: string
     SenderGlnRequired:
@@ -248,8 +248,8 @@ components:
       schema:
         type: string
   responses:
-    406NotAcceptableError:
-      description: 'Not Acceptable. The server cannot produce a response matching the list of acceptable values defined in the request''s proactive content negotiation headers.
+    404NotFoundError:
+      description: 'Not found. The requested resource does not exist or is not accessible to the caller.
 
         '
       content:
@@ -257,13 +257,13 @@ components:
           schema:
             $ref: ./schemas/json-api-error.schema.json
           examples:
-            notAcceptable:
-              summary: Not acceptable error example
+            notFound:
+              summary: Not found error example
               value:
                 errors:
-                - status: '406'
-                  title: Not Acceptable
-                  detail: The requested media type is not supported.
+                - status: '404'
+                  title: Not Found
+                  detail: The requested resource could not be found.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
     422UnprocessableEntityError:
@@ -302,42 +302,6 @@ components:
                   detail: The authorization request type is not currently supported.
                 meta:
                   createdAt: '2025-12-17T12:51:57+01:00'
-    400BadRequestError:
-      description: 'Bad request. The request body is invalid or missing required fields.
-
-        '
-      content:
-        application/vnd.api+json:
-          schema:
-            $ref: ./schemas/json-api-error.schema.json
-          examples:
-            badRequest:
-              summary: Bad request error example
-              value:
-                errors:
-                - status: '400'
-                  title: Bad Request
-                  detail: A required field is missing or invalid.
-                  meta:
-                    createdAt: '2025-12-17T12:51:57+01:00'
-    500InternalServerError:
-      description: 'Internal server error. An unexpected error occurred while processing the request.
-
-        '
-      content:
-        application/vnd.api+json:
-          schema:
-            $ref: ./schemas/json-api-error.schema.json
-          examples:
-            internalServerError:
-              summary: Internal server error example
-              value:
-                errors:
-                - status: '500'
-                  title: Internal Server Error
-                  detail: An unexpected error occurred.
-                  meta:
-                    createdAt: '2025-12-17T12:51:57+01:00'
     409ConflictError:
       description: 'Conflict. The request could not be completed due to a conflict with the current state of the resource.
 
@@ -356,8 +320,8 @@ components:
                   detail: An authorization document already exists for the specified parties and validity period.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
-    404NotFoundError:
-      description: 'Not found. The requested resource does not exist or is not accessible to the caller.
+    413ContentTooLargeError:
+      description: 'Content Too Large. The request body exceeds the maximum allowed size.
 
         '
       content:
@@ -365,13 +329,31 @@ components:
           schema:
             $ref: ./schemas/json-api-error.schema.json
           examples:
-            notFound:
-              summary: Not found error example
+            contentTooLarge:
+              summary: Content too large error example
               value:
                 errors:
-                - status: '404'
-                  title: Not Found
-                  detail: The requested resource could not be found.
+                - status: '413'
+                  title: Content Too Large
+                  detail: Signed PDF upload size is limited to 1 MB.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    400BadRequestError:
+      description: 'Bad request. The request body is invalid or missing required fields.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            badRequest:
+              summary: Bad request error example
+              value:
+                errors:
+                - status: '400'
+                  title: Bad Request
+                  detail: A required field is missing or invalid.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
     401UnauthorizedError:
@@ -392,8 +374,8 @@ components:
                   detail: Authentication credentials are missing or invalid.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
-    415UnsupportedMediaTypeError:
-      description: 'Unsupported Media Type. The request body uses a media type the server or resource does not support.
+    500InternalServerError:
+      description: 'Internal server error. An unexpected error occurred while processing the request.
 
         '
       content:
@@ -401,13 +383,13 @@ components:
           schema:
             $ref: ./schemas/json-api-error.schema.json
           examples:
-            unsupportedMediaType:
-              summary: Unsupported media type error example
+            internalServerError:
+              summary: Internal server error example
               value:
                 errors:
-                - status: '415'
-                  title: Unsupported Media Type
-                  detail: The submitted content type is not supported.
+                - status: '500'
+                  title: Internal Server Error
+                  detail: An unexpected error occurred.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
     403ForbiddenError:
@@ -428,8 +410,8 @@ components:
                   detail: A detailed description for getting forbidden
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
-    413ContentTooLargeError:
-      description: 'Content Too Large. The request body exceeds the maximum allowed size.
+    406NotAcceptableError:
+      description: 'Not Acceptable. The server cannot produce a response matching the list of acceptable values defined in the request''s proactive content negotiation headers.
 
         '
       content:
@@ -437,13 +419,31 @@ components:
           schema:
             $ref: ./schemas/json-api-error.schema.json
           examples:
-            contentTooLarge:
-              summary: Content too large error example
+            notAcceptable:
+              summary: Not acceptable error example
               value:
                 errors:
-                - status: '413'
-                  title: Content Too Large
-                  detail: Signed PDF upload size is limited to 1 MB.
+                - status: '406'
+                  title: Not Acceptable
+                  detail: The requested media type is not supported.
+                  meta:
+                    createdAt: '2025-12-17T12:51:57+01:00'
+    415UnsupportedMediaTypeError:
+      description: 'Unsupported Media Type. The request body uses a media type the server or resource does not support.
+
+        '
+      content:
+        application/vnd.api+json:
+          schema:
+            $ref: ./schemas/json-api-error.schema.json
+          examples:
+            unsupportedMediaType:
+              summary: Unsupported media type error example
+              value:
+                errors:
+                - status: '415'
+                  title: Unsupported Media Type
+                  detail: The submitted content type is not supported.
                   meta:
                     createdAt: '2025-12-17T12:51:57+01:00'
   securitySchemes:

@@ -168,6 +168,15 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
     jsonapi.Links:
       type: object
       properties:
@@ -179,15 +188,30 @@ components:
       required:
       - members
       title: Links
-    jsonapi.Link.URI:
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
       type: object
       properties:
-        value:
-          type: string
+        header:
+          type:
+          - 'null'
+          - string
           title: String
-      required:
-      - value
-      title: Link.URI
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
     jsonapi.Error:
       type: object
       properties:
@@ -281,30 +305,6 @@ components:
       required:
       - members
       title: Meta
-    jsonapi.Link:
-      anyOf:
-      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
-      - $ref: '#/components/schemas/jsonapi.Link.URI'
-      title: Link
-    jsonapi.Error.Source:
-      type: object
-      properties:
-        header:
-          type:
-          - 'null'
-          - string
-          title: String
-        parameter:
-          type:
-          - 'null'
-          - string
-          title: String
-        pointer:
-          type:
-          - 'null'
-          - string
-          title: String
-      title: Error.Source
 externalDocs:
   url: /
 x-refined-from:

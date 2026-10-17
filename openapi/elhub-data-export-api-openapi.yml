@@ -409,6 +409,60 @@ paths:
       deprecated: false
 components:
   schemas:
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    no.elhub.ds.energy.data.models.Status:
+      type: string
+      enum:
+      - Initiated
+      - InProgress
+      - OnHold
+      - Rejected
+      - Completed
+      - Cancelled
+      title: Status
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
+      type: object
+      properties:
+        header:
+          type:
+          - 'null'
+          - string
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
     no.elhub.ds.energy.data.models.DataExportJob:
       type: object
       properties:
@@ -437,48 +491,6 @@ components:
       - status
       - type
       title: DataExportJob
-    jsonapi.Links:
-      type: object
-      properties:
-        members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/jsonapi.Link'
-          title: Map<String,Link>
-      required:
-      - members
-      title: Links
-    no.elhub.ds.energy.data.models.File:
-      type: object
-      properties:
-        filename:
-          type:
-          - 'null'
-          - string
-          description: File name
-          title: String
-        id:
-          type:
-          - 'null'
-          - string
-          description: File identification string
-          title: String
-        location:
-          type:
-          - 'null'
-          - string
-          description: File location URI
-          title: String
-      title: File
-    jsonapi.Link.URI:
-      type: object
-      properties:
-        value:
-          type: string
-          title: String
-      required:
-      - value
-      title: Link.URI
     jsonapi.Error:
       type: object
       properties:
@@ -600,39 +612,27 @@ components:
       required:
       - members
       title: Meta
-    no.elhub.ds.energy.data.models.Status:
-      type: string
-      enum:
-      - Initiated
-      - InProgress
-      - OnHold
-      - Rejected
-      - Completed
-      - Cancelled
-      title: Status
-    jsonapi.Link:
-      anyOf:
-      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
-      - $ref: '#/components/schemas/jsonapi.Link.URI'
-      title: Link
-    jsonapi.Error.Source:
+    no.elhub.ds.energy.data.models.File:
       type: object
       properties:
-        header:
+        filename:
           type:
           - 'null'
           - string
+          description: File name
           title: String
-        parameter:
+        id:
           type:
           - 'null'
           - string
+          description: File identification string
           title: String
-        pointer:
+        location:
           type:
           - 'null'
           - string
+          description: File location URI
           title: String
-      title: Error.Source
+      title: File
 externalDocs:
   url: /

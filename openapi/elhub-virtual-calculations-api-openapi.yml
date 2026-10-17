@@ -743,16 +743,127 @@ paths:
       - maskinporten: []
 components:
   schemas:
-    JsonApiErrorDocument:
+    VirtualCalculationResponseAttributes:
       type: object
-      title: JsonApiErrorDocument
+      title: VirtualCalculationResponseAttributes
       required:
-      - errors
+      - udcId
+      - name
+      - managingParty
+      - partyType
       properties:
-        errors:
+        udcId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        managingParty:
+          type: string
+        partyType:
+          type: string
+    VirtualCalculationIncluded.OrgIncluded:
+      type: object
+      title: VirtualCalculationIncluded.OrgIncluded
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+          enum:
+          - Party
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/OrganisationsResponseDto.Data.Attributes'
+    JsonApiToManyRelationship:
+      type: object
+      title: JsonApiToManyRelationship
+      required:
+      - data
+      properties:
+        data:
           type: array
           items:
-            $ref: '#/components/schemas/JsonApiError'
+            $ref: '#/components/schemas/JsonApiResourceIdentifier'
+    VirtualCalculationResourceData:
+      type: object
+      title: VirtualCalculationResourceData
+      required:
+      - type
+      - id
+      - attributes
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/VirtualCalculationResponseAttributes'
+        relationships:
+          $ref: '#/components/schemas/VirtualCalculationRelationships'
+    VirtualCalculationListResponse:
+      type: object
+      title: VirtualCalculationListResponse
+      required:
+      - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VirtualCalculationResourceData'
+        included:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VirtualCalculationIncluded'
+        links:
+          $ref: '#/components/schemas/JsonApiDocumentLinks'
+        meta:
+          $ref: '#/components/schemas/PageMeta'
+    JsonApiDocumentLinks:
+      type:
+      - object
+      - 'null'
+      title: JsonApiDocumentLinks
+      properties:
+        self:
+          type:
+          - string
+          - 'null'
+        first:
+          type:
+          - string
+          - 'null'
+        prev:
+          type:
+          - string
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+        last:
+          type:
+          - string
+          - 'null'
+    VirtualCalculationIncluded:
+      type: object
+      title: VirtualCalculationIncluded
+      oneOf:
+      - $ref: '#/components/schemas/VirtualCalculationIncluded.OrgIncluded'
+      - $ref: '#/components/schemas/VirtualCalculationIncluded.VersionIncluded'
+      discriminator:
+        propertyName: type
+        mapping:
+          Party: '#/components/schemas/VirtualCalculationIncluded.OrgIncluded'
+          Version: '#/components/schemas/VirtualCalculationIncluded.VersionIncluded'
     OrganisationsResponseDto.Data.Attributes:
       type: object
       title: OrganisationsResponseDto.Data.Attributes
@@ -769,6 +880,82 @@ components:
         name:
           type: string
         status:
+          type: string
+    JsonApiError:
+      type: object
+      title: JsonApiError
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        detail:
+          type:
+          - string
+          - 'null'
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+    VirtualCalculationPostDataDto:
+      type: object
+      title: VirtualCalculationPostDataDto
+      required:
+      - type
+      - attributes
+      properties:
+        type:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/VirtualCalculationPostAttributesDto'
+    VirtualCalculationPostRequestDto:
+      type: object
+      title: VirtualCalculationPostRequestDto
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/VirtualCalculationPostDataDto'
+    PageMeta:
+      type:
+      - object
+      - 'null'
+      title: PageMeta
+      required:
+      - page
+      - total
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMeta.PageInfo'
+        total:
+          $ref: '#/components/schemas/PageMeta.TotalInfo'
+    JsonElement:
+      type: object
+      title: JsonElement
+    JsonApiResourceIdentifier:
+      type: object
+      title: JsonApiResourceIdentifier
+      required:
+      - type
+      - id
+      properties:
+        type:
+          type: string
+        id:
           type: string
     VersionResponseAttributesDto:
       type: object
@@ -833,20 +1020,19 @@ components:
           - string
           - 'null'
           format: date
-    VirtualCalculationIncluded:
+    JsonApiErrorDocument:
       type: object
-      title: VirtualCalculationIncluded
-      oneOf:
-      - $ref: '#/components/schemas/VirtualCalculationIncluded.OrgIncluded'
-      - $ref: '#/components/schemas/VirtualCalculationIncluded.VersionIncluded'
-      discriminator:
-        propertyName: type
-        mapping:
-          Party: '#/components/schemas/VirtualCalculationIncluded.OrgIncluded'
-          Version: '#/components/schemas/VirtualCalculationIncluded.VersionIncluded'
-    VirtualCalculationResourceData:
+      title: JsonApiErrorDocument
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonApiError'
+    VirtualCalculationIncluded.VersionIncluded:
       type: object
-      title: VirtualCalculationResourceData
+      title: VirtualCalculationIncluded.VersionIncluded
       required:
       - type
       - id
@@ -854,38 +1040,32 @@ components:
       properties:
         type:
           type: string
+          enum:
+          - Version
         id:
           type: string
         attributes:
-          $ref: '#/components/schemas/VirtualCalculationResponseAttributes'
+          $ref: '#/components/schemas/VersionResponseAttributesDto'
         relationships:
-          $ref: '#/components/schemas/VirtualCalculationRelationships'
-    JsonApiDocumentLinks:
+          $ref: '#/components/schemas/VersionRelationships'
+    VirtualCalculationRelationships:
       type:
       - object
       - 'null'
-      title: JsonApiDocumentLinks
+      title: VirtualCalculationRelationships
+      required:
+      - party
       properties:
-        self:
-          type:
-          - string
-          - 'null'
-        first:
-          type:
-          - string
-          - 'null'
-        prev:
-          type:
-          - string
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-        last:
-          type:
-          - string
-          - 'null'
+        party:
+          $ref: '#/components/schemas/JsonApiToOneRelationship'
+        versions:
+          $ref: '#/components/schemas/JsonApiToManyRelationship'
+    JsonApiToOneRelationship:
+      type: object
+      title: JsonApiToOneRelationship
+      properties:
+        data:
+          $ref: '#/components/schemas/JsonApiResourceIdentifier'
     VersionRelationships:
       type:
       - object
@@ -899,49 +1079,21 @@ components:
           $ref: '#/components/schemas/JsonApiToOneRelationship'
         meteringPoints:
           $ref: '#/components/schemas/JsonApiToManyRelationship'
-    JsonElement:
+    VirtualCalculationPostAttributesDto:
       type: object
-      title: JsonElement
-    JsonApiToManyRelationship:
-      type: object
-      title: JsonApiToManyRelationship
+      title: VirtualCalculationPostAttributesDto
       required:
-      - data
+      - name
+      - partyType
       properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/JsonApiResourceIdentifier'
-    JsonApiError:
-      type: object
-      title: JsonApiError
-      properties:
-        id:
+        name:
+          type: string
+        description:
           type:
           - string
           - 'null'
-        status:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        detail:
-          type:
-          - string
-          - 'null'
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/JsonElement'
+        partyType:
+          type: string
     PageMeta.PageInfo:
       type: object
       title: PageMeta.PageInfo
@@ -953,71 +1105,22 @@ components:
           type: integer
         size:
           type: integer
-    PageMeta:
-      type:
-      - object
-      - 'null'
-      title: PageMeta
-      required:
-      - page
-      - total
-      properties:
-        page:
-          $ref: '#/components/schemas/PageMeta.PageInfo'
-        total:
-          $ref: '#/components/schemas/PageMeta.TotalInfo'
-    PageMeta.TotalInfo:
+    VirtualCalculationGetResponse:
       type: object
-      title: PageMeta.TotalInfo
-      required:
-      - pages
-      - items
-      properties:
-        pages:
-          type: integer
-        items:
-          type: integer
-    VirtualCalculationIncluded.OrgIncluded:
-      type: object
-      title: VirtualCalculationIncluded.OrgIncluded
-      required:
-      - type
-      - id
-      - attributes
-      properties:
-        type:
-          type: string
-          enum:
-          - Party
-        id:
-          type: string
-        attributes:
-          $ref: '#/components/schemas/OrganisationsResponseDto.Data.Attributes'
-    JsonApiToOneRelationship:
-      type: object
-      title: JsonApiToOneRelationship
-      properties:
-        data:
-          $ref: '#/components/schemas/JsonApiResourceIdentifier'
-    JsonApiResourceIdentifier:
-      type: object
-      title: JsonApiResourceIdentifier
-      required:
-      - type
-      - id
-      properties:
-        type:
-          type: string
-        id:
-          type: string
-    VirtualCalculationPostRequestDto:
-      type: object
-      title: VirtualCalculationPostRequestDto
+      title: VirtualCalculationGetResponse
       required:
       - data
       properties:
         data:
-          $ref: '#/components/schemas/VirtualCalculationPostDataDto'
+          $ref: '#/components/schemas/VirtualCalculationResourceData'
+        included:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/VirtualCalculationIncluded'
+        links:
+          $ref: '#/components/schemas/JsonApiDocumentLinks'
     VersionParticipantResponseDto:
       type: object
       title: VersionParticipantResponseDto
@@ -1058,120 +1161,17 @@ components:
           - EH.ELECTRIC.KWH.11.6
           - EH.ELECTRIC.KWH.11.7
           - EH.ELECTRIC.KWH.11.8
-    VirtualCalculationRelationships:
-      type:
-      - object
-      - 'null'
-      title: VirtualCalculationRelationships
-      required:
-      - party
-      properties:
-        party:
-          $ref: '#/components/schemas/JsonApiToOneRelationship'
-        versions:
-          $ref: '#/components/schemas/JsonApiToManyRelationship'
-    VirtualCalculationPostAttributesDto:
+    PageMeta.TotalInfo:
       type: object
-      title: VirtualCalculationPostAttributesDto
+      title: PageMeta.TotalInfo
       required:
-      - name
-      - partyType
+      - pages
+      - items
       properties:
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        partyType:
-          type: string
-    VirtualCalculationResponseAttributes:
-      type: object
-      title: VirtualCalculationResponseAttributes
-      required:
-      - udcId
-      - name
-      - managingParty
-      - partyType
-      properties:
-        udcId:
-          type: string
-          format: uuid
-        name:
-          type: string
-        description:
-          type:
-          - string
-          - 'null'
-        managingParty:
-          type: string
-        partyType:
-          type: string
-    VirtualCalculationIncluded.VersionIncluded:
-      type: object
-      title: VirtualCalculationIncluded.VersionIncluded
-      required:
-      - type
-      - id
-      - attributes
-      properties:
-        type:
-          type: string
-          enum:
-          - Version
-        id:
-          type: string
-        attributes:
-          $ref: '#/components/schemas/VersionResponseAttributesDto'
-        relationships:
-          $ref: '#/components/schemas/VersionRelationships'
-    VirtualCalculationGetResponse:
-      type: object
-      title: VirtualCalculationGetResponse
-      required:
-      - data
-      properties:
-        data:
-          $ref: '#/components/schemas/VirtualCalculationResourceData'
-        included:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VirtualCalculationIncluded'
-        links:
-          $ref: '#/components/schemas/JsonApiDocumentLinks'
-    VirtualCalculationPostDataDto:
-      type: object
-      title: VirtualCalculationPostDataDto
-      required:
-      - type
-      - attributes
-      properties:
-        type:
-          type: string
-        attributes:
-          $ref: '#/components/schemas/VirtualCalculationPostAttributesDto'
-    VirtualCalculationListResponse:
-      type: object
-      title: VirtualCalculationListResponse
-      required:
-      - data
-      properties:
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/VirtualCalculationResourceData'
-        included:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/VirtualCalculationIncluded'
-        links:
-          $ref: '#/components/schemas/JsonApiDocumentLinks'
-        meta:
-          $ref: '#/components/schemas/PageMeta'
+        pages:
+          type: integer
+        items:
+          type: integer
   securitySchemes:
     maskinporten:
       scheme: bearer

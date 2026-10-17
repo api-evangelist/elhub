@@ -1319,70 +1319,9 @@ paths:
       - maskinporten: []
 components:
   schemas:
-    VersionParticipantResponseDto:
+    SharedProductionVersionPostDataDto:
       type: object
-      title: VersionParticipantResponseDto
-      required:
-      - meteringPointId
-      - role
-      - channelType
-      properties:
-        meteringPointId:
-          type: string
-        role:
-          type: string
-          enum:
-          - Contributor
-          - Recipient
-          - Totalizer
-        share:
-          type:
-          - number
-          - 'null'
-        channelType:
-          type: string
-          enum:
-          - EH.ELECTRIC.KWH.1.3
-          - EH.ELECTRIC.KWH.1.32
-          - EH.ELECTRIC.KWH.1.4
-          - EH.ELECTRIC.KWH.1.7
-          - EH.ELECTRIC.KWH.1.8
-          - EH.ELECTRIC.KWH.1.9
-          - EH.ELECTRIC.KWH.1.10
-          - EH.ELECTRIC.KWH.1.11
-          - EH.ELECTRIC.KWH.1.12
-          - EH.ELECTRIC.KWH.11.1
-          - EH.ELECTRIC.KWH.11.2
-          - EH.ELECTRIC.KWH.11.3
-          - EH.ELECTRIC.KWH.11.4
-          - EH.ELECTRIC.KWH.11.5
-          - EH.ELECTRIC.KWH.11.6
-          - EH.ELECTRIC.KWH.11.7
-          - EH.ELECTRIC.KWH.11.8
-    JsonApiErrorDocument:
-      type: object
-      title: JsonApiErrorDocument
-      required:
-      - errors
-      properties:
-        errors:
-          type: array
-          items:
-            $ref: '#/components/schemas/JsonApiError'
-    SharedProductionVersionPostRequestDto:
-      type: object
-      title: SharedProductionVersionPostRequestDto
-      required:
-      - data
-      properties:
-        data:
-          $ref: '#/components/schemas/SharedProductionVersionPostDataDto'
-    JsonElement:
-      type: object
-      title: JsonElement
-    SharedProductionVersionPatchDataDto:
-      type: object
-      title: SharedProductionVersionPatchDataDto
+      title: SharedProductionVersionPostDataDto
       required:
       - type
       - attributes
@@ -1394,61 +1333,7 @@ components:
           - string
           - 'null'
         attributes:
-          $ref: '#/components/schemas/SharedProductionVersionPatchAttributesDto'
-    JsonApiError:
-      type: object
-      title: JsonApiError
-      properties:
-        id:
-          type:
-          - string
-          - 'null'
-        status:
-          type:
-          - string
-          - 'null'
-        code:
-          type:
-          - string
-          - 'null'
-        title:
-          type:
-          - string
-          - 'null'
-        detail:
-          type:
-          - string
-          - 'null'
-        meta:
-          type:
-          - object
-          - 'null'
-          additionalProperties:
-            $ref: '#/components/schemas/JsonElement'
-    SharedProductionVersionPatchRequestDto:
-      type: object
-      title: SharedProductionVersionPatchRequestDto
-      required:
-      - data
-      properties:
-        data:
-          $ref: '#/components/schemas/SharedProductionVersionPatchDataDto'
-    SharedProductionVersionResponseDataDto:
-      type: object
-      title: SharedProductionVersionResponseDataDto
-      required:
-      - type
-      - id
-      - attributes
-      properties:
-        type:
-          type: string
-        id:
-          type: string
-        attributes:
-          $ref: '#/components/schemas/VersionResponseAttributesDto'
-        links:
-          $ref: '#/components/schemas/JsonApiResourceLink'
+          $ref: '#/components/schemas/SharedProductionVersionPostAttributesDto'
     VersionResponseAttributesDto:
       type: object
       title: VersionResponseAttributesDto
@@ -1512,16 +1397,147 @@ components:
           - string
           - 'null'
           format: date
-    JsonApiResourceLink:
-      type:
-      - object
-      - 'null'
-      title: JsonApiResourceLink
+    SharedProductionVersionResponseDataDto:
+      type: object
+      title: SharedProductionVersionResponseDataDto
       required:
-      - self
+      - type
+      - id
+      - attributes
       properties:
-        self:
+        type:
           type: string
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/VersionResponseAttributesDto'
+        links:
+          $ref: '#/components/schemas/JsonApiResourceLink'
+    JsonApiError:
+      type: object
+      title: JsonApiError
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+        status:
+          type:
+          - string
+          - 'null'
+        code:
+          type:
+          - string
+          - 'null'
+        title:
+          type:
+          - string
+          - 'null'
+        detail:
+          type:
+          - string
+          - 'null'
+        meta:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            $ref: '#/components/schemas/JsonElement'
+    JsonElement:
+      type: object
+      title: JsonElement
+    SharedProductionVersionPatchRequestDto:
+      type: object
+      title: SharedProductionVersionPatchRequestDto
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/SharedProductionVersionPatchDataDto'
+    JsonApiErrorDocument:
+      type: object
+      title: JsonApiErrorDocument
+      required:
+      - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/JsonApiError'
+    SharedProductionVersionResponseDto:
+      type: object
+      title: SharedProductionVersionResponseDto
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/SharedProductionVersionResponseDataDto'
+        links:
+          $ref: '#/components/schemas/JsonApiDocumentLinks'
+    SharedProductionVersionPatchDataDto:
+      type: object
+      title: SharedProductionVersionPatchDataDto
+      required:
+      - type
+      - attributes
+      properties:
+        type:
+          type: string
+        id:
+          type:
+          - string
+          - 'null'
+        attributes:
+          $ref: '#/components/schemas/SharedProductionVersionPatchAttributesDto'
+    SharedProductionVersionPatchAttributesDto:
+      type: object
+      title: SharedProductionVersionPatchAttributesDto
+      properties:
+        participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/VersionParticipantDto'
+        status:
+          type: string
+          enum:
+          - Draft
+          - Active
+        template:
+          type: string
+          enum:
+          - NetMetering
+          - GrossMetering
+          - NetConsLargeCustomer
+          - SharedProduction
+          - SharedConsumption
+        settlementLevel:
+          type: string
+          enum:
+          - Contributor
+          - Totalizer
+          - Participant
+        resolution:
+          type: string
+          format: duration
+        recipientFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ConsumptionBased
+          - Manual
+        contributorFormulaType:
+          type: string
+          enum:
+          - EquallyDistributed
+          - ProductionBased
+          - Manual
+          - NoDistribution
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
     VersionParticipantDto:
       type: object
       title: VersionParticipantDto
@@ -1541,6 +1557,80 @@ components:
           type:
           - number
           - 'null'
+    JsonApiDocumentLinks:
+      type:
+      - object
+      - 'null'
+      title: JsonApiDocumentLinks
+      properties:
+        self:
+          type:
+          - string
+          - 'null'
+        first:
+          type:
+          - string
+          - 'null'
+        prev:
+          type:
+          - string
+          - 'null'
+        next:
+          type:
+          - string
+          - 'null'
+        last:
+          type:
+          - string
+          - 'null'
+    SharedProductionVersionPostRequestDto:
+      type: object
+      title: SharedProductionVersionPostRequestDto
+      required:
+      - data
+      properties:
+        data:
+          $ref: '#/components/schemas/SharedProductionVersionPostDataDto'
+    VersionParticipantResponseDto:
+      type: object
+      title: VersionParticipantResponseDto
+      required:
+      - meteringPointId
+      - role
+      - channelType
+      properties:
+        meteringPointId:
+          type: string
+        role:
+          type: string
+          enum:
+          - Contributor
+          - Recipient
+          - Totalizer
+        share:
+          type:
+          - number
+          - 'null'
+        channelType:
+          type: string
+          enum:
+          - EH.ELECTRIC.KWH.1.3
+          - EH.ELECTRIC.KWH.1.32
+          - EH.ELECTRIC.KWH.1.4
+          - EH.ELECTRIC.KWH.1.7
+          - EH.ELECTRIC.KWH.1.8
+          - EH.ELECTRIC.KWH.1.9
+          - EH.ELECTRIC.KWH.1.10
+          - EH.ELECTRIC.KWH.1.11
+          - EH.ELECTRIC.KWH.1.12
+          - EH.ELECTRIC.KWH.11.1
+          - EH.ELECTRIC.KWH.11.2
+          - EH.ELECTRIC.KWH.11.3
+          - EH.ELECTRIC.KWH.11.4
+          - EH.ELECTRIC.KWH.11.5
+          - EH.ELECTRIC.KWH.11.6
+          - EH.ELECTRIC.KWH.11.7
+          - EH.ELECTRIC.KWH.11.8
     SharedProductionVersionPostAttributesDto:
       type: object
       title: SharedProductionVersionPostAttributesDto
@@ -1601,106 +1691,16 @@ components:
           enum:
           - Draft
           - Active
-    JsonApiDocumentLinks:
+    JsonApiResourceLink:
       type:
       - object
       - 'null'
-      title: JsonApiDocumentLinks
+      title: JsonApiResourceLink
+      required:
+      - self
       properties:
         self:
-          type:
-          - string
-          - 'null'
-        first:
-          type:
-          - string
-          - 'null'
-        prev:
-          type:
-          - string
-          - 'null'
-        next:
-          type:
-          - string
-          - 'null'
-        last:
-          type:
-          - string
-          - 'null'
-    SharedProductionVersionResponseDto:
-      type: object
-      title: SharedProductionVersionResponseDto
-      required:
-      - data
-      properties:
-        data:
-          $ref: '#/components/schemas/SharedProductionVersionResponseDataDto'
-        links:
-          $ref: '#/components/schemas/JsonApiDocumentLinks'
-    SharedProductionVersionPatchAttributesDto:
-      type: object
-      title: SharedProductionVersionPatchAttributesDto
-      properties:
-        participants:
-          type: array
-          items:
-            $ref: '#/components/schemas/VersionParticipantDto'
-        status:
           type: string
-          enum:
-          - Draft
-          - Active
-        template:
-          type: string
-          enum:
-          - NetMetering
-          - GrossMetering
-          - NetConsLargeCustomer
-          - SharedProduction
-          - SharedConsumption
-        settlementLevel:
-          type: string
-          enum:
-          - Contributor
-          - Totalizer
-          - Participant
-        resolution:
-          type: string
-          format: duration
-        recipientFormulaType:
-          type: string
-          enum:
-          - EquallyDistributed
-          - ConsumptionBased
-          - Manual
-        contributorFormulaType:
-          type: string
-          enum:
-          - EquallyDistributed
-          - ProductionBased
-          - Manual
-          - NoDistribution
-        startDate:
-          type: string
-          format: date
-        endDate:
-          type: string
-          format: date
-    SharedProductionVersionPostDataDto:
-      type: object
-      title: SharedProductionVersionPostDataDto
-      required:
-      - type
-      - attributes
-      properties:
-        type:
-          type: string
-        id:
-          type:
-          - string
-          - 'null'
-        attributes:
-          $ref: '#/components/schemas/SharedProductionVersionPostAttributesDto'
   securitySchemes:
     maskinporten:
       scheme: bearer

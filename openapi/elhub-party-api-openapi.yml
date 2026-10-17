@@ -869,10 +869,121 @@ components:
           description: Start time of the interval
           title: String
       title: ConsumptionPerGroupMbaHour
-    no.elhub.ds.energy.data.models.pricearea.LossPerMbaHour:
+    no.elhub.ds.energy.data.models.gridarea.ConsumptionPerBalanceSupplierMgaHour:
       type: object
       properties:
-        calculateLossFraction:
+        balanceSupplier:
+          type:
+          - 'null'
+          - string
+          description: The GLN of the balance supplier
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: The end time of the interval.
+          title: String
+        gridArea:
+          type:
+          - 'null'
+          - string
+          description: The grid area.
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: Last updated time for the row.
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate.
+          title: Int
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate.
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: The start time of the interval.
+          title: String
+      title: ConsumptionPerBalanceSupplierMgaHour
+    no.elhub.ds.energy.data.models.pricearea.MeteringValueComparisonEacPerMonth:
+      type: object
+      properties:
+        consumptionGroup:
+          type:
+          - 'null'
+          - string
+          description: The consumption group
+          title: String
+        costNorwayPrice:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The cost based on the Norway price in NOK/kWh
+          title: Float
+        costSpotPrice:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The cost based on the spot price in NOK/kWh
+          title: Float
+        costSupportPrice:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The cost based on the support price in NOK/kWh
+          title: Float
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval
+          title: String
+        estimatedAnnualConsumption:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Sum of estimated annual consumption of all metering points
+          title: Int
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: The price area
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval
+          title: String
+      title: MeteringValueComparisonEacPerMonth
+    no.elhub.ds.energy.data.models.gridarea.LossPerMgaHour:
+      type: object
+      properties:
+        calculatedLossFraction:
           type: number
           format: float
           description: calculatedLossQuantityKwh divided by netInfeedQuantityKwh. Multiply with 100 to get percentage. Will be 0 if net infeed is 0.
@@ -884,33 +995,18 @@ components:
           format: float
           description: The loss in kwh. Includes no balance supplier loss. Calculated as production + exchange in - exchange out - consumption.
           title: Float
-        consumptionQuantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: Consumption quantity in kwh. Includes interval consumption(including consumption from combined metering points) and profile consumption
-          title: Float
         endTime:
           type:
           - 'null'
           - string
-          description: The end time of the interval
+          description: End time of the interval
           title: String
-        exchangeInQuantityKwh:
+        gridArea:
           type:
           - 'null'
-          - number
-          format: float
-          description: The exchange quantity in kWh for the IN direction
-          title: Float
-        exchangeOutQuantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The exchange quantity in kWh for the OUT direction
-          title: Float
+          - string
+          description: The grid area.
+          title: String
         lastUpdatedTime:
           type:
           - 'null'
@@ -930,22 +1026,260 @@ components:
           - string
           description: The price area
           title: String
-        productionQuantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: Production quantity in kwh
-          title: Float
         startTime:
           type:
           - 'null'
           - string
-          description: The start time of the interval
+          description: Start time of the interval
           title: String
       required:
-      - calculateLossFraction
-      title: LossPerMbaHour
+      - calculatedLossFraction
+      title: LossPerMgaHour
+    jsonapi.Link.LinkObject:
+      type: object
+      properties:
+        describedBy:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Link'
+        href:
+          type: string
+          title: String
+        hreflang:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+            title: String
+          title: List<String>
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        rel:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+        type:
+          type:
+          - 'null'
+          - string
+          title: String
+      required:
+      - href
+      title: Link.LinkObject
+    no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerMba:
+      type: object
+      properties:
+        actualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received. Excluding reads exchange points in neighbouring grid areas
+          title: Int
+        combinedConsumptionActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for consumption on combined metering points (E19)
+          title: Int
+        combinedConsumptionExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for consumption on combined metering points (E19)
+          title: Int
+        combinedProductionActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for production on combined metering points (E19)
+          title: Int
+        combinedProductionExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for production on combined metering points (E19)
+          title: Int
+        consumptionFifteenActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for consumption (E17) on 15 min resolution
+          title: Int
+        consumptionFifteenExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for consumption (E17) on 15 min resolution
+          title: Int
+        consumptionSixtyActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for consumption (E17) on 60 min resolution
+          title: Int
+        consumptionSixtyExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for consumption (E17) on 60 min resolution
+          title: Int
+        estimatedAnnualConsumptionAll:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of estimated annual consumption of all metering point. E17 and E19 only. Direction Out only.
+          title: Long
+        estimatedAnnualConsumptionCompleted:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of estimated annual consumption of all completed metering point, meaning number of received reads are equal to expected. E17 and E19 only. Direction Out only.
+          title: Long
+        estimatedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Count of how many reads are received for the usage date which does not have measured quality. (Also included in actual interval count)
+          title: Int
+        exchangeActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for exchange points (E20) in grid area. Excluding exchange points in neighbouring grid areas
+          title: Int
+        exchangeExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for exchange points (E20) in grid area. Excluding exchange points in neighbouring grid areas
+          title: Int
+        expectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received. Excluding reads exchange points in neighbouring grid areas
+          title: Int
+        finalEstimatedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Count of how many reads are received for the usage date which has final estimated quality.(Also included in actual interval count)
+          title: Int
+        installedCapacityAll:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of installed capacity of all metering point. E18 and E19 only. Direction In only.
+          title: Long
+        installedCapacityCompleted:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of installed capacity of all completed metering point, meaning number of received reads are equal to expected. E18 and E19 only. Direction In only.
+          title: Long
+        largeProductionActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for large production (E18) metering points
+          title: Int
+        largeProductionExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for large production (E18) metering points
+          title: Int
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        loadLimitAll:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of load limit of all metering point. E17 and E19 only. Direction Out only.
+          title: Long
+        loadLimitCompleted:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of load limit of all completed metering point, meaning number of received reads are equal to expected. E17 and E19 only. Direction Out only.
+          title: Long
+        meteredIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Count of how many reads are received for the usage date which has metered(highest) quality.(Also included in actual interval count)
+          title: Int
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of metering points. Excluding exchange points in neighbouring grid areas
+          title: Int
+        notCompleteMeteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of metering points where actually received metering value count is less than expected
+          title: Int
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: The price area
+          title: String
+        temporaryIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Count of how many reads are received for the usage date which has temporary quality.(Also included in actual interval count)
+          title: Int
+        usageDateId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The usage date
+          title: Int
+      title: CompletenessDailyPerMba
     no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerBalanceSupplierMga:
       type: object
       properties:
@@ -1149,60 +1483,127 @@ components:
           description: The usage date
           title: Int
       title: CompletenessDailyPerBalanceSupplierMga
-    no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour:
+    no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth:
       type: object
       properties:
-        balanceResponsible:
+        consumptionKwh:
+          description: Sum of consumption
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        consumptionKwhNorwayPrice:
+          description: Sum of consumption for metering points when on Norway price and below threshold
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        consumptionKwhSpotPrice:
+          description: Sum of consumption for metering points when on spot price
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        consumptionKwhSupportPrice:
+          description: Sum of consumption for metering points when on support price and below threshold
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        costNorwayPrice:
+          description: Cost of consumption in NOK/kWh when on Norway price and below threshold
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        costSpotPrice:
+          description: Cost of consumption in NOK/kWh when on spot price
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        costSupportPrice:
+          description: Cost of consumption in NOK/kWh when on support price and below threshold
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        countEligibleForNorwayPrice:
           type:
           - 'null'
-          - string
-          description: The GLN of the balance responsible
-          title: String
+          - integer
+          format: int32
+          description: Number of metering points eligible for Norway price at end of month
+          title: Int
+        countEligibleForSupportPrice:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points eligible for support price at end of month
+          title: Int
+        countNorwayPriceContract:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points with Norway price at least one day in month
+          title: Int
+        countNorwayPriceContractEndOfMonth:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points with Norway price last day of month
+          title: Int
+        countSupportPriceContract:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points with support price at least one day in month
+          title: Int
+        countSupportPriceContractEndOfMonth:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points with support price last day of month
+          title: Int
         endTime:
           type:
           - 'null'
           - string
-          description: End time of the interval.
+          description: End time of the interval
           title: String
         lastUpdatedTime:
           type:
           - 'null'
           - string
-          description: Last updated time
+          description: When the row was last updated
           title: String
-        meteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of metering points in the aggregate.
-          title: Int
-        meteringPointTypeCode:
-          type:
-          - 'null'
-          - string
-          description: The code of the MeteringPointType. E.g. E18. <a href='https://dok.elhub.no/e27/metering-point-type' target='_new'>metering point type</a>
-          title: String
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: The Price Area
-          title: String
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate.
-          title: Float
         startTime:
           type:
           - 'null'
           - string
-          description: Start time of the interval.
+          description: Start time of the interval
           title: String
-      title: ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour
+        supportNorwayPrice:
+          description: Support amount for consumption when on Norway price and below threshold
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        supportSupportPrice:
+          description: Support amount for consumption when on support price and below threshold
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        totalCost:
+          description: Total cost of consumption in NOK
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/java.math.BigDecimal'
+        yearMonth:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Year and month of the aggregate in YYYYMM format
+          title: Int
+      title: CostPerMgaMonth
     no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceResponsibleMbaHour:
       type: object
       properties:
@@ -1251,7 +1652,100 @@ components:
           description: The start time of the interval.
           title: String
       title: ConsumptionPerBalanceResponsibleMbaHour
-    no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour:
+    no.elhub.ds.energy.data.models.gridarea.ConsumptionPerGroupMgaHour:
+      type: object
+      properties:
+        consumptionGroup:
+          type:
+          - 'null'
+          - string
+          description: The consumption group
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval
+          title: String
+        gridArea:
+          type:
+          - 'null'
+          - string
+          description: The grid area.
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: Last updated time for the row.
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate
+          title: Int
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval
+          title: String
+      title: ConsumptionPerGroupMgaHour
+    java.math.BigDecimal:
+      type: object
+      properties: {}
+      title: BigDecimal
+    no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMba15Min:
+      type: object
+      properties:
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: The price area
+          title: String
+        productionGroup:
+          type:
+          - 'null'
+          - string
+          description: 'Production group: solar, hydro, wind, thermal, other'
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval
+          title: String
+      title: ProductionPerGroupMba15Min
+    no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceSupplierMbaHour:
       type: object
       properties:
         balanceSupplier:
@@ -1264,32 +1758,26 @@ components:
           type:
           - 'null'
           - string
-          description: End time of the interval.
+          description: The end time of the interval.
           title: String
         lastUpdatedTime:
           type:
           - 'null'
           - string
-          description: Last updated time
+          description: Last updated time for the row.
           title: String
         meteringPointCount:
           type:
           - 'null'
           - integer
           format: int32
-          description: The number of metering points in the aggregate.
+          description: Number of metering points that are part of the aggregate.
           title: Int
-        meteringPointTypeCode:
-          type:
-          - 'null'
-          - string
-          description: The code of the MeteringPointType. E.g. E18. <a href='https://dok.elhub.no/e27/metering-point-type' target='_new'>metering point type</a>
-          title: String
         priceArea:
           type:
           - 'null'
           - string
-          description: The Price Area
+          description: The price area.
           title: String
         quantityKwh:
           type:
@@ -1302,9 +1790,9 @@ components:
           type:
           - 'null'
           - string
-          description: Start time of the interval.
+          description: The start time of the interval.
           title: String
-      title: ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour
+      title: ConsumptionPerBalanceSupplierMbaHour
     no.elhub.ds.energy.data.models.gridarea.ExchangePerMgaHour:
       type: object
       properties:
@@ -1365,32 +1853,85 @@ components:
           description: Start time of the interval
           title: String
       title: ExchangePerMgaHour
-    jsonapi.Meta:
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    no.elhub.ds.energy.data.models.pricearea.InstalledCapacityPerMeteringPointTypeGroupMbaDaily:
       type: object
       properties:
-        members:
-          type: object
-          additionalProperties:
-            type: object
-            title: Any
-          title: Map<String,Any>
-      required:
-      - members
-      title: Meta
-    no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceSupplierMbaHour:
+        installedCapacity:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Sum of installed capacity of all metering point. E18(production) and E19(combined/prosumers) only. Direction In only(production), meaning consumption is ignored.
+          title: Float
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18(production), E19(combined/prosumers)
+          title: String
+        priceAreaId:
+          type:
+          - 'null'
+          - string
+          description: Price area ID
+          title: String
+        productionGroup:
+          type:
+          - 'null'
+          - string
+          description: 'Production group: solar, hydro, wind, thermal, other'
+          title: String
+        usageDateId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The usage date
+          title: Int
+      title: InstalledCapacityPerMeteringPointTypeGroupMbaDaily
+    no.elhub.ds.energy.data.models.gridarea.ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode:
       type: object
       properties:
         balanceSupplier:
           type:
           - 'null'
           - string
-          description: The GLN of the balance supplier
+          description: The balance supplier
+          title: String
+        consumptionGroup:
+          type:
+          - 'null'
+          - string
+          description: The consumption group
+          title: String
+        consumptionTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The consumption type code
           title: String
         endTime:
           type:
           - 'null'
           - string
-          description: The end time of the interval.
+          description: The end time of the interval
+          title: String
+        gridArea:
+          type:
+          - 'null'
+          - string
+          description: The grid area
           title: String
         lastUpdatedTime:
           type:
@@ -1403,13 +1944,67 @@ components:
           - 'null'
           - integer
           format: int32
-          description: Number of metering points that are part of the aggregate.
+          description: Number of metering points that are part of the aggregate
           title: Int
         priceArea:
           type:
           - 'null'
           - string
-          description: The price area.
+          description: Price area of the aggregate.
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: The start time of the interval
+          title: String
+      title: ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode
+    no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour:
+      type: object
+      properties:
+        balanceResponsible:
+          type:
+          - 'null'
+          - string
+          description: The GLN of the balance responsible
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval.
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: Last updated time
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of metering points in the aggregate.
+          title: Int
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18. <a href='https://dok.elhub.no/e27/metering-point-type' target='_new'>metering point type</a>
+          title: String
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: The Price Area
           title: String
         quantityKwh:
           type:
@@ -1422,170 +2017,386 @@ components:
           type:
           - 'null'
           - string
-          description: The start time of the interval.
+          description: Start time of the interval.
           title: String
-      title: ConsumptionPerBalanceSupplierMbaHour
-    no.elhub.ds.energy.data.models.pricearea.PriceArea:
+      title: ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour
+    no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerBalanceSupplierMba:
       type: object
       properties:
-        completenessDailyPerBalanceSupplierMba:
+        actualIntervalCount:
           type:
           - 'null'
-          - array
-          description: List of completeness daily per balance supplier MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerBalanceSupplierMba'
-          title: List<CompletenessDailyPerBalanceSupplierMba>
-        completenessDailyPerMba:
-          type:
-          - 'null'
-          - array
-          description: List of completeness daily per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerMba'
-          title: List<CompletenessDailyPerMba>
-        consumptionPerBalanceResponsibleMbaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated consumption per balance responsible per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceResponsibleMbaHour'
-          title: List<ConsumptionPerBalanceResponsibleMbaHour>
-        consumptionPerBalanceSupplierMbaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated consumption per balance supplier per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceSupplierMbaHour'
-          title: List<ConsumptionPerBalanceSupplierMbaHour>
-        consumptionPerGroupMbaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated consumption per group per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ConsumptionPerGroupMbaHour'
-          title: List<ConsumptionPerGroupMbaHour>
-        country:
+          - integer
+          format: int32
+          description: The number of reads actually received
+          title: Int
+        balanceSupplier:
           type:
           - 'null'
           - string
-          description: Price area country
+          description: The GLN of the balance supplier
           title: String
-        eic:
+        combinedConsumptionActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for consumption on combined metering points (E19)
+          title: Int
+        combinedConsumptionExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for consumption on combined metering points (E19)
+          title: Int
+        combinedProductionActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for production on combined metering points (E19)
+          title: Int
+        combinedProductionExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for production on combined metering points (E19)
+          title: Int
+        consumptionFifteenActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for consumption (E17) on 15 min resolution
+          title: Int
+        consumptionFifteenExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for consumption (E17) on 15 min resolution
+          title: Int
+        consumptionSixtyActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for consumption (E17) on 60 min resolution
+          title: Int
+        consumptionSixtyExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for consumption (E17) on 60 min resolution
+          title: Int
+        estimatedAnnualConsumptionAll:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of estimated annual consumption of all metering point. E17 and E19 only. Direction Out only.
+          title: Long
+        estimatedAnnualConsumptionCompleted:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of estimated annual consumption of all completed metering point, meaning number of received reads are equal to expected. E17 and E19 only. Direction Out only.
+          title: Long
+        estimatedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Count of how many reads are received for the usage date which does not have measured quality. (Also included in actual interval count)
+          title: Int
+        expectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received
+          title: Int
+        finalEstimatedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Count of how many reads are received for the usage date which has final estimated quality.(Also included in actual interval count)
+          title: Int
+        installedCapacityAll:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of installed capacity of all metering point. E18 and E19 only. Direction In only.
+          title: Long
+        installedCapacityCompleted:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of installed capacity of all completed metering point, meaning number of received reads are equal to expected. E18 and E19 only. Direction In only.
+          title: Long
+        largeProductionActualIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads actually received for large production (E18) metering points
+          title: Int
+        largeProductionExpectedIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of reads expected to be received for large production (E18) metering points
+          title: Int
+        lastUpdatedTime:
           type:
           - 'null'
           - string
-          description: Price area EIC
+          description: When the row was last updated
           title: String
-        exchangePerMba15Min:
+        loadLimitAll:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of load limit of all metering point. E17 and E19 only. Direction Out only.
+          title: Long
+        loadLimitCompleted:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Sum of load limit of all completed metering point, meaning number of received reads are equal to expected. E17 and E19 only. Direction Out only.
+          title: Long
+        meteredIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Count of how many reads are received for the usage date which has metered(highest) quality.(Also included in actual interval count)
+          title: Int
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate
+          title: Int
+        notCompleteMeteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of metering points where actually received metering value count is less than expected
+          title: Int
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: The price area
+          title: String
+        temporaryIntervalCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Count of how many reads are received for the usage date which has temporary quality.(Also included in actual interval count)
+          title: Int
+        usageDateId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The usage date
+          title: Int
+      title: CompletenessDailyPerBalanceSupplierMba
+    no.elhub.ds.energy.data.models.pricearea.ExchangePerMba15Min:
+      type: object
+      properties:
+        adjacentPriceArea:
+          type:
+          - 'null'
+          - string
+          description: The adjacent price area
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: The end time of the interval
+          title: String
+        exchangeInQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The exchange quantity in kWh for the IN direction
+          title: Float
+        exchangeOutQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The exchange quantity in kWh for the OUT direction
+          title: Float
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: Last updated time for the row.
+          title: String
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: The price area
+          title: String
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: The start time of the interval
+          title: String
+      title: ExchangePerMba15Min
+    no.elhub.ds.energy.data.models.pricearea.NorgesprisConsumptionPerGroupEacMba:
+      type: object
+      properties:
+        consumptionGroup:
+          type:
+          - 'null'
+          - string
+          description: The consumption group
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval
+          title: String
+        estimatedAnnualConsumptionFrom:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Estimated annual consumption from (kWh)
+          title: Long
+        estimatedAnnualConsumptionTo:
+          type:
+          - 'null'
+          - integer
+          format: int64
+          description: Estimated annual consumption to (kWh)
+          title: Long
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: Last updated time for the row.
+          title: String
+        meteringPointCountNorwayPrice:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Metering point count for Norway price
+          title: Int
+        meteringPointCountNotNorwayPrice:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Metering point count not for Norway price
+          title: Int
+        quantityKwhNorwayPrice:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Quantity in kWh for Norway price
+          title: Float
+        quantityKwhNotNorwayPrice:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Quantity in kWh not for Norway price
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval
+          title: String
+        totalMeteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Total metering point count
+          title: Int
+        totalQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Total aggregated consumption in kWh
+          title: Float
+      title: NorgesprisConsumptionPerGroupEacMba
+    no.elhub.ds.energy.data.models.Party:
+      type: object
+      properties:
+        gln:
+          type: string
+          description: Party GLN number
+          title: String
+        gridArea:
           type:
           - 'null'
           - array
-          description: List of 15 minute aggregated exchange per MBA
+          description: Grid areas
           items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ExchangePerMba15Min'
-          title: List<ExchangePerMba15Min>
-        exchangePerMbaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated exchange per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ExchangePerMbaHour'
-          title: List<ExchangePerMbaHour>
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.GridArea'
+          title: List<GridArea>
         id:
           type:
           - 'null'
           - string
-          description: Price area ID
+          description: Party identification string
           title: String
-        installedCapacityPerMeteringPointTypeGroupMbaDaily:
-          type:
-          - 'null'
-          - array
-          description: List of installed capacity per metering point type group per MBA daily
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.InstalledCapacityPerMeteringPointTypeGroupMbaDaily'
-          title: List<InstalledCapacityPerMeteringPointTypeGroupMbaDaily>
         links:
           description: Links object
           oneOf:
           - type: 'null'
           - $ref: '#/components/schemas/jsonapi.Links'
-        lossPerMbaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated loss per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.LossPerMbaHour'
-          title: List<LossPerMbaHour>
-        meteringValueComparisonEacPerMonth:
-          type:
-          - 'null'
-          - array
-          description: List of metering value comparison EAC per month
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.MeteringValueComparisonEacPerMonth'
-          title: List<MeteringValueComparisonEacPerMonth>
         name:
+          type: string
+          description: Party name
+          title: String
+        organisationNumber:
           type:
           - 'null'
           - string
-          description: Price area name
+          description: Party organisation number
           title: String
-        norgesprisConsumptionPerGroupEacMba:
-          type:
-          - 'null'
-          - array
-          description: List of Norgespris consumption per group EAC MBA
+        partyTypes:
+          type: array
+          description: Party types for the party
           items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.NorgesprisConsumptionPerGroupEacMba'
-          title: List<NorgesprisConsumptionPerGroupEacMba>
-        productionPerBalanceResponsibleMeteringPointTypeCodeMbaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated production per balance responsible per metering point type per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour'
-          title: List<ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour>
-        productionPerBalanceSupplierMeteringPointTypeCodeMbaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated production per balance supplier per metering point type per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour'
-          title: List<ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour>
-        productionPerGroupMba15Min:
-          type:
-          - 'null'
-          - array
-          description: List of 15 minute aggregated production per group per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMba15Min'
-          title: List<ProductionPerGroupMba15Min>
-        productionPerGroupMbaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated production per group per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMbaHour'
-          title: List<ProductionPerGroupMbaHour>
-        productionPerMba15Min:
-          type:
-          - 'null'
-          - array
-          description: List of 15 minute aggregated production per MBA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerMba15Min'
-          title: List<ProductionPerMba15Min>
-      title: PriceArea
+            type: string
+            title: String
+          title: List<String>
+      required:
+      - gln
+      - name
+      - partyTypes
+      title: Party
     no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth:
       type: object
       properties:
@@ -1755,159 +2566,230 @@ components:
           description: Year and month of the aggregate in YYYYMM format
           title: Int
       title: CostPerMgaMunicipalityGroupTypeMonth
-    no.elhub.ds.energy.data.models.gridarea.ConsumptionPerGroupMgaHour:
+    jsonapi.Error.Source:
       type: object
       properties:
-        consumptionGroup:
+        header:
           type:
           - 'null'
           - string
-          description: The consumption group
+          title: String
+        parameter:
+          type:
+          - 'null'
+          - string
+          title: String
+        pointer:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error.Source
+    no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour:
+      type: object
+      properties:
+        balanceSupplier:
+          type:
+          - 'null'
+          - string
+          description: The GLN of the balance supplier
           title: String
         endTime:
           type:
           - 'null'
           - string
-          description: End time of the interval
-          title: String
-        gridArea:
-          type:
-          - 'null'
-          - string
-          description: The grid area.
+          description: End time of the interval.
           title: String
         lastUpdatedTime:
           type:
           - 'null'
           - string
-          description: Last updated time for the row.
+          description: Last updated time
           title: String
         meteringPointCount:
           type:
           - 'null'
           - integer
           format: int32
-          description: Number of metering points that are part of the aggregate
+          description: The number of metering points in the aggregate.
           title: Int
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Start time of the interval
-          title: String
-      title: ConsumptionPerGroupMgaHour
-    no.elhub.ds.energy.data.models.pricearea.MeteringValueComparisonEacPerMonth:
-      type: object
-      properties:
-        consumptionGroup:
-          type:
-          - 'null'
-          - string
-          description: The consumption group
-          title: String
-        costNorwayPrice:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The cost based on the Norway price in NOK/kWh
-          title: Float
-        costSpotPrice:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The cost based on the spot price in NOK/kWh
-          title: Float
-        costSupportPrice:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The cost based on the support price in NOK/kWh
-          title: Float
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: End time of the interval
-          title: String
-        estimatedAnnualConsumption:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Sum of estimated annual consumption of all metering points
-          title: Int
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: The price area
-          title: String
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Start time of the interval
-          title: String
-      title: MeteringValueComparisonEacPerMonth
-    no.elhub.ds.energy.data.models.pricearea.InstalledCapacityPerMeteringPointTypeGroupMbaDaily:
-      type: object
-      properties:
-        installedCapacity:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: Sum of installed capacity of all metering point. E18(production) and E19(combined/prosumers) only. Direction In only(production), meaning consumption is ignored.
-          title: Float
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: When the row was last updated
-          title: String
         meteringPointTypeCode:
           type:
           - 'null'
           - string
-          description: The code of the MeteringPointType. E.g. E18(production), E19(combined/prosumers)
+          description: The code of the MeteringPointType. E.g. E18. <a href='https://dok.elhub.no/e27/metering-point-type' target='_new'>metering point type</a>
           title: String
-        priceAreaId:
+        priceArea:
           type:
           - 'null'
           - string
-          description: Price area ID
+          description: The Price Area
           title: String
-        productionGroup:
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate.
+          title: Float
+        startTime:
           type:
           - 'null'
           - string
-          description: 'Production group: solar, hydro, wind, thermal, other'
+          description: Start time of the interval.
           title: String
-        usageDateId:
+      title: ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour
+    no.elhub.ds.energy.data.models.gridarea.GridArea:
+      type: object
+      properties:
+        completenessDailyPerBalanceSupplierMga:
           type:
           - 'null'
-          - integer
-          format: int32
-          description: The usage date
-          title: Int
-      title: InstalledCapacityPerMeteringPointTypeGroupMbaDaily
+          - array
+          description: List of completeness daily per balance supplier MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerBalanceSupplierMga'
+          title: List<CompletenessDailyPerBalanceSupplierMga>
+        completenessDailyPerMga:
+          type:
+          - 'null'
+          - array
+          description: List of completeness daily per MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerMga'
+          title: List<CompletenessDailyPerMga>
+        consumptionPerBalanceSupplierMgaHour:
+          type:
+          - 'null'
+          - array
+          description: List of consumption hourly per balance supplier MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ConsumptionPerBalanceSupplierMgaHour'
+          title: List<ConsumptionPerBalanceSupplierMgaHour>
+        consumptionPerGroupMgaHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per group per MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ConsumptionPerGroupMgaHour'
+          title: List<ConsumptionPerGroupMgaHour>
+        consumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode:
+          type:
+          - 'null'
+          - array
+          description: List of consumption hourly per balance supplier per balance supplier per consumption group type per MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode'
+          title: List<ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode>
+        costPerMgaMonth:
+          type:
+          - 'null'
+          - array
+          description: List of cost per MGA per month
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth'
+          title: List<CostPerMgaMonth>
+        costPerMgaMunicipalityGroupTypeMonth:
+          type:
+          - 'null'
+          - array
+          description: List of monthly calculated Norgespris / Strømstøtte cost per grid area, municipality and group type
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth'
+          title: List<CostPerMgaMunicipalityGroupTypeMonth>
+        eic:
+          type:
+          - 'null'
+          - string
+          description: Grid area EIC
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: Grid area end time
+          title: String
+        exchangePerMgaHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated exchange per MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ExchangePerMgaHour'
+          title: List<ExchangePerMgaHour>
+        gridOwner:
+          description: Grid owner connected to this metering point entity
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/no.elhub.ds.energy.data.models.Party'
+        id:
+          type:
+          - 'null'
+          - string
+          description: Grid area identification string
+          title: String
+        links:
+          description: Links object
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        lossPerMgaHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated loss per MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.LossPerMgaHour'
+          title: List<LossPerMgaHour>
+        missingReadsPerMeteringPointPerMgaDaily:
+          type:
+          - 'null'
+          - array
+          description: List of missing reads per metering point per MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.MeteringPointMissingReadsPerMgaDaily'
+          title: List<MeteringPointMissingReadsPerMgaDaily>
+        name:
+          type: string
+          description: Grid area name
+          title: String
+        priceArea:
+          description: Price area from this metering point entity
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.PriceArea'
+        productionPerBalanceSupplierMeteringPointTypeMgaHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated production per balance supplier per metering point type per MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ProductionPerBalanceSupplierMeteringPointTypeMgaHour'
+          title: List<ProductionPerBalanceSupplierMeteringPointTypeMgaHour>
+        productionPerHourBalanceSupplierGroupMeteringPointTypeMga:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated production per balance supplier per production group per metering point type per MGA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga'
+          title: List<ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga>
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Grid area start time
+          title: String
+        status:
+          type:
+          - 'null'
+          - string
+          description: Grid area status
+          title: String
+      required:
+      - name
+      title: GridArea
     no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerMga:
       type: object
       properties:
@@ -2140,63 +3022,20 @@ components:
           description: The usage date
           title: Int
       title: CompletenessDailyPerMga
-    no.elhub.ds.energy.data.models.response.PartyResponse:
+    no.elhub.ds.energy.data.models.pricearea.ProductionPerMba15Min:
       type: object
       properties:
-        creationTime:
-          type: string
-          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
-          title: String
-        currentLink:
-          type:
-          - 'null'
-          - string
-          description: link to the current resource
-          title: String
-        parties:
-          type: array
-          description: data grouped by a list of parties
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.Party'
-          title: List<Party>
-      required:
-      - creationTime
-      - parties
-      title: PartyResponse
-    no.elhub.ds.energy.data.models.pricearea.ExchangePerMba15Min:
-      type: object
-      properties:
-        adjacentPriceArea:
-          type:
-          - 'null'
-          - string
-          description: The adjacent price area
-          title: String
         endTime:
           type:
           - 'null'
           - string
-          description: The end time of the interval
+          description: End time of the interval
           title: String
-        exchangeInQuantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The exchange quantity in kWh for the IN direction
-          title: Float
-        exchangeOutQuantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The exchange quantity in kWh for the OUT direction
-          title: Float
         lastUpdatedTime:
           type:
           - 'null'
           - string
-          description: Last updated time for the row.
+          description: When the row was last updated
           title: String
         priceArea:
           type:
@@ -2204,62 +3043,21 @@ components:
           - string
           description: The price area
           title: String
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: The start time of the interval
-          title: String
-      title: ExchangePerMba15Min
-    no.elhub.ds.energy.data.models.gridarea.ConsumptionPerBalanceSupplierMgaHour:
-      type: object
-      properties:
-        balanceSupplier:
-          type:
-          - 'null'
-          - string
-          description: The GLN of the balance supplier
-          title: String
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: The end time of the interval.
-          title: String
-        gridArea:
-          type:
-          - 'null'
-          - string
-          description: The grid area.
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: Last updated time for the row.
-          title: String
-        meteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points that are part of the aggregate.
-          title: Int
         quantityKwh:
           type:
           - 'null'
           - number
           format: float
-          description: The quantity in kWh for the aggregate.
+          description: The quantity in kWh for the aggregate
           title: Float
         startTime:
           type:
           - 'null'
           - string
-          description: The start time of the interval.
+          description: Start time of the interval
           title: String
-      title: ConsumptionPerBalanceSupplierMgaHour
-    no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMba15Min:
+      title: ProductionPerMba15Min
+    no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMbaHour:
       type: object
       properties:
         endTime:
@@ -2299,7 +3097,110 @@ components:
           - string
           description: Start time of the interval
           title: String
-      title: ProductionPerGroupMba15Min
+      title: ProductionPerGroupMbaHour
+    no.elhub.ds.energy.data.models.response.PartyResponse:
+      type: object
+      properties:
+        creationTime:
+          type: string
+          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        currentLink:
+          type:
+          - 'null'
+          - string
+          description: link to the current resource
+          title: String
+        parties:
+          type: array
+          description: data grouped by a list of parties
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.Party'
+          title: List<Party>
+      required:
+      - creationTime
+      - parties
+      title: PartyResponse
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    no.elhub.ds.energy.data.models.gridarea.ProductionPerBalanceSupplierMeteringPointTypeMgaHour:
+      type: object
+      properties:
+        balanceSupplier:
+          type:
+          - 'null'
+          - string
+          description: The GLN of the balance supplier.
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval.
+          title: String
+        gridArea:
+          type:
+          - 'null'
+          - string
+          description: Grid area of the aggregate.
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: Last updated time
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The number of metering points in the aggregate.
+          title: Int
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18.
+          title: String
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: Price area of the aggregate.
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate.
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval.
+          title: String
+      title: ProductionPerBalanceSupplierMeteringPointTypeMgaHour
     no.elhub.ds.energy.data.models.gridarea.MeteringPointMissingReadsPerMgaDaily:
       type: object
       properties:
@@ -2412,199 +3313,208 @@ components:
       - meteringPointTypeCode
       - usageDateId
       title: MeteringPointMissingReadsPerMgaDaily
-    jsonapi.Links:
+    jsonapi.Error:
       type: object
       properties:
-        members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/jsonapi.Link'
-          title: Map<String,Link>
-      required:
-      - members
-      title: Links
-    no.elhub.ds.energy.data.models.gridarea.ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode:
-      type: object
-      properties:
-        balanceSupplier:
+        code:
           type:
           - 'null'
           - string
-          description: The balance supplier
           title: String
-        consumptionGroup:
+        detail:
           type:
           - 'null'
           - string
-          description: The consumption group
           title: String
-        consumptionTypeCode:
-          type:
-          - 'null'
-          - string
-          description: The consumption type code
-          title: String
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: The end time of the interval
-          title: String
-        gridArea:
-          type:
-          - 'null'
-          - string
-          description: The grid area
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: Last updated time for the row.
-          title: String
-        meteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points that are part of the aggregate
-          title: Int
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: Price area of the aggregate.
-          title: String
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: The start time of the interval
-          title: String
-      title: ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode
-    jsonapi.Link.URI:
-      type: object
-      properties:
-        value:
-          type: string
-          title: String
-      required:
-      - value
-      title: Link.URI
-    java.math.BigDecimal:
-      type: object
-      properties: {}
-      title: BigDecimal
-    no.elhub.ds.energy.data.models.Party:
-      type: object
-      properties:
-        gln:
-          type: string
-          description: Party GLN number
-          title: String
-        gridArea:
-          type:
-          - 'null'
-          - array
-          description: Grid areas
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.GridArea'
-          title: List<GridArea>
         id:
           type:
           - 'null'
           - string
-          description: Party identification string
           title: String
+        links:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Error.Source'
+        status:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+      title: Error
+    no.elhub.ds.energy.data.models.pricearea.PriceArea:
+      type: object
+      properties:
+        completenessDailyPerBalanceSupplierMba:
+          type:
+          - 'null'
+          - array
+          description: List of completeness daily per balance supplier MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerBalanceSupplierMba'
+          title: List<CompletenessDailyPerBalanceSupplierMba>
+        completenessDailyPerMba:
+          type:
+          - 'null'
+          - array
+          description: List of completeness daily per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerMba'
+          title: List<CompletenessDailyPerMba>
+        consumptionPerBalanceResponsibleMbaHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per balance responsible per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceResponsibleMbaHour'
+          title: List<ConsumptionPerBalanceResponsibleMbaHour>
+        consumptionPerBalanceSupplierMbaHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per balance supplier per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ConsumptionPerBalanceSupplierMbaHour'
+          title: List<ConsumptionPerBalanceSupplierMbaHour>
+        consumptionPerGroupMbaHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated consumption per group per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ConsumptionPerGroupMbaHour'
+          title: List<ConsumptionPerGroupMbaHour>
+        country:
+          type:
+          - 'null'
+          - string
+          description: Price area country
+          title: String
+        eic:
+          type:
+          - 'null'
+          - string
+          description: Price area EIC
+          title: String
+        exchangePerMba15Min:
+          type:
+          - 'null'
+          - array
+          description: List of 15 minute aggregated exchange per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ExchangePerMba15Min'
+          title: List<ExchangePerMba15Min>
+        exchangePerMbaHour:
+          type:
+          - 'null'
+          - array
+          description: List of hourly aggregated exchange per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ExchangePerMbaHour'
+          title: List<ExchangePerMbaHour>
+        id:
+          type:
+          - 'null'
+          - string
+          description: Price area ID
+          title: String
+        installedCapacityPerMeteringPointTypeGroupMbaDaily:
+          type:
+          - 'null'
+          - array
+          description: List of installed capacity per metering point type group per MBA daily
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.InstalledCapacityPerMeteringPointTypeGroupMbaDaily'
+          title: List<InstalledCapacityPerMeteringPointTypeGroupMbaDaily>
         links:
           description: Links object
           oneOf:
           - type: 'null'
           - $ref: '#/components/schemas/jsonapi.Links'
-        name:
-          type: string
-          description: Party name
-          title: String
-        organisationNumber:
+        lossPerMbaHour:
           type:
           - 'null'
-          - string
-          description: Party organisation number
-          title: String
-        partyTypes:
-          type: array
-          description: Party types for the party
+          - array
+          description: List of hourly aggregated loss per MBA
           items:
-            type: string
-            title: String
-          title: List<String>
-      required:
-      - gln
-      - name
-      - partyTypes
-      title: Party
-    no.elhub.ds.energy.data.models.gridarea.LossPerMgaHour:
-      type: object
-      properties:
-        calculatedLossFraction:
-          type: number
-          format: float
-          description: calculatedLossQuantityKwh divided by netInfeedQuantityKwh. Multiply with 100 to get percentage. Will be 0 if net infeed is 0.
-          title: Float
-        calculatedLossQuantityKwh:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.LossPerMbaHour'
+          title: List<LossPerMbaHour>
+        meteringValueComparisonEacPerMonth:
           type:
           - 'null'
-          - number
-          format: float
-          description: The loss in kwh. Includes no balance supplier loss. Calculated as production + exchange in - exchange out - consumption.
-          title: Float
-        endTime:
+          - array
+          description: List of metering value comparison EAC per month
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.MeteringValueComparisonEacPerMonth'
+          title: List<MeteringValueComparisonEacPerMonth>
+        name:
           type:
           - 'null'
           - string
-          description: End time of the interval
+          description: Price area name
           title: String
-        gridArea:
+        norgesprisConsumptionPerGroupEacMba:
           type:
           - 'null'
-          - string
-          description: The grid area.
-          title: String
-        lastUpdatedTime:
+          - array
+          description: List of Norgespris consumption per group EAC MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.NorgesprisConsumptionPerGroupEacMba'
+          title: List<NorgesprisConsumptionPerGroupEacMba>
+        productionPerBalanceResponsibleMeteringPointTypeCodeMbaHour:
           type:
           - 'null'
-          - string
-          description: Last updated time for the row.
-          title: String
-        netInfeedQuantityKwh:
+          - array
+          description: List of hourly aggregated production per balance responsible per metering point type per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour'
+          title: List<ProductionPerBalanceResponsibleMeteringPointTypeCodeMbaHour>
+        productionPerBalanceSupplierMeteringPointTypeCodeMbaHour:
           type:
           - 'null'
-          - number
-          format: float
-          description: The net infeed in kwh. Calculated as production + exchange in - exchange out
-          title: Float
-        priceArea:
+          - array
+          description: List of hourly aggregated production per balance supplier per metering point type per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour'
+          title: List<ProductionPerBalanceSupplierMeteringPointTypeCodeMbaHour>
+        productionPerGroupMba15Min:
           type:
           - 'null'
-          - string
-          description: The price area
-          title: String
-        startTime:
+          - array
+          description: List of 15 minute aggregated production per group per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMba15Min'
+          title: List<ProductionPerGroupMba15Min>
+        productionPerGroupMbaHour:
           type:
           - 'null'
-          - string
-          description: Start time of the interval
-          title: String
-      required:
-      - calculatedLossFraction
-      title: LossPerMgaHour
+          - array
+          description: List of hourly aggregated production per group per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMbaHour'
+          title: List<ProductionPerGroupMbaHour>
+        productionPerMba15Min:
+          type:
+          - 'null'
+          - array
+          description: List of 15 minute aggregated production per MBA
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.ProductionPerMba15Min'
+          title: List<ProductionPerMba15Min>
+      title: PriceArea
     no.elhub.ds.energy.data.models.pricearea.ExchangePerMbaHour:
       type: object
       properties:
@@ -2653,6 +3563,95 @@ components:
           description: The start time of the interval
           title: String
       title: ExchangePerMbaHour
+    no.elhub.ds.energy.data.models.pricearea.LossPerMbaHour:
+      type: object
+      properties:
+        calculateLossFraction:
+          type: number
+          format: float
+          description: calculatedLossQuantityKwh divided by netInfeedQuantityKwh. Multiply with 100 to get percentage. Will be 0 if net infeed is 0.
+          title: Float
+        calculatedLossQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The loss in kwh. Includes no balance supplier loss. Calculated as production + exchange in - exchange out - consumption.
+          title: Float
+        consumptionQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Consumption quantity in kwh. Includes interval consumption(including consumption from combined metering points) and profile consumption
+          title: Float
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: The end time of the interval
+          title: String
+        exchangeInQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The exchange quantity in kWh for the IN direction
+          title: Float
+        exchangeOutQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The exchange quantity in kWh for the OUT direction
+          title: Float
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: Last updated time for the row.
+          title: String
+        netInfeedQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The net infeed in kwh. Calculated as production + exchange in - exchange out
+          title: Float
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: The price area
+          title: String
+        productionQuantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Production quantity in kwh
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: The start time of the interval
+          title: String
+      required:
+      - calculateLossFraction
+      title: LossPerMbaHour
+    jsonapi.Meta:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            type: object
+            title: Any
+          title: Map<String,Any>
+      required:
+      - members
+      title: Meta
     no.elhub.ds.energy.data.models.gridarea.ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga:
       type: object
       properties:
@@ -2719,1347 +3718,6 @@ components:
           description: Start time of the interval.
           title: String
       title: ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga
-    no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth:
-      type: object
-      properties:
-        consumptionKwh:
-          description: Sum of consumption
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        consumptionKwhNorwayPrice:
-          description: Sum of consumption for metering points when on Norway price and below threshold
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        consumptionKwhSpotPrice:
-          description: Sum of consumption for metering points when on spot price
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        consumptionKwhSupportPrice:
-          description: Sum of consumption for metering points when on support price and below threshold
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        costNorwayPrice:
-          description: Cost of consumption in NOK/kWh when on Norway price and below threshold
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        costSpotPrice:
-          description: Cost of consumption in NOK/kWh when on spot price
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        costSupportPrice:
-          description: Cost of consumption in NOK/kWh when on support price and below threshold
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        countEligibleForNorwayPrice:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points eligible for Norway price at end of month
-          title: Int
-        countEligibleForSupportPrice:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points eligible for support price at end of month
-          title: Int
-        countNorwayPriceContract:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points with Norway price at least one day in month
-          title: Int
-        countNorwayPriceContractEndOfMonth:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points with Norway price last day of month
-          title: Int
-        countSupportPriceContract:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points with support price at least one day in month
-          title: Int
-        countSupportPriceContractEndOfMonth:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points with support price last day of month
-          title: Int
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: End time of the interval
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: When the row was last updated
-          title: String
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Start time of the interval
-          title: String
-        supportNorwayPrice:
-          description: Support amount for consumption when on Norway price and below threshold
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        supportSupportPrice:
-          description: Support amount for consumption when on support price and below threshold
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        totalCost:
-          description: Total cost of consumption in NOK
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/java.math.BigDecimal'
-        yearMonth:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Year and month of the aggregate in YYYYMM format
-          title: Int
-      title: CostPerMgaMonth
-    no.elhub.ds.energy.data.models.gridarea.ProductionPerBalanceSupplierMeteringPointTypeMgaHour:
-      type: object
-      properties:
-        balanceSupplier:
-          type:
-          - 'null'
-          - string
-          description: The GLN of the balance supplier.
-          title: String
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: End time of the interval.
-          title: String
-        gridArea:
-          type:
-          - 'null'
-          - string
-          description: Grid area of the aggregate.
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: Last updated time
-          title: String
-        meteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of metering points in the aggregate.
-          title: Int
-        meteringPointTypeCode:
-          type:
-          - 'null'
-          - string
-          description: The code of the MeteringPointType. E.g. E18.
-          title: String
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: Price area of the aggregate.
-          title: String
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate.
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Start time of the interval.
-          title: String
-      title: ProductionPerBalanceSupplierMeteringPointTypeMgaHour
-    no.elhub.ds.energy.data.models.gridarea.GridArea:
-      type: object
-      properties:
-        completenessDailyPerBalanceSupplierMga:
-          type:
-          - 'null'
-          - array
-          description: List of completeness daily per balance supplier MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerBalanceSupplierMga'
-          title: List<CompletenessDailyPerBalanceSupplierMga>
-        completenessDailyPerMga:
-          type:
-          - 'null'
-          - array
-          description: List of completeness daily per MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.CompletenessDailyPerMga'
-          title: List<CompletenessDailyPerMga>
-        consumptionPerBalanceSupplierMgaHour:
-          type:
-          - 'null'
-          - array
-          description: List of consumption hourly per balance supplier MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ConsumptionPerBalanceSupplierMgaHour'
-          title: List<ConsumptionPerBalanceSupplierMgaHour>
-        consumptionPerGroupMgaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated consumption per group per MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ConsumptionPerGroupMgaHour'
-          title: List<ConsumptionPerGroupMgaHour>
-        consumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode:
-          type:
-          - 'null'
-          - array
-          description: List of consumption hourly per balance supplier per balance supplier per consumption group type per MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode'
-          title: List<ConsumptionPerHourBalanceSupplierGroupMgaConsumptionTypeCode>
-        costPerMgaMonth:
-          type:
-          - 'null'
-          - array
-          description: List of cost per MGA per month
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.CostPerMgaMonth'
-          title: List<CostPerMgaMonth>
-        costPerMgaMunicipalityGroupTypeMonth:
-          type:
-          - 'null'
-          - array
-          description: List of monthly calculated Norgespris / Strømstøtte cost per grid area, municipality and group type
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.CostPerMgaMunicipalityGroupTypeMonth'
-          title: List<CostPerMgaMunicipalityGroupTypeMonth>
-        eic:
-          type:
-          - 'null'
-          - string
-          description: Grid area EIC
-          title: String
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: Grid area end time
-          title: String
-        exchangePerMgaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated exchange per MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ExchangePerMgaHour'
-          title: List<ExchangePerMgaHour>
-        gridOwner:
-          description: Grid owner connected to this metering point entity
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/no.elhub.ds.energy.data.models.Party'
-        id:
-          type:
-          - 'null'
-          - string
-          description: Grid area identification string
-          title: String
-        links:
-          description: Links object
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Links'
-        lossPerMgaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated loss per MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.LossPerMgaHour'
-          title: List<LossPerMgaHour>
-        missingReadsPerMeteringPointPerMgaDaily:
-          type:
-          - 'null'
-          - array
-          description: List of missing reads per metering point per MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.MeteringPointMissingReadsPerMgaDaily'
-          title: List<MeteringPointMissingReadsPerMgaDaily>
-        name:
-          type: string
-          description: Grid area name
-          title: String
-        priceArea:
-          description: Price area from this metering point entity
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/no.elhub.ds.energy.data.models.pricearea.PriceArea'
-        productionPerBalanceSupplierMeteringPointTypeMgaHour:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated production per balance supplier per metering point type per MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ProductionPerBalanceSupplierMeteringPointTypeMgaHour'
-          title: List<ProductionPerBalanceSupplierMeteringPointTypeMgaHour>
-        productionPerHourBalanceSupplierGroupMeteringPointTypeMga:
-          type:
-          - 'null'
-          - array
-          description: List of hourly aggregated production per balance supplier per production group per metering point type per MGA
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.gridarea.ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga'
-          title: List<ProductionPerHourBalanceSupplierGroupMeteringPointTypeMga>
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Grid area start time
-          title: String
-        status:
-          type:
-          - 'null'
-          - string
-          description: Grid area status
-          title: String
-      required:
-      - name
-      title: GridArea
-    no.elhub.ds.energy.data.models.pricearea.NorgesprisConsumptionPerGroupEacMba:
-      type: object
-      properties:
-        consumptionGroup:
-          type:
-          - 'null'
-          - string
-          description: The consumption group
-          title: String
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: End time of the interval
-          title: String
-        estimatedAnnualConsumptionFrom:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Estimated annual consumption from (kWh)
-          title: Long
-        estimatedAnnualConsumptionTo:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Estimated annual consumption to (kWh)
-          title: Long
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: Last updated time for the row.
-          title: String
-        meteringPointCountNorwayPrice:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Metering point count for Norway price
-          title: Int
-        meteringPointCountNotNorwayPrice:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Metering point count not for Norway price
-          title: Int
-        quantityKwhNorwayPrice:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: Quantity in kWh for Norway price
-          title: Float
-        quantityKwhNotNorwayPrice:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: Quantity in kWh not for Norway price
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Start time of the interval
-          title: String
-        totalMeteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Total metering point count
-          title: Int
-        totalQuantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: Total aggregated consumption in kWh
-          title: Float
-      title: NorgesprisConsumptionPerGroupEacMba
-    jsonapi.Error:
-      type: object
-      properties:
-        code:
-          type:
-          - 'null'
-          - string
-          title: String
-        detail:
-          type:
-          - 'null'
-          - string
-          title: String
-        id:
-          type:
-          - 'null'
-          - string
-          title: String
-        links:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Links'
-        meta:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Meta'
-        source:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Error.Source'
-        status:
-          type:
-          - 'null'
-          - string
-          title: String
-        title:
-          type:
-          - 'null'
-          - string
-          title: String
-      title: Error
-    jsonapi.Link.LinkObject:
-      type: object
-      properties:
-        describedBy:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Link'
-        href:
-          type: string
-          title: String
-        hreflang:
-          type:
-          - 'null'
-          - array
-          items:
-            type: string
-            title: String
-          title: List<String>
-        meta:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Meta'
-        rel:
-          type:
-          - 'null'
-          - string
-          title: String
-        title:
-          type:
-          - 'null'
-          - string
-          title: String
-        type:
-          type:
-          - 'null'
-          - string
-          title: String
-      required:
-      - href
-      title: Link.LinkObject
-    jsonapi.Link:
-      anyOf:
-      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
-      - $ref: '#/components/schemas/jsonapi.Link.URI'
-      title: Link
-    no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerBalanceSupplierMba:
-      type: object
-      properties:
-        actualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received
-          title: Int
-        balanceSupplier:
-          type:
-          - 'null'
-          - string
-          description: The GLN of the balance supplier
-          title: String
-        combinedConsumptionActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for consumption on combined metering points (E19)
-          title: Int
-        combinedConsumptionExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for consumption on combined metering points (E19)
-          title: Int
-        combinedProductionActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for production on combined metering points (E19)
-          title: Int
-        combinedProductionExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for production on combined metering points (E19)
-          title: Int
-        consumptionFifteenActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for consumption (E17) on 15 min resolution
-          title: Int
-        consumptionFifteenExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for consumption (E17) on 15 min resolution
-          title: Int
-        consumptionSixtyActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for consumption (E17) on 60 min resolution
-          title: Int
-        consumptionSixtyExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for consumption (E17) on 60 min resolution
-          title: Int
-        estimatedAnnualConsumptionAll:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of estimated annual consumption of all metering point. E17 and E19 only. Direction Out only.
-          title: Long
-        estimatedAnnualConsumptionCompleted:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of estimated annual consumption of all completed metering point, meaning number of received reads are equal to expected. E17 and E19 only. Direction Out only.
-          title: Long
-        estimatedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Count of how many reads are received for the usage date which does not have measured quality. (Also included in actual interval count)
-          title: Int
-        expectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received
-          title: Int
-        finalEstimatedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Count of how many reads are received for the usage date which has final estimated quality.(Also included in actual interval count)
-          title: Int
-        installedCapacityAll:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of installed capacity of all metering point. E18 and E19 only. Direction In only.
-          title: Long
-        installedCapacityCompleted:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of installed capacity of all completed metering point, meaning number of received reads are equal to expected. E18 and E19 only. Direction In only.
-          title: Long
-        largeProductionActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for large production (E18) metering points
-          title: Int
-        largeProductionExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for large production (E18) metering points
-          title: Int
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: When the row was last updated
-          title: String
-        loadLimitAll:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of load limit of all metering point. E17 and E19 only. Direction Out only.
-          title: Long
-        loadLimitCompleted:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of load limit of all completed metering point, meaning number of received reads are equal to expected. E17 and E19 only. Direction Out only.
-          title: Long
-        meteredIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Count of how many reads are received for the usage date which has metered(highest) quality.(Also included in actual interval count)
-          title: Int
-        meteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points that are part of the aggregate
-          title: Int
-        notCompleteMeteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of metering points where actually received metering value count is less than expected
-          title: Int
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: The price area
-          title: String
-        temporaryIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Count of how many reads are received for the usage date which has temporary quality.(Also included in actual interval count)
-          title: Int
-        usageDateId:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The usage date
-          title: Int
-      title: CompletenessDailyPerBalanceSupplierMba
-    no.elhub.ds.energy.data.models.pricearea.ProductionPerMba15Min:
-      type: object
-      properties:
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: End time of the interval
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: When the row was last updated
-          title: String
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: The price area
-          title: String
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Start time of the interval
-          title: String
-      title: ProductionPerMba15Min
-    jsonapi.Error.Source:
-      type: object
-      properties:
-        header:
-          type:
-          - 'null'
-          - string
-          title: String
-        parameter:
-          type:
-          - 'null'
-          - string
-          title: String
-        pointer:
-          type:
-          - 'null'
-          - string
-          title: String
-      title: Error.Source
-    no.elhub.ds.energy.data.models.pricearea.ProductionPerGroupMbaHour:
-      type: object
-      properties:
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: End time of the interval
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: When the row was last updated
-          title: String
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: The price area
-          title: String
-        productionGroup:
-          type:
-          - 'null'
-          - string
-          description: 'Production group: solar, hydro, wind, thermal, other'
-          title: String
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Start time of the interval
-          title: String
-      title: ProductionPerGroupMbaHour
-    no.elhub.ds.energy.data.models.pricearea.CompletenessDailyPerMba:
-      type: object
-      properties:
-        actualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received. Excluding reads exchange points in neighbouring grid areas
-          title: Int
-        combinedConsumptionActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for consumption on combined metering points (E19)
-          title: Int
-        combinedConsumptionExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for consumption on combined metering points (E19)
-          title: Int
-        combinedProductionActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for production on combined metering points (E19)
-          title: Int
-        combinedProductionExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for production on combined metering points (E19)
-          title: Int
-        consumptionFifteenActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for consumption (E17) on 15 min resolution
-          title: Int
-        consumptionFifteenExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for consumption (E17) on 15 min resolution
-          title: Int
-        consumptionSixtyActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for consumption (E17) on 60 min resolution
-          title: Int
-        consumptionSixtyExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for consumption (E17) on 60 min resolution
-          title: Int
-        estimatedAnnualConsumptionAll:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of estimated annual consumption of all metering point. E17 and E19 only. Direction Out only.
-          title: Long
-        estimatedAnnualConsumptionCompleted:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of estimated annual consumption of all completed metering point, meaning number of received reads are equal to expected. E17 and E19 only. Direction Out only.
-          title: Long
-        estimatedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Count of how many reads are received for the usage date which does not have measured quality. (Also included in actual interval count)
-          title: Int
-        exchangeActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for exchange points (E20) in grid area. Excluding exchange points in neighbouring grid areas
-          title: Int
-        exchangeExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for exchange points (E20) in grid area. Excluding exchange points in neighbouring grid areas
-          title: Int
-        expectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received. Excluding reads exchange points in neighbouring grid areas
-          title: Int
-        finalEstimatedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Count of how many reads are received for the usage date which has final estimated quality.(Also included in actual interval count)
-          title: Int
-        installedCapacityAll:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of installed capacity of all metering point. E18 and E19 only. Direction In only.
-          title: Long
-        installedCapacityCompleted:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of installed capacity of all completed metering point, meaning number of received reads are equal to expected. E18 and E19 only. Direction In only.
-          title: Long
-        largeProductionActualIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads actually received for large production (E18) metering points
-          title: Int
-        largeProductionExpectedIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of reads expected to be received for large production (E18) metering points
-          title: Int
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: When the row was last updated
-          title: String
-        loadLimitAll:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of load limit of all metering point. E17 and E19 only. Direction Out only.
-          title: Long
-        loadLimitCompleted:
-          type:
-          - 'null'
-          - integer
-          format: int64
-          description: Sum of load limit of all completed metering point, meaning number of received reads are equal to expected. E17 and E19 only. Direction Out only.
-          title: Long
-        meteredIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Count of how many reads are received for the usage date which has metered(highest) quality.(Also included in actual interval count)
-          title: Int
-        meteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of metering points. Excluding exchange points in neighbouring grid areas
-          title: Int
-        notCompleteMeteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The number of metering points where actually received metering value count is less than expected
-          title: Int
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: The price area
-          title: String
-        temporaryIntervalCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Count of how many reads are received for the usage date which has temporary quality.(Also included in actual interval count)
-          title: Int
-        usageDateId:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The usage date
-          title: Int
-      title: CompletenessDailyPerMba
-    party_create_request:
-      summary: Create - Party
-      description: 'Request schema for create operations - The body that interacts with the Flexibility Information System
-
-
-        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
-
-
-        Example party types:
-
-
-        * Service Provider
-
-        * System Operator
-
-        * End User'
-      type: object
-      properties:
-        business_id:
-          description: The business identifier of the party. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '1337099000000'
-        business_id_type:
-          $ref: '#/components/schemas/party_business_id_type'
-          default: uuid
-        entity_id:
-          description: Reference to the entity that is the parent of the party.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the party. Maximum 128 characters.
-          format: text
-          type: string
-          example: Flex Energy Supplier
-        role:
-          $ref: '#/components/schemas/party_role'
-        type:
-          $ref: '#/components/schemas/party_type'
-        status:
-          $ref: '#/components/schemas/party_status'
-          default: new
-      required:
-      - entity_id
-      - name
-      - role
-      - type
-    identity_response:
-      summary: Response - Identity
-      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 44
-        entity_id:
-          description: Reference to the entity using the identity.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 3
-        entity_name:
-          description: Name of the entity using the identity.
-          format: text
-          type: string
-          readOnly: true
-          example: Martin Andersen
-        party_id:
-          description: Reference to the party assumed by the entity.
-          format: bigint
-          type: integer
-          readOnly: true
-          nullable: true
-          example: 17
-        party_name:
-          description: Name of the party assumed by the entity.
-          format: text
-          type: string
-          readOnly: true
-          nullable: true
-          example: Andersen SO
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-        party:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - entity_id
-      - entity_name
-    entity_type:
-      description: The type of the entity, e.g Person, Organisation
-      format: text
-      type: string
-      example: person
-      enum:
-      - person
-      - organisation
-    party_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      default: uuid
-      enum:
-      - gln
-      - uuid
-      - eic_x
-      - org
-      example: gln
-    party_status:
-      description: The status of the party.
-      format: text
-      type: string
-      default: new
-      enum:
-      - new
-      - active
-      - inactive
-      - suspended
-      - terminated
-      example: active
-    error_message:
-      description: Error message returned from the API.
-      type: object
-      properties:
-        code:
-          type: string
-          pattern: ^[A-Z0-9]+$
-          description: The error code.
-          example: PT418
-        details:
-          type:
-          - string
-          - 'null'
-          description: Detailed information about the error.
-        hint:
-          type:
-          - string
-          - 'null'
-          description: A hint to help resolve the error.
-        message:
-          type: string
-          description: The error message.
-          example: error
-      required:
-      - code
-      - message
-    party_role:
-      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
-      format: text
-      type: string
-      example: flex_energy_supplier
-      enum:
-      - flex_balance_responsible_party
-      - flex_end_user
-      - flex_energy_supplier
-      - flex_flexibility_information_system_operator
-      - flex_market_operator
-      - flex_organisation
-      - flex_service_provider
-      - flex_system_operator
-      - flex_third_party
-    party_response:
-      summary: Response - Party
-      description: 'Response schema - The body that interacts with the Flexibility Information System
-
-
-        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
-
-
-        Example party types:
-
-
-        * Service Provider
-
-        * System Operator
-
-        * End User'
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 11
-        business_id:
-          description: The business identifier of the party. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '1337099000000'
-        business_id_type:
-          $ref: '#/components/schemas/party_business_id_type'
-          default: uuid
-        entity_id:
-          description: Reference to the entity that is the parent of the party.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the party. Maximum 128 characters.
-          format: text
-          type: string
-          example: Flex Energy Supplier
-        role:
-          $ref: '#/components/schemas/party_role'
-        type:
-          $ref: '#/components/schemas/party_type'
-        status:
-          $ref: '#/components/schemas/party_status'
-          default: new
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - business_id_type
-      - entity_id
-      - name
-      - role
-      - type
-      - status
-      - recorded_at
-      - recorded_by
-    party_type:
-      description: The type of the party, e.g SystemOperator, ServiceProvider
-      format: text
-      type: string
-      example: energy_supplier
-      enum:
-      - balance_responsible_party
-      - end_user
-      - energy_supplier
-      - flexibility_information_system_operator
-      - market_operator
-      - organisation
-      - service_provider
-      - system_operator
-      - third_party
-    party_history_response:
-      summary: Party - history
-      description: Party - history
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 11
-        business_id:
-          description: The business identifier of the party. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '1337099000000'
-        business_id_type:
-          $ref: '#/components/schemas/party_business_id_type'
-          default: uuid
-        entity_id:
-          description: Reference to the entity that is the parent of the party.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the party. Maximum 128 characters.
-          format: text
-          type: string
-          example: Flex Energy Supplier
-        role:
-          $ref: '#/components/schemas/party_role'
-        type:
-          $ref: '#/components/schemas/party_type'
-        status:
-          $ref: '#/components/schemas/party_status'
-          default: new
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        party_id:
-          description: Reference to the resource that was updated.
-          format: bigint
-          type: integer
-          example: 48
-        replaced_by:
-          description: The identity that updated the resource when it was replaced.
-          format: bigint
-          type: integer
-          nullable: true
-          example: 90
-        replaced_at:
-          description: When the resource was replaced in the system.
-          format: date-time
-          type: string
-          nullable: true
-          example: '2024-07-07T10:00:00+00:00'
-      required:
-      - id
-      - business_id
-      - business_id_type
-      - entity_id
-      - name
-      - role
-      - type
-      - status
-      - recorded_at
-      - recorded_by
-      - party_id
     entity_response:
       summary: Response - Entity
       description: 'Response schema - Entity - Natural or legal person
@@ -4153,6 +3811,42 @@ components:
       - type
       - recorded_at
       - recorded_by
+    entity_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      example: pid
+      enum:
+      - pid
+      - org
+      - email
+    party_role:
+      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
+      format: text
+      type: string
+      example: flex_energy_supplier
+      enum:
+      - flex_balance_responsible_party
+      - flex_end_user
+      - flex_energy_supplier
+      - flex_flexibility_information_system_operator
+      - flex_market_operator
+      - flex_organisation
+      - flex_service_provider
+      - flex_system_operator
+      - flex_third_party
+    party_status:
+      description: The status of the party.
+      format: text
+      type: string
+      default: new
+      enum:
+      - new
+      - active
+      - inactive
+      - suspended
+      - terminated
+      example: active
     auth_scope:
       description: Authorization scopes.
       format: text
@@ -4266,6 +3960,392 @@ components:
       - use:data:controllable_unit:lookup
       - use:data:entity
       - use:data:entity:lookup
+    identity_response:
+      summary: Response - Identity
+      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 44
+        entity_id:
+          description: Reference to the entity using the identity.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 3
+        entity_name:
+          description: Name of the entity using the identity.
+          format: text
+          type: string
+          readOnly: true
+          example: Martin Andersen
+        party_id:
+          description: Reference to the party assumed by the entity.
+          format: bigint
+          type: integer
+          readOnly: true
+          nullable: true
+          example: 17
+        party_name:
+          description: Name of the party assumed by the entity.
+          format: text
+          type: string
+          readOnly: true
+          nullable: true
+          example: Andersen SO
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - entity_id
+      - entity_name
+    party_update_request:
+      summary: Update - Party
+      description: 'Request schema for update operations - The body that interacts with the Flexibility Information System
+
+
+        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
+
+
+        Example party types:
+
+
+        * Service Provider
+
+        * System Operator
+
+        * End User'
+      type: object
+      properties:
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+    party_membership_response:
+      summary: Response - Party Membership
+      description: Response schema - The relation between a party and entity.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 44
+        party_id:
+          description: Reference to the party that the membership links to an entity.
+          format: bigint
+          type: integer
+          example: 379
+        entity_id:
+          description: Reference to the entity that the party represents.
+          format: bigint
+          type: integer
+          example: 30
+        scopes:
+          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - party_id
+      - entity_id
+      - scopes
+      - recorded_at
+      - recorded_by
+    error_message:
+      description: Error message returned from the API.
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]+$
+          description: The error code.
+          example: PT418
+        details:
+          type:
+          - string
+          - 'null'
+          description: Detailed information about the error.
+        hint:
+          type:
+          - string
+          - 'null'
+          description: A hint to help resolve the error.
+        message:
+          type: string
+          description: The error message.
+          example: error
+      required:
+      - code
+      - message
+    party_history_response:
+      summary: Party - history
+      description: Party - history
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 11
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
+        entity_id:
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        party_id:
+          description: Reference to the resource that was updated.
+          format: bigint
+          type: integer
+          example: 48
+        replaced_by:
+          description: The identity that updated the resource when it was replaced.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 90
+        replaced_at:
+          description: When the resource was replaced in the system.
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-07-07T10:00:00+00:00'
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - entity_id
+      - name
+      - role
+      - type
+      - status
+      - recorded_at
+      - recorded_by
+      - party_id
+    party_create_request:
+      summary: Create - Party
+      description: 'Request schema for create operations - The body that interacts with the Flexibility Information System
+
+
+        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
+
+
+        Example party types:
+
+
+        * Service Provider
+
+        * System Operator
+
+        * End User'
+      type: object
+      properties:
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
+        entity_id:
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+      required:
+      - entity_id
+      - name
+      - role
+      - type
+    entity_type:
+      description: The type of the entity, e.g Person, Organisation
+      format: text
+      type: string
+      example: person
+      enum:
+      - person
+      - organisation
+    party_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      default: uuid
+      enum:
+      - gln
+      - uuid
+      - eic_x
+      - org
+      example: gln
+    party_response:
+      summary: Response - Party
+      description: 'Response schema - The body that interacts with the Flexibility Information System
+
+
+        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
+
+
+        Example party types:
+
+
+        * Service Provider
+
+        * System Operator
+
+        * End User'
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 11
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
+        entity_id:
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - entity_id
+      - name
+      - role
+      - type
+      - status
+      - recorded_at
+      - recorded_by
     entity_client_response:
       summary: Response - Entity client
       description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
@@ -4366,106 +4446,26 @@ components:
       - scopes
       - recorded_at
       - recorded_by
-    party_membership_response:
-      summary: Response - Party Membership
-      description: Response schema - The relation between a party and entity.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 44
-        party_id:
-          description: Reference to the party that the membership links to an entity.
-          format: bigint
-          type: integer
-          example: 379
-        entity_id:
-          description: Reference to the entity that the party represents.
-          format: bigint
-          type: integer
-          example: 30
-        scopes:
-          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
-          type: array
-          items:
-            $ref: '#/components/schemas/auth_scope'
-          nullable: false
-          example:
-          - read:data
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        party:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - party_id
-      - entity_id
-      - scopes
-      - recorded_at
-      - recorded_by
-    entity_business_id_type:
-      description: The type of the business identifier.
+    party_type:
+      description: The type of the party, e.g SystemOperator, ServiceProvider
       format: text
       type: string
-      example: pid
+      example: energy_supplier
       enum:
-      - pid
-      - org
-      - email
+      - balance_responsible_party
+      - end_user
+      - energy_supplier
+      - flexibility_information_system_operator
+      - market_operator
+      - organisation
+      - service_provider
+      - system_operator
+      - third_party
     empty_object:
       description: An empty object
       type: object
       properties: {}
       additionalProperties: false
-    party_update_request:
-      summary: Update - Party
-      description: 'Request schema for update operations - The body that interacts with the Flexibility Information System
-
-
-        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
-
-
-        Example party types:
-
-
-        * Service Provider
-
-        * System Operator
-
-        * End User'
-      type: object
-      properties:
-        name:
-          description: Name of the party. Maximum 128 characters.
-          format: text
-          type: string
-          example: Flex Energy Supplier
-        status:
-          $ref: '#/components/schemas/party_status'
-          default: new
     party:
       properties:
         id:

@@ -475,6 +475,209 @@ paths:
       deprecated: false
 components:
   schemas:
+    jsonapi.Meta:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            type: object
+            title: Any
+          title: Map<String,Any>
+      required:
+      - members
+      title: Meta
+    jsonapi.Link.LinkObject:
+      type: object
+      properties:
+        describedBy:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Link'
+        href:
+          type: string
+          title: String
+        hreflang:
+          type:
+          - 'null'
+          - array
+          items:
+            type: string
+            title: String
+          title: List<String>
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        rel:
+          type:
+          - 'null'
+          - string
+          title: String
+        title:
+          type:
+          - 'null'
+          - string
+          title: String
+        type:
+          type:
+          - 'null'
+          - string
+          title: String
+      required:
+      - href
+      title: Link.LinkObject
+    no.elhub.ds.energy.data.models.response.MunicipalityResponse:
+      type: object
+      properties:
+        creationTime:
+          type: string
+          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        currentLink:
+          type:
+          - 'null'
+          - string
+          description: link to the current resource
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          title: String
+        municipalities:
+          type: array
+          description: data grouped by a list of municipalities
+          items:
+            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.Municipality'
+          title: List<Municipality>
+      required:
+      - creationTime
+      - municipalities
+      title: MunicipalityResponse
+    no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour:
+      type: object
+      properties:
+        consumptionCode:
+          type:
+          - 'null'
+          - string
+          description: Consumption code for the aggregate.
+          title: String
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: The end time of the interval.
+          title: String
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the aggregate was last updated.
+          title: String
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate.
+          title: Int
+        naceCode:
+          type:
+          - 'null'
+          - string
+          description: NACE code for the aggregate.
+          title: String
+        priceArea:
+          type:
+          - 'null'
+          - string
+          description: Price area for the aggregate.
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate.
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: The start time of the interval.
+          title: String
+      title: ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour
+    jsonapi.Links:
+      type: object
+      properties:
+        members:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/jsonapi.Link'
+          title: Map<String,Link>
+      required:
+      - members
+      title: Links
+    jsonapi.Link.URI:
+      type: object
+      properties:
+        value:
+          type: string
+          title: String
+      required:
+      - value
+      title: Link.URI
+    ? no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily
+    : type: object
+      properties:
+        basicStatisticalUnit:
+          type:
+          - 'null'
+          - string
+          description: Basic Statistical Unit
+          title: String
+        installedCapacity:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Sum of installed capacity of all metering point. E18(production) and E19(combined/prosumers) only. Direction In only(production), meaning consumption is ignored.
+          title: Float
+        lastUpdatedTime:
+          type:
+          - 'null'
+          - string
+          description: When the row was last updated
+          title: String
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18(production), E19(combined/prosumers)
+          title: String
+        municipalityId:
+          type:
+          - 'null'
+          - string
+          description: Municipality ID
+          title: String
+        productionGroup:
+          type:
+          - 'null'
+          - string
+          description: 'Production group: solar, hydro, wind, thermal, other'
+          title: String
+        usageDateId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The usage date
+          title: Int
+      title: InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily
     no.elhub.ds.energy.data.models.municipality.Municipality:
       type: object
       properties:
@@ -594,96 +797,71 @@ components:
       - name
       - nameNo
       title: Municipality
-    no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily:
+    jsonapi.Link:
+      anyOf:
+      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
+      - $ref: '#/components/schemas/jsonapi.Link.URI'
+      title: Link
+    jsonapi.Error.Source:
       type: object
       properties:
-        installedCapacity:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: Sum of installed capacity of all metering point. E18 and E19 only. Direction In only(production), meaning consumption is ignored.
-          title: Float
-        lastUpdatedTime:
+        header:
           type:
           - 'null'
           - string
-          description: When the row was last updated
           title: String
-        meteringPointTypeCode:
+        parameter:
           type:
           - 'null'
           - string
-          description: The code of the MeteringPointType. E.g. E18(production), E19(combined/prosumers)
           title: String
-        municipalityId:
+        pointer:
           type:
           - 'null'
           - string
-          description: Municipality ID
           title: String
-        productionGroup:
-          type:
-          - 'null'
-          - string
-          description: 'Production group: solar, hydro, wind, thermal, other'
-          title: String
-        usageDateId:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The usage date
-          title: Int
-      title: InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily
-    ? no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily
-    : type: object
+      title: Error.Source
+    jsonapi.Error:
+      type: object
       properties:
-        basicStatisticalUnit:
+        code:
           type:
           - 'null'
           - string
-          description: Basic Statistical Unit
           title: String
-        installedCapacity:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: Sum of installed capacity of all metering point. E18(production) and E19(combined/prosumers) only. Direction In only(production), meaning consumption is ignored.
-          title: Float
-        lastUpdatedTime:
+        detail:
           type:
           - 'null'
           - string
-          description: When the row was last updated
           title: String
-        meteringPointTypeCode:
+        id:
           type:
           - 'null'
           - string
-          description: The code of the MeteringPointType. E.g. E18(production), E19(combined/prosumers)
           title: String
-        municipalityId:
+        links:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Links'
+        meta:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Meta'
+        source:
+          oneOf:
+          - type: 'null'
+          - $ref: '#/components/schemas/jsonapi.Error.Source'
+        status:
           type:
           - 'null'
           - string
-          description: Municipality ID
           title: String
-        productionGroup:
+        title:
           type:
           - 'null'
           - string
-          description: 'Production group: solar, hydro, wind, thermal, other'
           title: String
-        usageDateId:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: The usage date
-          title: Int
-      title: InstalledCapacityPerMeteringPointTypeGroupMunicipalityBasicStatisticalUnitDaily
+      title: Error
     no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityHour:
       type: object
       properties:
@@ -786,182 +964,6 @@ components:
           description: The start time of the interval.
           title: String
       title: ConsumptionPerMbaMgaMunicipalityNaceCodeConsumptionCodeHour
-    jsonapi.Links:
-      type: object
-      properties:
-        members:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/jsonapi.Link'
-          title: Map<String,Link>
-      required:
-      - members
-      title: Links
-    no.elhub.ds.energy.data.models.municipality.ProductionPerMeteringPointTypeMunicipalityHour:
-      type: object
-      properties:
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: End time of the interval
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: When the row was last updated
-          title: String
-        meteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points that are part of the aggregate
-          title: Int
-        meteringPointTypeCode:
-          type:
-          - 'null'
-          - string
-          description: The code of the MeteringPointType. E.g. E18.
-          title: String
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: Start time of the interval
-          title: String
-      title: ProductionPerMeteringPointTypeMunicipalityHour
-    jsonapi.Link.URI:
-      type: object
-      properties:
-        value:
-          type: string
-          title: String
-      required:
-      - value
-      title: Link.URI
-    no.elhub.ds.energy.data.models.municipality.ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour:
-      type: object
-      properties:
-        consumptionCode:
-          type:
-          - 'null'
-          - string
-          description: Consumption code for the aggregate.
-          title: String
-        endTime:
-          type:
-          - 'null'
-          - string
-          description: The end time of the interval.
-          title: String
-        lastUpdatedTime:
-          type:
-          - 'null'
-          - string
-          description: When the aggregate was last updated.
-          title: String
-        meteringPointCount:
-          type:
-          - 'null'
-          - integer
-          format: int32
-          description: Number of metering points that are part of the aggregate.
-          title: Int
-        naceCode:
-          type:
-          - 'null'
-          - string
-          description: NACE code for the aggregate.
-          title: String
-        priceArea:
-          type:
-          - 'null'
-          - string
-          description: Price area for the aggregate.
-          title: String
-        quantityKwh:
-          type:
-          - 'null'
-          - number
-          format: float
-          description: The quantity in kWh for the aggregate.
-          title: Float
-        startTime:
-          type:
-          - 'null'
-          - string
-          description: The start time of the interval.
-          title: String
-      title: ConsumptionPerMbaMunicipalityNaceCodeConsumptionCodeHour
-    jsonapi.Error:
-      type: object
-      properties:
-        code:
-          type:
-          - 'null'
-          - string
-          title: String
-        detail:
-          type:
-          - 'null'
-          - string
-          title: String
-        id:
-          type:
-          - 'null'
-          - string
-          title: String
-        links:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Links'
-        meta:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Meta'
-        source:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Error.Source'
-        status:
-          type:
-          - 'null'
-          - string
-          title: String
-        title:
-          type:
-          - 'null'
-          - string
-          title: String
-      title: Error
-    jsonapi.Error.Source:
-      type: object
-      properties:
-        header:
-          type:
-          - 'null'
-          - string
-          title: String
-        parameter:
-          type:
-          - 'null'
-          - string
-          title: String
-        pointer:
-          type:
-          - 'null'
-          - string
-          title: String
-      title: Error.Source
     no.elhub.ds.energy.data.models.municipality.MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth:
       type: object
       properties:
@@ -1019,63 +1021,6 @@ components:
           description: The month and year of the max consumption
           title: String
       title: MaxConsumptionPerEACMunicipalityBasicStatisticalUnitMonth
-    jsonapi.Link.LinkObject:
-      type: object
-      properties:
-        describedBy:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Link'
-        href:
-          type: string
-          title: String
-        hreflang:
-          type:
-          - 'null'
-          - array
-          items:
-            type: string
-            title: String
-          title: List<String>
-        meta:
-          oneOf:
-          - type: 'null'
-          - $ref: '#/components/schemas/jsonapi.Meta'
-        rel:
-          type:
-          - 'null'
-          - string
-          title: String
-        title:
-          type:
-          - 'null'
-          - string
-          title: String
-        type:
-          type:
-          - 'null'
-          - string
-          title: String
-      required:
-      - href
-      title: Link.LinkObject
-    jsonapi.Meta:
-      type: object
-      properties:
-        members:
-          type: object
-          additionalProperties:
-            type: object
-            title: Any
-          title: Map<String,Any>
-      required:
-      - members
-      title: Meta
-    jsonapi.Link:
-      anyOf:
-      - $ref: '#/components/schemas/jsonapi.Link.LinkObject'
-      - $ref: '#/components/schemas/jsonapi.Link.URI'
-      title: Link
     no.elhub.ds.energy.data.models.municipality.ConsumptionPerGroupMunicipalityBasicStatisticalUnitHour:
       type: object
       properties:
@@ -1178,34 +1123,89 @@ components:
       - lastDayOfMonth
       - lastUpdateTime
       title: MeteringPointCountPerMonthGridOwnerNaceCodeAdjustedMunicipality
-    no.elhub.ds.energy.data.models.response.MunicipalityResponse:
+    no.elhub.ds.energy.data.models.municipality.InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily:
       type: object
       properties:
-        creationTime:
-          type: string
-          description: timestamp of this response creation, in yyyy-MM-dd'T'HH:mm:ssXXX format
-          title: String
-        currentLink:
+        installedCapacity:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: Sum of installed capacity of all metering point. E18 and E19 only. Direction In only(production), meaning consumption is ignored.
+          title: Float
+        lastUpdatedTime:
           type:
           - 'null'
           - string
-          description: link to the current resource
+          description: When the row was last updated
+          title: String
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18(production), E19(combined/prosumers)
+          title: String
+        municipalityId:
+          type:
+          - 'null'
+          - string
+          description: Municipality ID
+          title: String
+        productionGroup:
+          type:
+          - 'null'
+          - string
+          description: 'Production group: solar, hydro, wind, thermal, other'
+          title: String
+        usageDateId:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: The usage date
+          title: Int
+      title: InstalledCapacityPerMeteringPointTypeGroupMunicipalityDaily
+    no.elhub.ds.energy.data.models.municipality.ProductionPerMeteringPointTypeMunicipalityHour:
+      type: object
+      properties:
+        endTime:
+          type:
+          - 'null'
+          - string
+          description: End time of the interval
           title: String
         lastUpdatedTime:
           type:
           - 'null'
           - string
-          description: timestamp for the last update time of this response's content, in yyyy-MM-dd'T'HH:mm:ssXXX format
+          description: When the row was last updated
           title: String
-        municipalities:
-          type: array
-          description: data grouped by a list of municipalities
-          items:
-            $ref: '#/components/schemas/no.elhub.ds.energy.data.models.municipality.Municipality'
-          title: List<Municipality>
-      required:
-      - creationTime
-      - municipalities
-      title: MunicipalityResponse
+        meteringPointCount:
+          type:
+          - 'null'
+          - integer
+          format: int32
+          description: Number of metering points that are part of the aggregate
+          title: Int
+        meteringPointTypeCode:
+          type:
+          - 'null'
+          - string
+          description: The code of the MeteringPointType. E.g. E18.
+          title: String
+        quantityKwh:
+          type:
+          - 'null'
+          - number
+          format: float
+          description: The quantity in kWh for the aggregate
+          title: Float
+        startTime:
+          type:
+          - 'null'
+          - string
+          description: Start time of the interval
+          title: String
+      title: ProductionPerMeteringPointTypeMunicipalityHour
 externalDocs:
   url: /

@@ -354,274 +354,6 @@ paths:
       description: Development
 components:
   schemas:
-    identity_response:
-      summary: Response - Identity
-      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 44
-        entity_id:
-          description: Reference to the entity using the identity.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 3
-        entity_name:
-          description: Name of the entity using the identity.
-          format: text
-          type: string
-          readOnly: true
-          example: Martin Andersen
-        party_id:
-          description: Reference to the party assumed by the entity.
-          format: bigint
-          type: integer
-          readOnly: true
-          nullable: true
-          example: 17
-        party_name:
-          description: Name of the party assumed by the entity.
-          format: text
-          type: string
-          readOnly: true
-          nullable: true
-          example: Andersen SO
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-        party:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - entity_id
-      - entity_name
-    entity_type:
-      description: The type of the entity, e.g Person, Organisation
-      format: text
-      type: string
-      example: person
-      enum:
-      - person
-      - organisation
-    error_message:
-      description: Error message returned from the API.
-      type: object
-      properties:
-        code:
-          type: string
-          pattern: ^[A-Z0-9]+$
-          description: The error code.
-          example: PT418
-        details:
-          type:
-          - string
-          - 'null'
-          description: Detailed information about the error.
-        hint:
-          type:
-          - string
-          - 'null'
-          description: A hint to help resolve the error.
-        message:
-          type: string
-          description: The error message.
-          example: error
-      required:
-      - code
-      - message
-    party_status:
-      description: The status of the party.
-      format: text
-      type: string
-      default: new
-      enum:
-      - new
-      - active
-      - inactive
-      - suspended
-      - terminated
-      example: active
-    party_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      default: uuid
-      enum:
-      - gln
-      - uuid
-      - eic_x
-      - org
-      example: gln
-    party_response:
-      summary: Response - Party
-      description: 'Response schema - The body that interacts with the Flexibility Information System
-
-
-        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
-
-
-        Example party types:
-
-
-        * Service Provider
-
-        * System Operator
-
-        * End User'
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 11
-        business_id:
-          description: The business identifier of the party. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '1337099000000'
-        business_id_type:
-          $ref: '#/components/schemas/party_business_id_type'
-          default: uuid
-        entity_id:
-          description: Reference to the entity that is the parent of the party.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the party. Maximum 128 characters.
-          format: text
-          type: string
-          example: Flex Energy Supplier
-        role:
-          $ref: '#/components/schemas/party_role'
-        type:
-          $ref: '#/components/schemas/party_type'
-        status:
-          $ref: '#/components/schemas/party_status'
-          default: new
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - business_id_type
-      - entity_id
-      - name
-      - role
-      - type
-      - status
-      - recorded_at
-      - recorded_by
-    party_role:
-      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
-      format: text
-      type: string
-      example: flex_energy_supplier
-      enum:
-      - flex_balance_responsible_party
-      - flex_end_user
-      - flex_energy_supplier
-      - flex_flexibility_information_system_operator
-      - flex_market_operator
-      - flex_organisation
-      - flex_service_provider
-      - flex_system_operator
-      - flex_third_party
-    party_type:
-      description: The type of the party, e.g SystemOperator, ServiceProvider
-      format: text
-      type: string
-      example: energy_supplier
-      enum:
-      - balance_responsible_party
-      - end_user
-      - energy_supplier
-      - flexibility_information_system_operator
-      - market_operator
-      - organisation
-      - service_provider
-      - system_operator
-      - third_party
-    product_type_response:
-      summary: Response - Product Type
-      description: Response schema - Product type.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 4
-        business_id:
-          description: The code for this product type.
-          format: text
-          type: string
-          readOnly: true
-          example: manual_congestion
-        name:
-          description: The name of the product type.
-          format: text
-          type: string
-          maxLength: 64
-          readOnly: true
-          example: Manual Congestion
-        service:
-          description: The service offered by the product type.
-          format: text
-          type: string
-          readOnly: true
-          example: congestion management
-        products:
-          description: Examples of products belonging to this product type.
-          format: text
-          type: string
-          readOnly: true
-          example: LongFlex, ShortFlex
-        system_operator_product_type:
-          description: Embedded system_operator_product_type
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/system_operator_product_type_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - name
-      - service
-      - products
     entity_response:
       summary: Response - Entity
       description: 'Response schema - Entity - Natural or legal person
@@ -715,6 +447,42 @@ components:
       - type
       - recorded_at
       - recorded_by
+    entity_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      example: pid
+      enum:
+      - pid
+      - org
+      - email
+    party_role:
+      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
+      format: text
+      type: string
+      example: flex_energy_supplier
+      enum:
+      - flex_balance_responsible_party
+      - flex_end_user
+      - flex_energy_supplier
+      - flex_flexibility_information_system_operator
+      - flex_market_operator
+      - flex_organisation
+      - flex_service_provider
+      - flex_system_operator
+      - flex_third_party
+    party_status:
+      description: The status of the party.
+      format: text
+      type: string
+      default: new
+      enum:
+      - new
+      - active
+      - inactive
+      - suspended
+      - terminated
+      example: active
     auth_scope:
       description: Authorization scopes.
       format: text
@@ -828,18 +596,9 @@ components:
       - use:data:controllable_unit:lookup
       - use:data:entity
       - use:data:entity:lookup
-    system_operator_product_type_status:
-      description: The status of the relation.
-      format: text
-      type: string
-      default: active
-      enum:
-      - active
-      - inactive
-      example: active
-    system_operator_product_type_response:
-      summary: Response - System Operator Product Type
-      description: Response schema - Relation between a system operator and a product type they want to buy.
+    identity_response:
+      summary: Response - Identity
+      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
       type: object
       properties:
         id:
@@ -847,20 +606,104 @@ components:
           format: bigint
           type: integer
           readOnly: true
-          example: 89
-        system_operator_id:
-          description: Reference to the system operator.
+          example: 44
+        entity_id:
+          description: Reference to the entity using the identity.
           format: bigint
           type: integer
-          example: 37
-        product_type_id:
-          description: Reference to the product type.
+          readOnly: true
+          example: 3
+        entity_name:
+          description: Name of the entity using the identity.
+          format: text
+          type: string
+          readOnly: true
+          example: Martin Andersen
+        party_id:
+          description: Reference to the party assumed by the entity.
           format: bigint
           type: integer
-          example: 8
-        status:
-          $ref: '#/components/schemas/system_operator_product_type_status'
-          default: active
+          readOnly: true
+          nullable: true
+          example: 17
+        party_name:
+          description: Name of the party assumed by the entity.
+          format: text
+          type: string
+          readOnly: true
+          nullable: true
+          example: Andersen SO
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - entity_id
+      - entity_name
+    error_message:
+      description: Error message returned from the API.
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]+$
+          description: The error code.
+          example: PT418
+        details:
+          type:
+          - string
+          - 'null'
+          description: Detailed information about the error.
+        hint:
+          type:
+          - string
+          - 'null'
+          description: A hint to help resolve the error.
+        message:
+          type: string
+          description: The error message.
+          example: error
+      required:
+      - code
+      - message
+    party_membership_response:
+      summary: Response - Party Membership
+      description: Response schema - The relation between a party and entity.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 44
+        party_id:
+          description: Reference to the party that the membership links to an entity.
+          format: bigint
+          type: integer
+          example: 379
+        entity_id:
+          description: Reference to the entity that the party represents.
+          format: bigint
+          type: integer
+          example: 30
+        scopes:
+          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
         recorded_at:
           description: When the resource was recorded (created or updated) in the system.
           format: date-time
@@ -873,25 +716,187 @@ components:
           type: integer
           readOnly: true
           example: 145
-        system_operator:
+        party:
           description: Embedded party
           oneOf:
           - $ref: '#/components/schemas/party_response'
           - type: 'null'
           nullable: true
-        product_type:
-          description: Embedded product_type
+        entity:
+          description: Embedded entity
           oneOf:
-          - $ref: '#/components/schemas/product_type_response'
+          - $ref: '#/components/schemas/entity_response'
           - type: 'null'
           nullable: true
       required:
       - id
-      - system_operator_id
-      - product_type_id
+      - party_id
+      - entity_id
+      - scopes
+      - recorded_at
+      - recorded_by
+    entity_type:
+      description: The type of the entity, e.g Person, Organisation
+      format: text
+      type: string
+      example: person
+      enum:
+      - person
+      - organisation
+    party_response:
+      summary: Response - Party
+      description: 'Response schema - The body that interacts with the Flexibility Information System
+
+
+        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
+
+
+        Example party types:
+
+
+        * Service Provider
+
+        * System Operator
+
+        * End User'
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 11
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
+        entity_id:
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - entity_id
+      - name
+      - role
+      - type
       - status
       - recorded_at
       - recorded_by
+    party_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      default: uuid
+      enum:
+      - gln
+      - uuid
+      - eic_x
+      - org
+      example: gln
+    product_type_response:
+      summary: Response - Product Type
+      description: Response schema - Product type.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 4
+        business_id:
+          description: The code for this product type.
+          format: text
+          type: string
+          readOnly: true
+          example: manual_congestion
+        name:
+          description: The name of the product type.
+          format: text
+          type: string
+          maxLength: 64
+          readOnly: true
+          example: Manual Congestion
+        service:
+          description: The service offered by the product type.
+          format: text
+          type: string
+          readOnly: true
+          example: congestion management
+        products:
+          description: Examples of products belonging to this product type.
+          format: text
+          type: string
+          readOnly: true
+          example: LongFlex, ShortFlex
+        system_operator_product_type:
+          description: Embedded system_operator_product_type
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/system_operator_product_type_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - name
+      - service
+      - products
+    party_type:
+      description: The type of the party, e.g SystemOperator, ServiceProvider
+      format: text
+      type: string
+      example: energy_supplier
+      enum:
+      - balance_responsible_party
+      - end_user
+      - energy_supplier
+      - flexibility_information_system_operator
+      - market_operator
+      - organisation
+      - service_provider
+      - system_operator
+      - third_party
     entity_client_response:
       summary: Response - Entity client
       description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
@@ -992,9 +997,9 @@ components:
       - scopes
       - recorded_at
       - recorded_by
-    party_membership_response:
-      summary: Response - Party Membership
-      description: Response schema - The relation between a party and entity.
+    system_operator_product_type_response:
+      summary: Response - System Operator Product Type
+      description: Response schema - Relation between a system operator and a product type they want to buy.
       type: object
       properties:
         id:
@@ -1002,25 +1007,20 @@ components:
           format: bigint
           type: integer
           readOnly: true
-          example: 44
-        party_id:
-          description: Reference to the party that the membership links to an entity.
+          example: 89
+        system_operator_id:
+          description: Reference to the system operator.
           format: bigint
           type: integer
-          example: 379
-        entity_id:
-          description: Reference to the entity that the party represents.
+          example: 37
+        product_type_id:
+          description: Reference to the product type.
           format: bigint
           type: integer
-          example: 30
-        scopes:
-          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
-          type: array
-          items:
-            $ref: '#/components/schemas/auth_scope'
-          nullable: false
-          example:
-          - read:data
+          example: 8
+        status:
+          $ref: '#/components/schemas/system_operator_product_type_status'
+          default: active
         recorded_at:
           description: When the resource was recorded (created or updated) in the system.
           format: date-time
@@ -1033,39 +1033,39 @@ components:
           type: integer
           readOnly: true
           example: 145
-        party:
+        system_operator:
           description: Embedded party
           oneOf:
           - $ref: '#/components/schemas/party_response'
           - type: 'null'
           nullable: true
-        entity:
-          description: Embedded entity
+        product_type:
+          description: Embedded product_type
           oneOf:
-          - $ref: '#/components/schemas/entity_response'
+          - $ref: '#/components/schemas/product_type_response'
           - type: 'null'
           nullable: true
       required:
       - id
-      - party_id
-      - entity_id
-      - scopes
+      - system_operator_id
+      - product_type_id
+      - status
       - recorded_at
       - recorded_by
-    entity_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      example: pid
-      enum:
-      - pid
-      - org
-      - email
     empty_object:
       description: An empty object
       type: object
       properties: {}
       additionalProperties: false
+    system_operator_product_type_status:
+      description: The status of the relation.
+      format: text
+      type: string
+      default: active
+      enum:
+      - active
+      - inactive
+      example: active
     product_type:
       properties:
         id:

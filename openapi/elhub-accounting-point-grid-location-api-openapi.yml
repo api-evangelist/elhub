@@ -540,78 +540,6 @@ paths:
       - $ref: '#/components/parameters/ApiVersion'
 components:
   schemas:
-    service_providing_group_product_application_ramping_capability:
-      description: Whether the service providing group can ramp in accordance with the product requirements during both activation and deactivation.
-      format: text
-      type: string
-      nullable: true
-      enum:
-      - always
-      - partial
-      - never
-      example: always
-    identity_response:
-      summary: Response - Identity
-      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 44
-        entity_id:
-          description: Reference to the entity using the identity.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 3
-        entity_name:
-          description: Name of the entity using the identity.
-          format: text
-          type: string
-          readOnly: true
-          example: Martin Andersen
-        party_id:
-          description: Reference to the party assumed by the entity.
-          format: bigint
-          type: integer
-          readOnly: true
-          nullable: true
-          example: 17
-        party_name:
-          description: Name of the party assumed by the entity.
-          format: text
-          type: string
-          readOnly: true
-          nullable: true
-          example: Andersen SO
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-        party:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - entity_id
-      - entity_name
-    controllable_unit_suspension_comment_visibility:
-      description: The level of visibility of the comment.
-      format: text
-      type: string
-      default: same_party
-      enum:
-      - same_party
-      - any_involved_party
-      example: same_party
     service_providing_group_product_application_status:
       description: The status of the application.
       format: text
@@ -625,22 +553,242 @@ components:
       - verified
       - rejected
       example: prequalification
-    metering_grid_area_status:
-      description: The status of the metering grid area.
-      format: text
-      type: string
-      readOnly: true
-      example: active
-      enum:
-      - active
-      - inactive
-    accounting_point_grid_location_object_type:
-      description: The type of object in the common grid model that the accounting point is at.
-      format: text
-      type: string
-      enum:
-      - substation
-      example: substation
+    accounting_point_balance_responsible_party_response:
+      summary: Response - Accounting Point Balance Responsible Party
+      description: Response schema - Relation linking a balance responsible party to an accounting point.
+      type: object
+      properties:
+        accounting_point_id:
+          description: The ID of the accounting point.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 245
+        balance_responsible_party_id:
+          description: The balance responsible party of the accounting point.
+          format: bigint
+          type: integer
+          example: 37
+          readOnly: true
+        energy_direction:
+          $ref: '#/components/schemas/accounting_point_balance_responsible_party_energy_direction'
+          readOnly: true
+        valid_from:
+          description: The date from which the relation between the accounting point and the balance responsible party is valid. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-08-08T00:00:00+02'
+        valid_to:
+          description: The date until which the relation between the accounting point and the balance responsible party is valid. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          readOnly: true
+          nullable: true
+        accounting_point:
+          description: Embedded accounting_point
+          oneOf:
+          - $ref: '#/components/schemas/accounting_point_response'
+          - type: 'null'
+          nullable: true
+        balance_responsible_party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - accounting_point_id
+      - balance_responsible_party_id
+      - energy_direction
+      - valid_from
+    accounting_point_grid_location_response:
+      summary: Response - Accounting Point Grid Location
+      description: Response schema - The electrical (topological) location of an accounting point in the common grid model (Nemo).
+      type: object
+      properties:
+        id:
+          description: Unique surrogate key.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 1
+        accounting_point_id:
+          description: The accounting point this grid location belongs to.
+          format: bigint
+          type: integer
+          example: 45
+        object_type:
+          $ref: '#/components/schemas/accounting_point_grid_location_object_type'
+        business_id:
+          description: Business identifier (mRID) referencing the object in the common grid model (NEMO).
+          format: text
+          type: string
+          nullable: false
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+          example: 53919b79-876f-4dad-8bde-b29368367604
+        name:
+          description: Name of the grid model object at the location.
+          format: text
+          type: string
+          maxLength: 512
+          example: Snilldal 1 KRA
+        nominal_voltage:
+          description: Nominal voltage level at the grid location, in kilovolt (kV).
+          format: decimal
+          type: number
+          minimum: 0
+          maximum: 999999.999
+          multipleOf: 0.001
+          example: 22
+        additional_information:
+          description: Free text field for extra information about the grid location if needed.
+          format: text
+          type: string
+          nullable: true
+        source:
+          $ref: '#/components/schemas/accounting_point_grid_location_source'
+          readOnly: true
+        quality:
+          $ref: '#/components/schemas/accounting_point_grid_location_quality'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        accounting_point:
+          description: Embedded accounting_point
+          oneOf:
+          - $ref: '#/components/schemas/accounting_point_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - accounting_point_id
+      - object_type
+      - business_id
+      - name
+      - nominal_voltage
+      - source
+      - quality
+      - recorded_at
+      - recorded_by
+    accounting_point_grid_location_create_request:
+      summary: Create - Accounting Point Grid Location
+      description: Request schema for create operations - The electrical (topological) location of an accounting point in the common grid model (Nemo).
+      type: object
+      properties:
+        accounting_point_id:
+          description: The accounting point this grid location belongs to.
+          format: bigint
+          type: integer
+          example: 45
+        object_type:
+          $ref: '#/components/schemas/accounting_point_grid_location_object_type'
+        business_id:
+          description: Business identifier (mRID) referencing the object in the common grid model (NEMO).
+          format: text
+          type: string
+          nullable: false
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+          example: 53919b79-876f-4dad-8bde-b29368367604
+        name:
+          description: Name of the grid model object at the location.
+          format: text
+          type: string
+          maxLength: 512
+          example: Snilldal 1 KRA
+        nominal_voltage:
+          description: Nominal voltage level at the grid location, in kilovolt (kV).
+          format: decimal
+          type: number
+          minimum: 0
+          maximum: 999999.999
+          multipleOf: 0.001
+          example: 22
+        additional_information:
+          description: Free text field for extra information about the grid location if needed.
+          format: text
+          type: string
+          nullable: true
+        quality:
+          $ref: '#/components/schemas/accounting_point_grid_location_quality'
+      required:
+      - accounting_point_id
+      - object_type
+      - business_id
+      - name
+      - nominal_voltage
+      - quality
+    service_providing_group_grid_suspension_response:
+      summary: Response - Service Providing Group Grid Suspension
+      description: Response schema - The relation allowing an impacted system operator to temporarily suspend a service providing group from delivering services.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 49
+        impacted_system_operator_id:
+          description: Reference to the impacted system operator suspending the service providing group.
+          format: bigint
+          type: integer
+          example: 7
+        service_providing_group_id:
+          description: Reference to the service providing group being suspended.
+          format: bigint
+          type: integer
+          example: 13
+        reason:
+          $ref: '#/components/schemas/service_providing_group_grid_suspension_reason'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        impacted_system_operator:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        service_providing_group:
+          description: Embedded service_providing_group
+          oneOf:
+          - $ref: '#/components/schemas/service_providing_group_response'
+          - type: 'null'
+          nullable: true
+        comment:
+          description: Embedded service_providing_group_grid_suspension_comment
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_providing_group_grid_suspension_comment_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - impacted_system_operator_id
+      - service_providing_group_id
+      - reason
+      - recorded_at
+      - recorded_by
     service_providing_group_grid_prequalification_response:
       summary: Response - Grid prequalification for service providing group
       description: Response schema - Grid prequalification for service providing group
@@ -710,42 +858,7 @@ components:
       - status
       - recorded_at
       - recorded_by
-    error_message:
-      description: Error message returned from the API.
-      type: object
-      properties:
-        code:
-          type: string
-          pattern: ^[A-Z0-9]+$
-          description: The error code.
-          example: PT418
-        details:
-          type:
-          - string
-          - 'null'
-          description: Detailed information about the error.
-        hint:
-          type:
-          - string
-          - 'null'
-          description: A hint to help resolve the error.
-        message:
-          type: string
-          description: The error message.
-          example: error
-      required:
-      - code
-      - message
-    service_providing_group_grid_suspension_reason:
-      description: The reason for the suspension.
-      format: text
-      type: string
-      enum:
-      - breach_of_conditions
-      - significant_group_change
-      - other
-      example: significant_group_change
-    service_providing_group_product_suspension_comment_visibility:
+    controllable_unit_suspension_comment_visibility:
       description: The level of visibility of the comment.
       format: text
       type: string
@@ -754,411 +867,6 @@ components:
       - same_party
       - any_involved_party
       example: same_party
-    controllable_unit_suspension_comment_response:
-      summary: Response - Controllable Unit Suspension Comment
-      description: Response schema - Comment made by a party involved in a controllable unit suspension.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 9
-        controllable_unit_suspension_id:
-          description: Reference to the controllable unit suspension.
-          format: bigint
-          type: integer
-          example: 7
-        created_by:
-          description: Reference to the identity that created the comment.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 94
-        created_at:
-          description: When the comment was added to the CUS.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2022-08-08 12:00:00+02:00'
-        visibility:
-          $ref: '#/components/schemas/controllable_unit_suspension_comment_visibility'
-          default: same_party
-        content:
-          description: Free text content of the comment.
-          format: text
-          type: string
-          maxLength: 2048
-          example: Missing document.
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        controllable_unit_suspension:
-          description: Embedded controllable_unit_suspension
-          oneOf:
-          - $ref: '#/components/schemas/controllable_unit_suspension_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - controllable_unit_suspension_id
-      - created_by
-      - created_at
-      - visibility
-      - content
-      - recorded_at
-      - recorded_by
-    service_providing_group_power_per_substation_response:
-      summary: Response - Service Providing Group Power Per Substation
-      description: Response schema - Per-substation breakdown of controllable units and their technical details for a service providing group.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate key (service providing group ID).
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 4
-        service_providing_group_id:
-          description: The ID of the service providing group this resource is a breakdown of.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 4
-        substations:
-          description: List of per-substation aggregates for the controllable units currently in the service providing group. Each element contains the substation identifier and name, plus controllable unit and technical resource aggregates. An element with null substation fields groups controllable units whose grid location has not yet been assigned.
-          type: array
-          readOnly: true
-          items:
-            type: object
-            properties:
-              substation_business_id:
-                type: string
-                nullable: true
-              substation_name:
-                type: string
-                nullable: true
-              controllable_unit:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                  maximum_active_power:
-                    $ref: '#/components/schemas/numeric_aggregation'
-              technical_resource:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                  maximum_active_power:
-                    $ref: '#/components/schemas/numeric_aggregation'
-          example:
-          - substation_business_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
-            substation_name: Substation A
-            controllable_unit:
-              count: 3
-              maximum_active_power:
-                sum: 120
-                average: 40
-                min: 20
-                max: 60
-            technical_resource:
-              count: 5
-              maximum_active_power:
-                sum: 150
-                average: 50
-                min: 30
-                max: 80
-        service_providing_group:
-          description: Embedded service_providing_group
-          oneOf:
-          - $ref: '#/components/schemas/service_providing_group_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - service_providing_group_id
-      - substations
-    accounting_point_grid_location_quality:
-      description: Indicates how the grid location was determined. Guessed means that Flexibility Information System has estimated the location, while confirmed means that someone has verified it.
-      format: text
-      type: string
-      enum:
-      - confirmed
-      - guessed
-      example: confirmed
-    entity_response:
-      summary: Response - Entity
-      description: 'Response schema - Entity - Natural or legal person
-
-
-        An entity is a natural or legal person that can be a party in the Flexibility Information System.
-
-
-        Example entity types:
-
-
-        * Person
-
-        * Organisation'
-      type: object
-      properties:
-        id:
-          description: 'Unique surrogate identifier.
-
-
-            Note:
-
-            This is a Primary Key.'
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 14
-        business_id:
-          description: The business identifier of the entity. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '13370000000'
-        business_id_type:
-          $ref: '#/components/schemas/entity_business_id_type'
-        name:
-          description: Name of the entity. Maximum 128 characters.
-          format: text
-          type: string
-          example: John Smith
-        type:
-          $ref: '#/components/schemas/entity_type'
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        client:
-          description: Embedded entity_client
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/entity_client_response'
-          - type: 'null'
-          nullable: true
-        party:
-          description: Embedded party
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-        party_membership:
-          description: Embedded party_membership
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/party_membership_response'
-          - type: 'null'
-          nullable: true
-        identity:
-          description: Embedded identity
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/identity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - business_id_type
-      - name
-      - type
-      - recorded_at
-      - recorded_by
-    auth_scope:
-      description: Authorization scopes.
-      format: text
-      type: string
-      enum:
-      - manage:attachment
-      - manage:attachment:service_providing_group_product_application_attachment
-      - manage:auth
-      - manage:data
-      - manage:data:accounting_point_grid_location
-      - manage:data:controllable_unit
-      - manage:data:controllable_unit_service_provider
-      - manage:data:controllable_unit_suspension
-      - manage:data:controllable_unit_suspension_comment
-      - manage:data:entity
-      - manage:data:entity_client
-      - manage:data:notification
-      - manage:data:party
-      - manage:data:party_membership
-      - manage:data:service_provider_product_application
-      - manage:data:service_provider_product_application_comment
-      - manage:data:service_provider_product_suspension
-      - manage:data:service_provider_product_suspension_comment
-      - manage:data:service_providing_group
-      - manage:data:service_providing_group_grid_prequalification
-      - manage:data:service_providing_group_grid_prequalification_comment
-      - manage:data:service_providing_group_grid_suspension
-      - manage:data:service_providing_group_grid_suspension_comment
-      - manage:data:service_providing_group_membership
-      - manage:data:service_providing_group_product_application
-      - manage:data:service_providing_group_product_application_comment
-      - manage:data:service_providing_group_product_suspension
-      - manage:data:service_providing_group_product_suspension_comment
-      - manage:data:system_operator_product_type
-      - manage:data:technical_resource
-      - read:attachment
-      - read:attachment:service_providing_group_product_application_attachment
-      - read:attachment:service_providing_group_product_application_attachment_history
-      - read:auth
-      - read:data
-      - read:data:accounting_point
-      - read:data:accounting_point_balance_responsible_party
-      - read:data:accounting_point_bidding_zone
-      - read:data:accounting_point_end_user
-      - read:data:accounting_point_energy_supplier
-      - read:data:accounting_point_grid_location
-      - read:data:accounting_point_grid_location_history
-      - read:data:accounting_point_metering_grid_area
-      - read:data:controllable_unit
-      - read:data:controllable_unit_history
-      - read:data:controllable_unit_service_provider
-      - read:data:controllable_unit_service_provider_history
-      - read:data:controllable_unit_summary
-      - read:data:controllable_unit_suspension
-      - read:data:controllable_unit_suspension_comment
-      - read:data:controllable_unit_suspension_comment_history
-      - read:data:controllable_unit_suspension_history
-      - read:data:entity
-      - read:data:entity_client
-      - read:data:event
-      - read:data:identity
-      - read:data:metering_grid_area
-      - read:data:notice
-      - read:data:notification
-      - read:data:party
-      - read:data:party_history
-      - read:data:party_membership
-      - read:data:party_membership_history
-      - read:data:product_type
-      - read:data:service_provider_product_application
-      - read:data:service_provider_product_application_comment
-      - read:data:service_provider_product_application_comment_history
-      - read:data:service_provider_product_application_history
-      - read:data:service_provider_product_suspension
-      - read:data:service_provider_product_suspension_comment
-      - read:data:service_provider_product_suspension_comment_history
-      - read:data:service_provider_product_suspension_history
-      - read:data:service_providing_group
-      - read:data:service_providing_group_grid_prequalification
-      - read:data:service_providing_group_grid_prequalification_comment
-      - read:data:service_providing_group_grid_prequalification_comment_history
-      - read:data:service_providing_group_grid_prequalification_history
-      - read:data:service_providing_group_grid_suspension
-      - read:data:service_providing_group_grid_suspension_comment
-      - read:data:service_providing_group_grid_suspension_comment_history
-      - read:data:service_providing_group_grid_suspension_history
-      - read:data:service_providing_group_history
-      - read:data:service_providing_group_membership
-      - read:data:service_providing_group_membership_history
-      - read:data:service_providing_group_power_per_substation
-      - read:data:service_providing_group_product_application
-      - read:data:service_providing_group_product_application_comment
-      - read:data:service_providing_group_product_application_comment_history
-      - read:data:service_providing_group_product_application_history
-      - read:data:service_providing_group_product_suspension
-      - read:data:service_providing_group_product_suspension_comment
-      - read:data:service_providing_group_product_suspension_comment_history
-      - read:data:service_providing_group_product_suspension_history
-      - read:data:service_providing_group_summary
-      - read:data:system_operator_product_type
-      - read:data:system_operator_product_type_history
-      - read:data:technical_resource
-      - read:data:technical_resource_history
-      - read:grid
-      - read:grid:line
-      - read:grid:substation
-      - read:grid:substation_cluster
-      - use:auth
-      - use:data
-      - use:data:controllable_unit
-      - use:data:controllable_unit:lookup
-      - use:data:entity
-      - use:data:entity:lookup
-    service_providing_group_bidding_zone:
-      description: The bidding zone that restricts which CUs that can be added to the group. Also known as scheduling area or price area for TSO.
-      format: text
-      type: string
-      enum:
-      - NO1
-      - NO2
-      - NO3
-      - NO4
-      - NO5
-      example: NO3
-    accounting_point_end_user_response:
-      summary: Response - Accounting Point End User
-      description: Response schema - Relation telling which end user an accounting point belongs to.
-      type: object
-      properties:
-        accounting_point_id:
-          description: The ID of the accounting point.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 245
-        end_user_id:
-          description: The end user on the accounting point.
-          format: bigint
-          type: integer
-          example: 12
-          readOnly: true
-        valid_from:
-          description: The date from which the accounting point belongs to the end user. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2022-08-08T00:00:00+02'
-        valid_to:
-          description: The date until which the accounting point belongs to the end user. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          readOnly: true
-          nullable: true
-        accounting_point:
-          description: Embedded accounting_point
-          oneOf:
-          - $ref: '#/components/schemas/accounting_point_response'
-          - type: 'null'
-          nullable: true
-        end_user:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - accounting_point_id
-      - end_user_id
-      - valid_from
     accounting_point_response:
       summary: Response - Accounting Point
       description: Response schema - Accounting point for a controllable unit.
@@ -1273,47 +981,37 @@ components:
       - system_operator_id
       - recorded_at
       - recorded_by
-    service_providing_group_product_application_attachment_content_type:
-      description: MIME type of the attachment.
-      format: text
-      type: string
-      example: application/pdf
-      enum:
-      - application/pdf
-      - image/jpeg
-      - image/png
-    service_providing_group_product_suspension_response:
-      summary: Response - Service Providing Group Product Suspension
-      description: Response schema - The relation allowing a procuring system operator to temporarily suspend a service providing group from delivering products of certain types.
+    service_providing_group_membership_response:
+      summary: Response - Membership relation of controllable unit in service providing group
+      description: Response schema - Membership relation of controllable unit in service providing group
       type: object
       properties:
         id:
-          description: Unique surrogate identifier.
+          description: Unique surrogate key.
           format: bigint
           type: integer
           readOnly: true
-          example: 12
-        procuring_system_operator_id:
-          description: Reference to the procuring system operator suspending the service providing group.
+          example: 27
+        controllable_unit_id:
+          description: Reference to the controllable unit this relation links to a service providing group.
           format: bigint
           type: integer
-          example: 91
+          example: 6
         service_providing_group_id:
-          description: Reference to the service providing group being suspended.
+          description: Reference to the service providing group this relation links to a controllable unit.
           format: bigint
           type: integer
-          example: 7
-        product_type_ids:
-          description: References to the suspended product types.
-          type: array
-          items:
-            format: bigint
-            type: integer
-          example:
-          - 3
-          - 6
-        reason:
-          $ref: '#/components/schemas/service_providing_group_product_suspension_reason'
+          example: 55
+        valid_from:
+          description: The date from which the relation between the controllable unit and the service providing group is valid. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          example: '2022-08-08T00:00:00+02'
+        valid_to:
+          description: The date until which the relation between the controllable unit and the service providing group is valid. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          nullable: true
         recorded_at:
           description: When the resource was recorded (created or updated) in the system.
           format: date-time
@@ -1326,10 +1024,10 @@ components:
           type: integer
           readOnly: true
           example: 145
-        procuring_system_operator:
-          description: Embedded party
+        controllable_unit:
+          description: Embedded controllable_unit
           oneOf:
-          - $ref: '#/components/schemas/party_response'
+          - $ref: '#/components/schemas/controllable_unit_response'
           - type: 'null'
           nullable: true
         service_providing_group:
@@ -1338,25 +1036,333 @@ components:
           - $ref: '#/components/schemas/service_providing_group_response'
           - type: 'null'
           nullable: true
-        comment:
-          description: Embedded service_providing_group_product_suspension_comment
+      required:
+      - id
+      - controllable_unit_id
+      - service_providing_group_id
+      - valid_from
+      - recorded_at
+      - recorded_by
+    service_providing_group_summary_response:
+      summary: Response - Service Providing Group Summary
+      description: Response schema - Aggregated summary of controllable units and technical resources belonging to a service providing group.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate key (service providing group ID).
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 4
+        service_providing_group_id:
+          description: The ID of the service providing group this resource is a summary of.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 4
+        controllable_unit:
+          description: Aggregated statistics on controllable units currently in the service providing group, including count and maximum active power information (sum, average, min, max).
+          type: object
+          readOnly: true
+          properties:
+            count:
+              type: integer
+            maximum_active_power:
+              $ref: '#/components/schemas/numeric_aggregation'
+            maximum_active_power_up:
+              description: Maximum active power aggregated over controllable units with regulation_direction equal to up or both.
+              $ref: '#/components/schemas/numeric_aggregation'
+            maximum_active_power_down:
+              description: Maximum active power aggregated over controllable units with regulation_direction equal to down or both.
+              $ref: '#/components/schemas/numeric_aggregation'
+          example:
+            count: 3
+            maximum_active_power:
+              sum: 200
+              average: 66.67
+              min: 40
+              max: 100
+            maximum_active_power_up:
+              sum: 150
+              average: 75
+              min: 50
+              max: 100
+            maximum_active_power_down:
+              sum: 100
+              average: 50
+              min: 40
+              max: 60
+        technical_resource:
+          description: Aggregated statistics on technical resources belonging to controllable units with active membership in the service providing group, including counts and maximum active power breakdowns (sum, average, min, max) by category and technology.
+          type: object
+          readOnly: true
+          properties:
+            count:
+              type: integer
+            maximum_active_power:
+              $ref: '#/components/schemas/numeric_aggregation'
+            by_category:
+              type: object
+              propertyNames:
+                $ref: '#/components/schemas/category'
+              additionalProperties:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  maximum_active_power:
+                    $ref: '#/components/schemas/numeric_aggregation'
+            by_technology:
+              type: object
+              propertyNames:
+                $ref: '#/components/schemas/technology'
+              additionalProperties:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  maximum_active_power:
+                    $ref: '#/components/schemas/numeric_aggregation'
+          example:
+            count: 8
+            maximum_active_power:
+              sum: 250
+              average: 31.25
+              min: 10
+              max: 80
+            by_category:
+              production:
+                count: 5
+                maximum_active_power:
+                  sum: 180
+                  average: 36
+                  min: 10
+                  max: 80
+              consumption:
+                count: 3
+                maximum_active_power:
+                  sum: 70
+                  average: 23.33
+                  min: 15
+                  max: 30
+            by_technology:
+              solar:
+                count: 3
+                maximum_active_power:
+                  sum: 130
+                  average: 43.33
+                  min: 20
+                  max: 80
+              battery:
+                count: 2
+                maximum_active_power:
+                  sum: 50
+                  average: 25
+                  min: 20
+                  max: 30
+        service_providing_group:
+          description: Embedded service_providing_group
           oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/service_providing_group_product_suspension_comment_response'
+          - $ref: '#/components/schemas/service_providing_group_response'
           - type: 'null'
           nullable: true
       required:
       - id
-      - procuring_system_operator_id
       - service_providing_group_id
-      - product_type_ids
-      - reason
+      - controllable_unit
+      - technical_resource
+    service_providing_group_status:
+      description: The status of the group.
+      format: text
+      type: string
+      default: new
+      enum:
+      - new
+      - active
+      - inactive
+      - terminated
+      example: active
+    party_response:
+      summary: Response - Party
+      description: 'Response schema - The body that interacts with the Flexibility Information System
+
+
+        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
+
+
+        Example party types:
+
+
+        * Service Provider
+
+        * System Operator
+
+        * End User'
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 11
+        business_id:
+          description: The business identifier of the party. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '1337099000000'
+        business_id_type:
+          $ref: '#/components/schemas/party_business_id_type'
+          default: uuid
+        entity_id:
+          description: Reference to the entity that is the parent of the party.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the party. Maximum 128 characters.
+          format: text
+          type: string
+          example: Flex Energy Supplier
+        role:
+          $ref: '#/components/schemas/party_role'
+        type:
+          $ref: '#/components/schemas/party_type'
+        status:
+          $ref: '#/components/schemas/party_status'
+          default: new
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - entity_id
+      - name
+      - role
+      - type
+      - status
       - recorded_at
       - recorded_by
-    accounting_point_balance_responsible_party_response:
-      summary: Response - Accounting Point Balance Responsible Party
-      description: Response schema - Relation linking a balance responsible party to an accounting point.
+    entity_client_response:
+      summary: Response - Entity client
+      description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 14
+        entity_id:
+          description: Reference to the entity that this client is attached to.
+          format: bigint
+          type: integer
+          example: 30
+        name:
+          description: Name of the client.
+          format: text
+          type: string
+          maxLength: 256
+          nullable: true
+          example: Laptop
+        client_id:
+          description: The identifier of the entity. For use with client credentials authentication method.
+          format: text
+          type: string
+          readOnly: true
+          example: addr@flex.test
+        party_id:
+          description: Reference to the party this client allows to assume. A null value means the client cannot assume any party.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 30
+        scopes:
+          description: 'List of scopes granted to the user when it logs in as an entity or when it acts as the party. When assuming a party through party membership, the least privileged set of scopes will be kept.
+
+            Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.'
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
+        client_secret:
+          description: The secret of the entity. For use with client credentials authentication method. Input as plain text but stored encrypted.
+          format: text
+          type: string
+          minLength: 12
+          nullable: true
+          example: mysupersecretpassword
+        public_key:
+          description: The public key of the entity (X.509 SubjectPublicKeyInfo). For use with JWT grant authentication method.
+          format: text
+          type: string
+          nullable: true
+          pattern: ^-----BEGIN PUBLIC KEY-----\nMIIB[-A-Za-z0-9+/\n]*={0,3}\n-----END PUBLIC KEY-----$
+          example: '-----BEGIN PUBLIC KEY-----
+
+            MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAq3DnhgYgLVJknvDA3clA
+
+            TozPtjI7yauqD/ZuqgZn4KzzzkQ4BzJar4jRygpzbghlFn0Luk1mdVKzPUgYj0V
+
+            kbRlHyYfxahbgOHixOOnXkKXrtZW7yWGjXPqy/ZJ/+kFBNPAzxy7fDuAzKfU3Rn5
+
+            0sBakg95pua14W1oE4rtd4/U+sg2maCq6HgGdCLLxRWwXA8IBtvHZ48i6kxiz9tu
+
+            -----END PUBLIC KEY-----'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - entity_id
+      - client_id
+      - scopes
+      - recorded_at
+      - recorded_by
+    accounting_point_energy_supplier_response:
+      summary: Response - Accounting Point Energy Supplier
+      description: Response schema - Relation linking an energy supplier to an accounting point.
       type: object
       properties:
         accounting_point_id:
@@ -1364,24 +1370,21 @@ components:
           format: bigint
           type: integer
           readOnly: true
-          example: 245
-        balance_responsible_party_id:
-          description: The balance responsible party of the accounting point.
+          example: 45
+        energy_supplier_id:
+          description: The energy supplier of the accounting point.
           format: bigint
           type: integer
-          example: 37
-          readOnly: true
-        energy_direction:
-          $ref: '#/components/schemas/accounting_point_balance_responsible_party_energy_direction'
+          example: 7
           readOnly: true
         valid_from:
-          description: The date from which the relation between the accounting point and the balance responsible party is valid. Midnight aligned on Norwegian timezone.
+          description: The date from which the relation between the accounting point and the energy supplier is valid. Midnight aligned on Norwegian timezone.
           format: date-time
           type: string
           readOnly: true
-          example: '2022-08-08T00:00:00+02'
+          example: '2023-09-09T00:00:00+02'
         valid_to:
-          description: The date until which the relation between the accounting point and the balance responsible party is valid. Midnight aligned on Norwegian timezone.
+          description: The date until which the relation between the accounting point and the energy supplier is valid. Midnight aligned on Norwegian timezone.
           format: date-time
           type: string
           readOnly: true
@@ -1392,7 +1395,7 @@ components:
           - $ref: '#/components/schemas/accounting_point_response'
           - type: 'null'
           nullable: true
-        balance_responsible_party:
+        energy_supplier:
           description: Embedded party
           oneOf:
           - $ref: '#/components/schemas/party_response'
@@ -1400,9 +1403,504 @@ components:
           nullable: true
       required:
       - accounting_point_id
-      - balance_responsible_party_id
-      - energy_direction
+      - energy_supplier_id
       - valid_from
+    service_providing_group_grid_suspension_comment_visibility:
+      description: The level of visibility of the comment.
+      format: text
+      type: string
+      default: same_party
+      enum:
+      - same_party
+      - any_involved_party
+      example: same_party
+    controllable_unit_suspension_comment_response:
+      summary: Response - Controllable Unit Suspension Comment
+      description: Response schema - Comment made by a party involved in a controllable unit suspension.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 9
+        controllable_unit_suspension_id:
+          description: Reference to the controllable unit suspension.
+          format: bigint
+          type: integer
+          example: 7
+        created_by:
+          description: Reference to the identity that created the comment.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 94
+        created_at:
+          description: When the comment was added to the CUS.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-08-08 12:00:00+02:00'
+        visibility:
+          $ref: '#/components/schemas/controllable_unit_suspension_comment_visibility'
+          default: same_party
+        content:
+          description: Free text content of the comment.
+          format: text
+          type: string
+          maxLength: 2048
+          example: Missing document.
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        controllable_unit_suspension:
+          description: Embedded controllable_unit_suspension
+          oneOf:
+          - $ref: '#/components/schemas/controllable_unit_suspension_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - controllable_unit_suspension_id
+      - created_by
+      - created_at
+      - visibility
+      - content
+      - recorded_at
+      - recorded_by
+    controllable_unit_summary_response:
+      summary: Response - Controllable Unit Summary
+      description: Response schema - Aggregated summary of technical resources belonging to a controllable unit.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate key (controllable unit ID).
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 12
+        controllable_unit_id:
+          description: The ID of the controllable unit this resource is a summary of.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 12
+        technical_resource:
+          description: Aggregated statistics on technical resources belonging to the controllable unit, including counts and maximum active power breakdowns (sum, average, min, max) by category and technology.
+          type: object
+          readOnly: true
+          properties:
+            count:
+              type: integer
+            maximum_active_power:
+              $ref: '#/components/schemas/numeric_aggregation'
+            by_category:
+              type: object
+              propertyNames:
+                $ref: '#/components/schemas/category'
+              additionalProperties:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  maximum_active_power:
+                    $ref: '#/components/schemas/numeric_aggregation'
+            by_technology:
+              type: object
+              propertyNames:
+                $ref: '#/components/schemas/technology'
+              additionalProperties:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                  maximum_active_power:
+                    $ref: '#/components/schemas/numeric_aggregation'
+          example:
+            technical_resource:
+              count: 3
+              maximum_active_power:
+                sum: 150
+                average: 50
+                min: 20
+                max: 80
+              by_category:
+                production:
+                  count: 2
+                  maximum_active_power:
+                    sum: 130
+                    average: 65
+                    min: 50
+                    max: 80
+                consumption:
+                  count: 1
+                  maximum_active_power:
+                    sum: 20
+                    average: 20
+                    min: 20
+                    max: 20
+              by_technology:
+                solar:
+                  count: 2
+                  maximum_active_power:
+                    sum: 130
+                    average: 65
+                    min: 50
+                    max: 80
+                battery:
+                  count: 1
+                  maximum_active_power:
+                    sum: 20
+                    average: 20
+                    min: 20
+                    max: 20
+        controllable_unit:
+          description: Embedded controllable_unit
+          oneOf:
+          - $ref: '#/components/schemas/controllable_unit_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - controllable_unit_id
+      - technical_resource
+    entity_response:
+      summary: Response - Entity
+      description: 'Response schema - Entity - Natural or legal person
+
+
+        An entity is a natural or legal person that can be a party in the Flexibility Information System.
+
+
+        Example entity types:
+
+
+        * Person
+
+        * Organisation'
+      type: object
+      properties:
+        id:
+          description: 'Unique surrogate identifier.
+
+
+            Note:
+
+            This is a Primary Key.'
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 14
+        business_id:
+          description: The business identifier of the entity. Format depends on `business_id_type`.
+          format: text
+          type: string
+          example: '13370000000'
+        business_id_type:
+          $ref: '#/components/schemas/entity_business_id_type'
+        name:
+          description: Name of the entity. Maximum 128 characters.
+          format: text
+          type: string
+          example: John Smith
+        type:
+          $ref: '#/components/schemas/entity_type'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        client:
+          description: Embedded entity_client
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/entity_client_response'
+          - type: 'null'
+          nullable: true
+        party:
+          description: Embedded party
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        party_membership:
+          description: Embedded party_membership
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/party_membership_response'
+          - type: 'null'
+          nullable: true
+        identity:
+          description: Embedded identity
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/identity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - name
+      - type
+      - recorded_at
+      - recorded_by
+    device_type:
+      description: Type of device for technical resources.
+      format: text
+      type: string
+      enum:
+      - inverter
+      - boiler
+      - water_heater
+      - socket
+      - hvac
+      - ev_charging_device
+      - energy_management_system
+      - other
+    error_message:
+      description: Error message returned from the API.
+      type: object
+      properties:
+        code:
+          type: string
+          pattern: ^[A-Z0-9]+$
+          description: The error code.
+          example: PT418
+        details:
+          type:
+          - string
+          - 'null'
+          description: Detailed information about the error.
+        hint:
+          type:
+          - string
+          - 'null'
+          description: A hint to help resolve the error.
+        message:
+          type: string
+          description: The error message.
+          example: error
+      required:
+      - code
+      - message
+    service_providing_group_grid_suspension_comment_response:
+      summary: Response - Service Providing Group Grid Suspension Comment
+      description: Response schema - Comment made by a party involved in a service providing group grid suspension.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 9
+        service_providing_group_grid_suspension_id:
+          description: Reference to the service providing group grid suspension.
+          format: bigint
+          type: integer
+          example: 7
+        created_by:
+          description: Reference to the identity that created the comment.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 94
+        created_at:
+          description: When the comment was added to the SPGGS.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-08-08 12:00:00+02:00'
+        visibility:
+          $ref: '#/components/schemas/service_providing_group_grid_suspension_comment_visibility'
+          default: same_party
+        content:
+          description: Free text content of the comment.
+          format: text
+          type: string
+          maxLength: 2048
+          example: Missing document.
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        service_providing_group_grid_suspension:
+          description: Embedded service_providing_group_grid_suspension
+          oneOf:
+          - $ref: '#/components/schemas/service_providing_group_grid_suspension_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - service_providing_group_grid_suspension_id
+      - created_by
+      - created_at
+      - visibility
+      - content
+      - recorded_at
+      - recorded_by
+    service_providing_group_product_application_attachment_response:
+      summary: Response - Service Providing Group Product Application Attachment
+      description: Response schema - File attachment associated with a service providing group product application, allowing involved parties to exchange supporting documents.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 9
+        service_providing_group_product_application_id:
+          description: Reference to the service providing group product application.
+          format: bigint
+          type: integer
+          example: 7
+        object_id:
+          description: Identifier of the object to which the attachment is linked.
+          format: text
+          type: string
+          example: 08aa9239-d209-4c15-a916-2b4942ce45ee
+        filename:
+          description: Original filename of the attachment.
+          format: text
+          type: string
+          example: document.pdf
+        filename_sanitised:
+          description: Sanitised filename safe for storage.
+          format: text
+          type: string
+          example: document.pdf
+        content_type:
+          $ref: '#/components/schemas/service_providing_group_product_application_attachment_content_type'
+        size_bytes:
+          description: Size of the attachment in bytes.
+          format: bigint
+          type: integer
+          example: 204800
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        service_providing_group_product_application:
+          description: Embedded service_providing_group_product_application
+          oneOf:
+          - $ref: '#/components/schemas/service_providing_group_product_application_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - service_providing_group_product_application_id
+      - object_id
+      - filename
+      - filename_sanitised
+      - content_type
+      - size_bytes
+      - recorded_at
+      - recorded_by
+    accounting_point_metering_grid_area_response:
+      summary: Response - Accounting Point Metering Grid Area
+      description: Response schema - Relation telling which metering grid area an accounting point belongs to.
+      type: object
+      properties:
+        accounting_point_id:
+          description: The ID of the accounting point.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 45
+        metering_grid_area_id:
+          description: The metering grid area of the accounting point.
+          format: bigint
+          type: integer
+          example: 3
+          readOnly: true
+        valid_from:
+          description: The date from which the accounting point belongs to the metering grid area. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-09-09T00:00:00+02'
+        valid_to:
+          description: The date until which the accounting point belongs to the metering grid area. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          readOnly: true
+          nullable: true
+        accounting_point:
+          description: Embedded accounting_point
+          oneOf:
+          - $ref: '#/components/schemas/accounting_point_response'
+          - type: 'null'
+          nullable: true
+        metering_grid_area:
+          description: Embedded metering_grid_area
+          oneOf:
+          - $ref: '#/components/schemas/metering_grid_area_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - accounting_point_id
+      - metering_grid_area_id
+      - valid_from
+    accounting_point_balance_responsible_party_energy_direction:
+      description: The direction of the effect on the balance that the BRP takes responsibility for.
+      format: text
+      type: string
+      readOnly: true
+      example: consumption
+      enum:
+      - consumption
+      - production
+    accounting_point_grid_location_source:
+      description: 'How the grid location was determined. When a system operator creates or updates a grid location, this field is set automatically: `cso` if the SO is the connecting system operator, `so` otherwise.'
+      format: text
+      type: string
+      readOnly: true
+      enum:
+      - cso
+      - so
+      - grid_model
+      - system
+      example: cso
     technical_resource_response:
       summary: Response - Technical Resource
       description: Response schema - Technical unit being part of a controllable unit.
@@ -1516,6 +2014,1048 @@ components:
       - device_type
       - recorded_at
       - recorded_by
+    accounting_point_end_user_response:
+      summary: Response - Accounting Point End User
+      description: Response schema - Relation telling which end user an accounting point belongs to.
+      type: object
+      properties:
+        accounting_point_id:
+          description: The ID of the accounting point.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 245
+        end_user_id:
+          description: The end user on the accounting point.
+          format: bigint
+          type: integer
+          example: 12
+          readOnly: true
+        valid_from:
+          description: The date from which the accounting point belongs to the end user. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-08-08T00:00:00+02'
+        valid_to:
+          description: The date until which the accounting point belongs to the end user. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          readOnly: true
+          nullable: true
+        accounting_point:
+          description: Embedded accounting_point
+          oneOf:
+          - $ref: '#/components/schemas/accounting_point_response'
+          - type: 'null'
+          nullable: true
+        end_user:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - accounting_point_id
+      - end_user_id
+      - valid_from
+    accounting_point_grid_location_quality:
+      description: Indicates how the grid location was determined. Guessed means that Flexibility Information System has estimated the location, while confirmed means that someone has verified it.
+      format: text
+      type: string
+      enum:
+      - confirmed
+      - guessed
+      example: confirmed
+    controllable_unit_response:
+      summary: Response - Controllable unit
+      description: Response schema - Controllable unit
+      type: object
+      properties:
+        id:
+          description: Unique surrogate key.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 12
+        business_id:
+          description: Unique business identifier for the controllable unit.
+          format: text
+          type: string
+          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
+          readOnly: true
+          example: 53919b79-876f-4dad-8bde-b29368367604
+        name:
+          description: Free text name of the controllable unit.
+          format: text
+          type: string
+          maxLength: 512
+          example: 'Car Charger #34'
+        start_date:
+          description: The usage date when the controllable unit is first active.
+          format: date
+          type: string
+          nullable: true
+          example: '2024-05-17'
+        status:
+          $ref: '#/components/schemas/controllable_unit_status'
+          default: new
+        regulation_direction:
+          $ref: '#/components/schemas/controllable_unit_regulation_direction'
+        maximum_active_power:
+          description: Maximum continuous active power (flexible power) that the controllable unit can produce or consume, i.e. deliver for balancing and congestion services, in kilowatts.
+          format: decimal
+          type: number
+          minimum: 0
+          maximum: 999999.999
+          multipleOf: 0.001
+          example: 3.5
+        is_small:
+          description: Whether the controllable unit is small or not, following NCDR. Current threshold for this to be true is <= 50 kW of flexible power.
+          format: boolean
+          type: boolean
+          readOnly: true
+          example: true
+        accounting_point_id:
+          description: Reference to the accounting point that the controllable unit is connected to.
+          format: bigint
+          type: integer
+          nullable: false
+          example: 10289
+        additional_information:
+          description: Free text field for extra information about the controllable unit if needed.
+          format: text
+          type: string
+          nullable: true
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        accounting_point:
+          description: Embedded accounting_point
+          oneOf:
+          - $ref: '#/components/schemas/accounting_point_response'
+          - type: 'null'
+          nullable: true
+        suspension:
+          description: Embedded controllable_unit_suspension
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/controllable_unit_suspension_response'
+          - type: 'null'
+          nullable: true
+        service_provider:
+          description: Embedded controllable_unit_service_provider
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/controllable_unit_service_provider_response'
+          - type: 'null'
+          nullable: true
+        summary:
+          description: Embedded controllable_unit_summary
+          oneOf:
+          - $ref: '#/components/schemas/controllable_unit_summary_response'
+          - type: 'null'
+          nullable: true
+        service_providing_group_membership:
+          description: Embedded service_providing_group_membership
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_providing_group_membership_response'
+          - type: 'null'
+          nullable: true
+        technical_resource:
+          description: Embedded technical_resource
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/technical_resource_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - name
+      - status
+      - regulation_direction
+      - maximum_active_power
+      - is_small
+      - accounting_point_id
+      - recorded_at
+      - recorded_by
+    service_providing_group_grid_prequalification_comment_visibility:
+      description: The level of visibility of the comment.
+      format: text
+      type: string
+      default: same_party
+      enum:
+      - same_party
+      - any_involved_party
+      example: same_party
+    service_providing_group_grid_prequalification_status:
+      description: The status of the grid prequalification for this service providing group.
+      format: text
+      type: string
+      default: requested
+      enum:
+      - requested
+      - in_progress
+      - conditionally_approved
+      - approved
+      - not_approved
+      example: in_progress
+    technical_resource_business_id_type:
+      description: The type of business identifier used for the device.
+      format: text
+      type: string
+      nullable: true
+      enum:
+      - serial_number
+      - mac
+      - other
+      example: serial_number
+    controllable_unit_status:
+      description: The status of the controllable unit.
+      format: text
+      type: string
+      default: new
+      enum:
+      - new
+      - active
+      - inactive
+      - terminated
+      example: active
+    service_providing_group_product_application_attachment_content_type:
+      description: MIME type of the attachment.
+      format: text
+      type: string
+      example: application/pdf
+      enum:
+      - application/pdf
+      - image/jpeg
+      - image/png
+    entity_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      example: pid
+      enum:
+      - pid
+      - org
+      - email
+    party_role:
+      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
+      format: text
+      type: string
+      example: flex_energy_supplier
+      enum:
+      - flex_balance_responsible_party
+      - flex_end_user
+      - flex_energy_supplier
+      - flex_flexibility_information_system_operator
+      - flex_market_operator
+      - flex_organisation
+      - flex_service_provider
+      - flex_system_operator
+      - flex_third_party
+    party_status:
+      description: The status of the party.
+      format: text
+      type: string
+      default: new
+      enum:
+      - new
+      - active
+      - inactive
+      - suspended
+      - terminated
+      example: active
+    auth_scope:
+      description: Authorization scopes.
+      format: text
+      type: string
+      enum:
+      - manage:attachment
+      - manage:attachment:service_providing_group_product_application_attachment
+      - manage:auth
+      - manage:data
+      - manage:data:accounting_point_grid_location
+      - manage:data:controllable_unit
+      - manage:data:controllable_unit_service_provider
+      - manage:data:controllable_unit_suspension
+      - manage:data:controllable_unit_suspension_comment
+      - manage:data:entity
+      - manage:data:entity_client
+      - manage:data:notification
+      - manage:data:party
+      - manage:data:party_membership
+      - manage:data:service_provider_product_application
+      - manage:data:service_provider_product_application_comment
+      - manage:data:service_provider_product_suspension
+      - manage:data:service_provider_product_suspension_comment
+      - manage:data:service_providing_group
+      - manage:data:service_providing_group_grid_prequalification
+      - manage:data:service_providing_group_grid_prequalification_comment
+      - manage:data:service_providing_group_grid_suspension
+      - manage:data:service_providing_group_grid_suspension_comment
+      - manage:data:service_providing_group_membership
+      - manage:data:service_providing_group_product_application
+      - manage:data:service_providing_group_product_application_comment
+      - manage:data:service_providing_group_product_suspension
+      - manage:data:service_providing_group_product_suspension_comment
+      - manage:data:system_operator_product_type
+      - manage:data:technical_resource
+      - read:attachment
+      - read:attachment:service_providing_group_product_application_attachment
+      - read:attachment:service_providing_group_product_application_attachment_history
+      - read:auth
+      - read:data
+      - read:data:accounting_point
+      - read:data:accounting_point_balance_responsible_party
+      - read:data:accounting_point_bidding_zone
+      - read:data:accounting_point_end_user
+      - read:data:accounting_point_energy_supplier
+      - read:data:accounting_point_grid_location
+      - read:data:accounting_point_grid_location_history
+      - read:data:accounting_point_metering_grid_area
+      - read:data:controllable_unit
+      - read:data:controllable_unit_history
+      - read:data:controllable_unit_service_provider
+      - read:data:controllable_unit_service_provider_history
+      - read:data:controllable_unit_summary
+      - read:data:controllable_unit_suspension
+      - read:data:controllable_unit_suspension_comment
+      - read:data:controllable_unit_suspension_comment_history
+      - read:data:controllable_unit_suspension_history
+      - read:data:entity
+      - read:data:entity_client
+      - read:data:event
+      - read:data:identity
+      - read:data:metering_grid_area
+      - read:data:notice
+      - read:data:notification
+      - read:data:party
+      - read:data:party_history
+      - read:data:party_membership
+      - read:data:party_membership_history
+      - read:data:product_type
+      - read:data:service_provider_product_application
+      - read:data:service_provider_product_application_comment
+      - read:data:service_provider_product_application_comment_history
+      - read:data:service_provider_product_application_history
+      - read:data:service_provider_product_suspension
+      - read:data:service_provider_product_suspension_comment
+      - read:data:service_provider_product_suspension_comment_history
+      - read:data:service_provider_product_suspension_history
+      - read:data:service_providing_group
+      - read:data:service_providing_group_grid_prequalification
+      - read:data:service_providing_group_grid_prequalification_comment
+      - read:data:service_providing_group_grid_prequalification_comment_history
+      - read:data:service_providing_group_grid_prequalification_history
+      - read:data:service_providing_group_grid_suspension
+      - read:data:service_providing_group_grid_suspension_comment
+      - read:data:service_providing_group_grid_suspension_comment_history
+      - read:data:service_providing_group_grid_suspension_history
+      - read:data:service_providing_group_history
+      - read:data:service_providing_group_membership
+      - read:data:service_providing_group_membership_history
+      - read:data:service_providing_group_power_per_substation
+      - read:data:service_providing_group_product_application
+      - read:data:service_providing_group_product_application_comment
+      - read:data:service_providing_group_product_application_comment_history
+      - read:data:service_providing_group_product_application_history
+      - read:data:service_providing_group_product_suspension
+      - read:data:service_providing_group_product_suspension_comment
+      - read:data:service_providing_group_product_suspension_comment_history
+      - read:data:service_providing_group_product_suspension_history
+      - read:data:service_providing_group_summary
+      - read:data:system_operator_product_type
+      - read:data:system_operator_product_type_history
+      - read:data:technical_resource
+      - read:data:technical_resource_history
+      - read:grid
+      - read:grid:line
+      - read:grid:substation
+      - read:grid:substation_cluster
+      - use:auth
+      - use:data
+      - use:data:controllable_unit
+      - use:data:controllable_unit:lookup
+      - use:data:entity
+      - use:data:entity:lookup
+    identity_response:
+      summary: Response - Identity
+      description: Response schema - Resource uniquely identifying a user by linking its entity and the potentially assumed party.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 44
+        entity_id:
+          description: Reference to the entity using the identity.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 3
+        entity_name:
+          description: Name of the entity using the identity.
+          format: text
+          type: string
+          readOnly: true
+          example: Martin Andersen
+        party_id:
+          description: Reference to the party assumed by the entity.
+          format: bigint
+          type: integer
+          readOnly: true
+          nullable: true
+          example: 17
+        party_name:
+          description: Name of the party assumed by the entity.
+          format: text
+          type: string
+          readOnly: true
+          nullable: true
+          example: Andersen SO
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - entity_id
+      - entity_name
+    numeric_aggregation:
+      type: object
+      properties:
+        sum:
+          type: number
+        average:
+          type: number
+        min:
+          type: number
+        max:
+          type: number
+      additionalProperties: false
+    party_membership_response:
+      summary: Response - Party Membership
+      description: Response schema - The relation between a party and entity.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 44
+        party_id:
+          description: Reference to the party that the membership links to an entity.
+          format: bigint
+          type: integer
+          example: 379
+        entity_id:
+          description: Reference to the entity that the party represents.
+          format: bigint
+          type: integer
+          example: 30
+        scopes:
+          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
+          type: array
+          items:
+            $ref: '#/components/schemas/auth_scope'
+          nullable: false
+          example:
+          - read:data
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        party:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        entity:
+          description: Embedded entity
+          oneOf:
+          - $ref: '#/components/schemas/entity_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - party_id
+      - entity_id
+      - scopes
+      - recorded_at
+      - recorded_by
+    service_providing_group_response:
+      summary: Response - Service providing group
+      description: Response schema - Group of controllable units
+      type: object
+      properties:
+        id:
+          description: Unique surrogate key.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 4
+        name:
+          description: Free text name of the service providing group.
+          format: text
+          type: string
+          maxLength: 128
+          example: 'Batteries #09'
+        service_provider_id:
+          description: Reference to the `party` (service provider) managing the group.
+          format: bigint
+          type: integer
+          example: 17
+        bidding_zone:
+          $ref: '#/components/schemas/service_providing_group_bidding_zone'
+        status:
+          $ref: '#/components/schemas/service_providing_group_status'
+          default: new
+        additional_information:
+          description: Free text field for extra information about the service providing group if needed.
+          format: text
+          type: string
+          nullable: true
+        created_at:
+          description: When the service providing group was first created.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-01-08T12:00:00+02'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        power_per_substation:
+          description: Embedded service_providing_group_power_per_substation
+          oneOf:
+          - $ref: '#/components/schemas/service_providing_group_power_per_substation_response'
+          - type: 'null'
+          nullable: true
+        summary:
+          description: Embedded service_providing_group_summary
+          oneOf:
+          - $ref: '#/components/schemas/service_providing_group_summary_response'
+          - type: 'null'
+          nullable: true
+        service_provider:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        membership:
+          description: Embedded service_providing_group_membership
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_providing_group_membership_response'
+          - type: 'null'
+          nullable: true
+        grid_prequalification:
+          description: Embedded service_providing_group_grid_prequalification
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_providing_group_grid_prequalification_response'
+          - type: 'null'
+          nullable: true
+        grid_suspension:
+          description: Embedded service_providing_group_grid_suspension
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_providing_group_grid_suspension_response'
+          - type: 'null'
+          nullable: true
+        product_application:
+          description: Embedded service_providing_group_product_application
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_providing_group_product_application_response'
+          - type: 'null'
+          nullable: true
+        product_suspension:
+          description: Embedded service_providing_group_product_suspension
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_providing_group_product_suspension_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - name
+      - service_provider_id
+      - bidding_zone
+      - status
+      - created_at
+      - recorded_at
+      - recorded_by
+    accounting_point_grid_location_history_response:
+      summary: Accounting Point Grid Location - history
+      description: Accounting Point Grid Location - history
+      properties:
+        id:
+          description: Unique surrogate key.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 1
+        accounting_point_id:
+          description: The accounting point this grid location belongs to.
+          format: bigint
+          type: integer
+          example: 45
+        object_type:
+          $ref: '#/components/schemas/accounting_point_grid_location_object_type'
+        business_id:
+          description: Business identifier (mRID) referencing the object in the common grid model (NEMO).
+          format: text
+          type: string
+          nullable: false
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+          example: 53919b79-876f-4dad-8bde-b29368367604
+        name:
+          description: Name of the grid model object at the location.
+          format: text
+          type: string
+          maxLength: 512
+          example: Snilldal 1 KRA
+        nominal_voltage:
+          description: Nominal voltage level at the grid location, in kilovolt (kV).
+          format: decimal
+          type: number
+          minimum: 0
+          maximum: 999999.999
+          multipleOf: 0.001
+          example: 22
+        additional_information:
+          description: Free text field for extra information about the grid location if needed.
+          format: text
+          type: string
+          nullable: true
+        source:
+          $ref: '#/components/schemas/accounting_point_grid_location_source'
+          readOnly: true
+        quality:
+          $ref: '#/components/schemas/accounting_point_grid_location_quality'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        accounting_point_grid_location_id:
+          description: Reference to the resource that was updated.
+          format: bigint
+          type: integer
+          example: 48
+        replaced_by:
+          description: The identity that updated the resource when it was replaced.
+          format: bigint
+          type: integer
+          nullable: true
+          example: 90
+        replaced_at:
+          description: When the resource was replaced in the system.
+          format: date-time
+          type: string
+          nullable: true
+          example: '2024-07-07T10:00:00+00:00'
+      required:
+      - id
+      - accounting_point_id
+      - object_type
+      - business_id
+      - name
+      - nominal_voltage
+      - source
+      - quality
+      - recorded_at
+      - recorded_by
+      - accounting_point_grid_location_id
+    controllable_unit_suspension_reason:
+      description: The reason for the suspension.
+      format: text
+      type: string
+      enum:
+      - compromises_safe_operation
+      - other
+      example: compromises_safe_operation
+    accounting_point_grid_location_update_request:
+      summary: Update - Accounting Point Grid Location
+      description: Request schema for update operations - The electrical (topological) location of an accounting point in the common grid model (Nemo).
+      type: object
+      properties:
+        object_type:
+          $ref: '#/components/schemas/accounting_point_grid_location_object_type'
+        business_id:
+          description: Business identifier (mRID) referencing the object in the common grid model (NEMO).
+          format: text
+          type: string
+          nullable: false
+          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
+          example: 53919b79-876f-4dad-8bde-b29368367604
+        name:
+          description: Name of the grid model object at the location.
+          format: text
+          type: string
+          maxLength: 512
+          example: Snilldal 1 KRA
+        nominal_voltage:
+          description: Nominal voltage level at the grid location, in kilovolt (kV).
+          format: decimal
+          type: number
+          minimum: 0
+          maximum: 999999.999
+          multipleOf: 0.001
+          example: 22
+        additional_information:
+          description: Free text field for extra information about the grid location if needed.
+          format: text
+          type: string
+          nullable: true
+        quality:
+          $ref: '#/components/schemas/accounting_point_grid_location_quality'
+    service_providing_group_product_suspension_comment_visibility:
+      description: The level of visibility of the comment.
+      format: text
+      type: string
+      default: same_party
+      enum:
+      - same_party
+      - any_involved_party
+      example: same_party
+    service_providing_group_product_application_comment_response:
+      summary: Response - Service Providing Group Product Application Comment
+      description: Response schema - Comment made by a party involved in a service providing group product application.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 9
+        service_providing_group_product_application_id:
+          description: Reference to the service providing group product application.
+          format: bigint
+          type: integer
+          example: 7
+        created_by:
+          description: Reference to the identity that created the comment.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 94
+        created_at:
+          description: When the comment was added to the SPGPA.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-08-08 12:00:00+02:00'
+        visibility:
+          $ref: '#/components/schemas/service_providing_group_product_application_comment_visibility'
+          default: same_party
+        content:
+          description: Free text content of the comment.
+          format: text
+          type: string
+          maxLength: 2048
+          example: Missing document.
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        service_providing_group_product_application:
+          description: Embedded service_providing_group_product_application
+          oneOf:
+          - $ref: '#/components/schemas/service_providing_group_product_application_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - service_providing_group_product_application_id
+      - created_by
+      - created_at
+      - visibility
+      - content
+      - recorded_at
+      - recorded_by
+    accounting_point_bidding_zone_response:
+      summary: Response - Accounting Point Bidding Zone
+      description: Response schema - Relation telling which bidding zone an accounting point belongs to.
+      type: object
+      properties:
+        accounting_point_id:
+          description: The ID of the accounting point.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 245
+        bidding_zone:
+          $ref: '#/components/schemas/accounting_point_bidding_zone_bidding_zone'
+        valid_from:
+          description: The date from which the accounting point belongs to the bidding zone. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2022-08-08T00:00:00+02'
+        valid_to:
+          description: The date until which the accounting point belongs to the bidding zone. Midnight aligned on Norwegian timezone.
+          format: date-time
+          type: string
+          readOnly: true
+          nullable: true
+        accounting_point:
+          description: Embedded accounting_point
+          oneOf:
+          - $ref: '#/components/schemas/accounting_point_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - accounting_point_id
+      - bidding_zone
+      - valid_from
+    service_providing_group_grid_suspension_reason:
+      description: The reason for the suspension.
+      format: text
+      type: string
+      enum:
+      - breach_of_conditions
+      - significant_group_change
+      - other
+      example: significant_group_change
+    metering_grid_area_status:
+      description: The status of the metering grid area.
+      format: text
+      type: string
+      readOnly: true
+      example: active
+      enum:
+      - active
+      - inactive
+    empty_object:
+      description: An empty object
+      type: object
+      properties: {}
+      additionalProperties: false
+    metering_grid_area_response:
+      summary: Response - Metering Grid Area
+      description: Response schema - Metering grid area to which accounting points belong.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 3
+        business_id:
+          description: The business identifier of the metering grid area. Format depends on `business_id_type`.
+          format: text
+          type: string
+          readOnly: true
+          example: 24YAOER9FNW34FNN
+        business_id_type:
+          $ref: '#/components/schemas/metering_grid_area_business_id_type'
+          readOnly: true
+        name:
+          description: The name of the metering grid area.
+          format: text
+          type: string
+          maxLength: 128
+          readOnly: true
+          example: VN04VESTNORGEDX12
+        status:
+          $ref: '#/components/schemas/metering_grid_area_status'
+          readOnly: true
+        accounting_point_metering_grid_area:
+          description: Embedded accounting_point_metering_grid_area
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/accounting_point_metering_grid_area_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - business_id
+      - business_id_type
+      - name
+      - status
+    party_type:
+      description: The type of the party, e.g SystemOperator, ServiceProvider
+      format: text
+      type: string
+      example: energy_supplier
+      enum:
+      - balance_responsible_party
+      - end_user
+      - energy_supplier
+      - flexibility_information_system_operator
+      - market_operator
+      - organisation
+      - service_provider
+      - system_operator
+      - third_party
+    service_providing_group_product_suspension_response:
+      summary: Response - Service Providing Group Product Suspension
+      description: Response schema - The relation allowing a procuring system operator to temporarily suspend a service providing group from delivering products of certain types.
+      type: object
+      properties:
+        id:
+          description: Unique surrogate identifier.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 12
+        procuring_system_operator_id:
+          description: Reference to the procuring system operator suspending the service providing group.
+          format: bigint
+          type: integer
+          example: 91
+        service_providing_group_id:
+          description: Reference to the service providing group being suspended.
+          format: bigint
+          type: integer
+          example: 7
+        product_type_ids:
+          description: References to the suspended product types.
+          type: array
+          items:
+            format: bigint
+            type: integer
+          example:
+          - 3
+          - 6
+        reason:
+          $ref: '#/components/schemas/service_providing_group_product_suspension_reason'
+        recorded_at:
+          description: When the resource was recorded (created or updated) in the system.
+          format: date-time
+          type: string
+          readOnly: true
+          example: '2023-12-31T23:59:00+00:00'
+        recorded_by:
+          description: The identity that recorded the resource.
+          format: bigint
+          type: integer
+          readOnly: true
+          example: 145
+        procuring_system_operator:
+          description: Embedded party
+          oneOf:
+          - $ref: '#/components/schemas/party_response'
+          - type: 'null'
+          nullable: true
+        service_providing_group:
+          description: Embedded service_providing_group
+          oneOf:
+          - $ref: '#/components/schemas/service_providing_group_response'
+          - type: 'null'
+          nullable: true
+        comment:
+          description: Embedded service_providing_group_product_suspension_comment
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/service_providing_group_product_suspension_comment_response'
+          - type: 'null'
+          nullable: true
+      required:
+      - id
+      - procuring_system_operator_id
+      - service_providing_group_id
+      - product_type_ids
+      - reason
+      - recorded_at
+      - recorded_by
+    service_providing_group_product_application_ramping_capability:
+      description: Whether the service providing group can ramp in accordance with the product requirements during both activation and deactivation.
+      format: text
+      type: string
+      nullable: true
+      enum:
+      - always
+      - partial
+      - never
+      example: always
+    category:
+      description: Resource category classification. Derived from technologies.
+      format: text
+      type: string
+      enum:
+      - consumption
+      - production
+      - energy_storage
+    service_providing_group_product_suspension_reason:
+      description: The reason for the suspension.
+      format: text
+      type: string
+      enum:
+      - failed_verification
+      - other
+      example: failed_verification
     service_providing_group_grid_prequalification_comment_response:
       summary: Response - Grid prequalification for service providing group Comment
       description: Response schema - Comment made by a party involved in a service providing group grid prequalification.
@@ -1580,90 +3120,29 @@ components:
       - content
       - recorded_at
       - recorded_by
-    accounting_point_bidding_zone_response:
-      summary: Response - Accounting Point Bidding Zone
-      description: Response schema - Relation telling which bidding zone an accounting point belongs to.
-      type: object
-      properties:
-        accounting_point_id:
-          description: The ID of the accounting point.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 245
-        bidding_zone:
-          $ref: '#/components/schemas/accounting_point_bidding_zone_bidding_zone'
-        valid_from:
-          description: The date from which the accounting point belongs to the bidding zone. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2022-08-08T00:00:00+02'
-        valid_to:
-          description: The date until which the accounting point belongs to the bidding zone. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          readOnly: true
-          nullable: true
-        accounting_point:
-          description: Embedded accounting_point
-          oneOf:
-          - $ref: '#/components/schemas/accounting_point_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - accounting_point_id
-      - bidding_zone
-      - valid_from
-    accounting_point_grid_location_response:
-      summary: Response - Accounting Point Grid Location
-      description: Response schema - The electrical (topological) location of an accounting point in the common grid model (Nemo).
+    controllable_unit_suspension_response:
+      summary: Response - Controllable Unit Suspension
+      description: Response schema - The relation allowing an impacted system operator to temporarily suspend a controllable unit.
       type: object
       properties:
         id:
-          description: Unique surrogate key.
+          description: Unique surrogate identifier.
           format: bigint
           type: integer
           readOnly: true
-          example: 1
-        accounting_point_id:
-          description: The accounting point this grid location belongs to.
+          example: 74
+        controllable_unit_id:
+          description: Reference to the suspended controllable unit.
           format: bigint
           type: integer
-          example: 45
-        object_type:
-          $ref: '#/components/schemas/accounting_point_grid_location_object_type'
-        business_id:
-          description: Business identifier (mRID) referencing the object in the common grid model (NEMO).
-          format: text
-          type: string
-          nullable: false
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-          example: 53919b79-876f-4dad-8bde-b29368367604
-        name:
-          description: Name of the grid model object at the location.
-          format: text
-          type: string
-          maxLength: 512
-          example: Snilldal 1 KRA
-        nominal_voltage:
-          description: Nominal voltage level at the grid location, in kilovolt (kV).
-          format: decimal
-          type: number
-          minimum: 0
-          maximum: 999999.999
-          multipleOf: 0.001
-          example: 22
-        additional_information:
-          description: Free text field for extra information about the grid location if needed.
-          format: text
-          type: string
-          nullable: true
-        source:
-          $ref: '#/components/schemas/accounting_point_grid_location_source'
-          readOnly: true
-        quality:
-          $ref: '#/components/schemas/accounting_point_grid_location_quality'
+          example: 2
+        impacted_system_operator_id:
+          description: Reference to the impacted system operator suspending the controllable unit.
+          format: bigint
+          type: integer
+          example: 7
+        reason:
+          $ref: '#/components/schemas/controllable_unit_suspension_reason'
         recorded_at:
           description: When the resource was recorded (created or updated) in the system.
           format: date-time
@@ -1676,94 +3155,112 @@ components:
           type: integer
           readOnly: true
           example: 145
-        accounting_point:
-          description: Embedded accounting_point
+        controllable_unit:
+          description: Embedded controllable_unit
           oneOf:
-          - $ref: '#/components/schemas/accounting_point_response'
+          - $ref: '#/components/schemas/controllable_unit_response'
           - type: 'null'
           nullable: true
-      required:
-      - id
-      - accounting_point_id
-      - object_type
-      - business_id
-      - name
-      - nominal_voltage
-      - source
-      - quality
-      - recorded_at
-      - recorded_by
-    controllable_unit_regulation_direction:
-      description: The regulation direction of the controllable unit. `up` means it can be used to increase production or decrease consumption, while `down` means to decrease production or increase consumption.
-      format: text
-      type: string
-      enum:
-      - up
-      - down
-      - both
-      example: up
-    accounting_point_energy_supplier_response:
-      summary: Response - Accounting Point Energy Supplier
-      description: Response schema - Relation linking an energy supplier to an accounting point.
-      type: object
-      properties:
-        accounting_point_id:
-          description: The ID of the accounting point.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 45
-        energy_supplier_id:
-          description: The energy supplier of the accounting point.
-          format: bigint
-          type: integer
-          example: 7
-          readOnly: true
-        valid_from:
-          description: The date from which the relation between the accounting point and the energy supplier is valid. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-09-09T00:00:00+02'
-        valid_to:
-          description: The date until which the relation between the accounting point and the energy supplier is valid. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          readOnly: true
-          nullable: true
-        accounting_point:
-          description: Embedded accounting_point
-          oneOf:
-          - $ref: '#/components/schemas/accounting_point_response'
-          - type: 'null'
-          nullable: true
-        energy_supplier:
+        impacted_system_operator:
           description: Embedded party
           oneOf:
           - $ref: '#/components/schemas/party_response'
           - type: 'null'
           nullable: true
+        comment:
+          description: Embedded controllable_unit_suspension_comment
+          oneOf:
+          - type: array
+            items:
+              $ref: '#/components/schemas/controllable_unit_suspension_comment_response'
+          - type: 'null'
+          nullable: true
       required:
-      - accounting_point_id
-      - energy_supplier_id
-      - valid_from
-    geojson_point:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-          - Point
-        coordinates:
-          type: array
-          description: '[longitude, latitude] in decimal degrees (WGS84)'
-          items:
-            type: number
-          minItems: 2
-          maxItems: 2
-      required:
-      - type
-      - coordinates
+      - id
+      - controllable_unit_id
+      - impacted_system_operator_id
+      - reason
+      - recorded_at
+      - recorded_by
+    metering_grid_area_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      readOnly: true
+      enum:
+      - eic_y
+      example: eic_y
+    technology:
+      description: Technology classification using ltree path notation. Technologies are hierarchical (e.g., hydropower.pumped, hvac.heat_pump). Use the most specific technology applicable to the technical resource.
+      format: text
+      type: string
+      enum:
+      - hydropower
+      - hydropower.pumped
+      - hydropower.run_of_river
+      - heat_power_plant
+      - heat_power_plant.chp
+      - solar
+      - wind
+      - backup_generator
+      - hvac
+      - hvac.heat
+      - hvac.heat_pump
+      - lighting
+      - water_heater
+      - boiler
+      - ev_charging_device
+      - ev_charging_device.v2g
+      - battery
+      - other.consumption
+      - other.production
+      - other.energy_storage
+    service_providing_group_product_application_comment_visibility:
+      description: The level of visibility of the comment.
+      format: text
+      type: string
+      default: same_party
+      enum:
+      - same_party
+      - any_involved_party
+      example: same_party
+    service_providing_group_bidding_zone:
+      description: The bidding zone that restricts which CUs that can be added to the group. Also known as scheduling area or price area for TSO.
+      format: text
+      type: string
+      enum:
+      - NO1
+      - NO2
+      - NO3
+      - NO4
+      - NO5
+      example: NO3
+    entity_type:
+      description: The type of the entity, e.g Person, Organisation
+      format: text
+      type: string
+      example: person
+      enum:
+      - person
+      - organisation
+    accounting_point_grid_location_object_type:
+      description: The type of object in the common grid model that the accounting point is at.
+      format: text
+      type: string
+      enum:
+      - substation
+      example: substation
+    party_business_id_type:
+      description: The type of the business identifier.
+      format: text
+      type: string
+      default: uuid
+      enum:
+      - gln
+      - uuid
+      - eic_x
+      - org
+      example: gln
     service_providing_group_product_suspension_comment_response:
       summary: Response - Service Providing Group Product Suspension Comment
       description: Response schema - Comment made by a party involved in a service providing group product suspension.
@@ -1828,60 +3325,44 @@ components:
       - content
       - recorded_at
       - recorded_by
-    numeric_aggregation:
-      type: object
-      properties:
-        sum:
-          type: number
-        average:
-          type: number
-        min:
-          type: number
-        max:
-          type: number
-      additionalProperties: false
-    controllable_unit_summary_response:
-      summary: Response - Controllable Unit Summary
-      description: Response schema - Aggregated summary of technical resources belonging to a controllable unit.
+    service_providing_group_power_per_substation_response:
+      summary: Response - Service Providing Group Power Per Substation
+      description: Response schema - Per-substation breakdown of controllable units and their technical details for a service providing group.
       type: object
       properties:
         id:
-          description: Unique surrogate key (controllable unit ID).
+          description: Unique surrogate key (service providing group ID).
           format: bigint
           type: integer
           readOnly: true
-          example: 12
-        controllable_unit_id:
-          description: The ID of the controllable unit this resource is a summary of.
+          example: 4
+        service_providing_group_id:
+          description: The ID of the service providing group this resource is a breakdown of.
           format: bigint
           type: integer
           readOnly: true
-          example: 12
-        technical_resource:
-          description: Aggregated statistics on technical resources belonging to the controllable unit, including counts and maximum active power breakdowns (sum, average, min, max) by category and technology.
-          type: object
+          example: 4
+        substations:
+          description: List of per-substation aggregates for the controllable units currently in the service providing group. Each element contains the substation identifier and name, plus controllable unit and technical resource aggregates. An element with null substation fields groups controllable units whose grid location has not yet been assigned.
+          type: array
           readOnly: true
-          properties:
-            count:
-              type: integer
-            maximum_active_power:
-              $ref: '#/components/schemas/numeric_aggregation'
-            by_category:
-              type: object
-              propertyNames:
-                $ref: '#/components/schemas/category'
-              additionalProperties:
+          items:
+            type: object
+            properties:
+              substation_business_id:
+                type: string
+                nullable: true
+              substation_name:
+                type: string
+                nullable: true
+              controllable_unit:
                 type: object
                 properties:
                   count:
                     type: integer
                   maximum_active_power:
                     $ref: '#/components/schemas/numeric_aggregation'
-            by_technology:
-              type: object
-              propertyNames:
-                $ref: '#/components/schemas/technology'
-              additionalProperties:
+              technical_resource:
                 type: object
                 properties:
                   count:
@@ -1889,113 +3370,22 @@ components:
                   maximum_active_power:
                     $ref: '#/components/schemas/numeric_aggregation'
           example:
-            technical_resource:
+          - substation_business_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+            substation_name: Substation A
+            controllable_unit:
               count: 3
+              maximum_active_power:
+                sum: 120
+                average: 40
+                min: 20
+                max: 60
+            technical_resource:
+              count: 5
               maximum_active_power:
                 sum: 150
                 average: 50
-                min: 20
+                min: 30
                 max: 80
-              by_category:
-                production:
-                  count: 2
-                  maximum_active_power:
-                    sum: 130
-                    average: 65
-                    min: 50
-                    max: 80
-                consumption:
-                  count: 1
-                  maximum_active_power:
-                    sum: 20
-                    average: 20
-                    min: 20
-                    max: 20
-              by_technology:
-                solar:
-                  count: 2
-                  maximum_active_power:
-                    sum: 130
-                    average: 65
-                    min: 50
-                    max: 80
-                battery:
-                  count: 1
-                  maximum_active_power:
-                    sum: 20
-                    average: 20
-                    min: 20
-                    max: 20
-        controllable_unit:
-          description: Embedded controllable_unit
-          oneOf:
-          - $ref: '#/components/schemas/controllable_unit_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - controllable_unit_id
-      - technical_resource
-    service_providing_group_status:
-      description: The status of the group.
-      format: text
-      type: string
-      default: new
-      enum:
-      - new
-      - active
-      - inactive
-      - terminated
-      example: active
-    service_providing_group_membership_response:
-      summary: Response - Membership relation of controllable unit in service providing group
-      description: Response schema - Membership relation of controllable unit in service providing group
-      type: object
-      properties:
-        id:
-          description: Unique surrogate key.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 27
-        controllable_unit_id:
-          description: Reference to the controllable unit this relation links to a service providing group.
-          format: bigint
-          type: integer
-          example: 6
-        service_providing_group_id:
-          description: Reference to the service providing group this relation links to a controllable unit.
-          format: bigint
-          type: integer
-          example: 55
-        valid_from:
-          description: The date from which the relation between the controllable unit and the service providing group is valid. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          example: '2022-08-08T00:00:00+02'
-        valid_to:
-          description: The date until which the relation between the controllable unit and the service providing group is valid. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          nullable: true
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        controllable_unit:
-          description: Embedded controllable_unit
-          oneOf:
-          - $ref: '#/components/schemas/controllable_unit_response'
-          - type: 'null'
-          nullable: true
         service_providing_group:
           description: Embedded service_providing_group
           oneOf:
@@ -2004,370 +3394,8 @@ components:
           nullable: true
       required:
       - id
-      - controllable_unit_id
       - service_providing_group_id
-      - valid_from
-      - recorded_at
-      - recorded_by
-    accounting_point_bidding_zone_bidding_zone:
-      description: The bidding zone of the accounting point.
-      format: text
-      type: string
-      enum:
-      - NO1
-      - NO2
-      - NO3
-      - NO4
-      - NO5
-      example: NO3
-    party_response:
-      summary: Response - Party
-      description: 'Response schema - The body that interacts with the Flexibility Information System
-
-
-        A party is the thing that is authorized to access or modify data in the Flexiblity Information System.
-
-
-        Example party types:
-
-
-        * Service Provider
-
-        * System Operator
-
-        * End User'
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 11
-        business_id:
-          description: The business identifier of the party. Format depends on `business_id_type`.
-          format: text
-          type: string
-          example: '1337099000000'
-        business_id_type:
-          $ref: '#/components/schemas/party_business_id_type'
-          default: uuid
-        entity_id:
-          description: Reference to the entity that is the parent of the party.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the party. Maximum 128 characters.
-          format: text
-          type: string
-          example: Flex Energy Supplier
-        role:
-          $ref: '#/components/schemas/party_role'
-        type:
-          $ref: '#/components/schemas/party_type'
-        status:
-          $ref: '#/components/schemas/party_status'
-          default: new
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - business_id_type
-      - entity_id
-      - name
-      - role
-      - type
-      - status
-      - recorded_at
-      - recorded_by
-    service_providing_group_grid_suspension_comment_response:
-      summary: Response - Service Providing Group Grid Suspension Comment
-      description: Response schema - Comment made by a party involved in a service providing group grid suspension.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 9
-        service_providing_group_grid_suspension_id:
-          description: Reference to the service providing group grid suspension.
-          format: bigint
-          type: integer
-          example: 7
-        created_by:
-          description: Reference to the identity that created the comment.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 94
-        created_at:
-          description: When the comment was added to the SPGGS.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2022-08-08 12:00:00+02:00'
-        visibility:
-          $ref: '#/components/schemas/service_providing_group_grid_suspension_comment_visibility'
-          default: same_party
-        content:
-          description: Free text content of the comment.
-          format: text
-          type: string
-          maxLength: 2048
-          example: Missing document.
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        service_providing_group_grid_suspension:
-          description: Embedded service_providing_group_grid_suspension
-          oneOf:
-          - $ref: '#/components/schemas/service_providing_group_grid_suspension_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - service_providing_group_grid_suspension_id
-      - created_by
-      - created_at
-      - visibility
-      - content
-      - recorded_at
-      - recorded_by
-    category:
-      description: Resource category classification. Derived from technologies.
-      format: text
-      type: string
-      enum:
-      - consumption
-      - production
-      - energy_storage
-    service_providing_group_grid_prequalification_status:
-      description: The status of the grid prequalification for this service providing group.
-      format: text
-      type: string
-      default: requested
-      enum:
-      - requested
-      - in_progress
-      - conditionally_approved
-      - approved
-      - not_approved
-      example: in_progress
-    accounting_point_balance_responsible_party_energy_direction:
-      description: The direction of the effect on the balance that the BRP takes responsibility for.
-      format: text
-      type: string
-      readOnly: true
-      example: consumption
-      enum:
-      - consumption
-      - production
-    service_providing_group_product_application_attachment_response:
-      summary: Response - Service Providing Group Product Application Attachment
-      description: Response schema - File attachment associated with a service providing group product application, allowing involved parties to exchange supporting documents.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 9
-        service_providing_group_product_application_id:
-          description: Reference to the service providing group product application.
-          format: bigint
-          type: integer
-          example: 7
-        object_id:
-          description: Identifier of the object to which the attachment is linked.
-          format: text
-          type: string
-          example: 08aa9239-d209-4c15-a916-2b4942ce45ee
-        filename:
-          description: Original filename of the attachment.
-          format: text
-          type: string
-          example: document.pdf
-        filename_sanitised:
-          description: Sanitised filename safe for storage.
-          format: text
-          type: string
-          example: document.pdf
-        content_type:
-          $ref: '#/components/schemas/service_providing_group_product_application_attachment_content_type'
-        size_bytes:
-          description: Size of the attachment in bytes.
-          format: bigint
-          type: integer
-          example: 204800
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        service_providing_group_product_application:
-          description: Embedded service_providing_group_product_application
-          oneOf:
-          - $ref: '#/components/schemas/service_providing_group_product_application_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - service_providing_group_product_application_id
-      - object_id
-      - filename
-      - filename_sanitised
-      - content_type
-      - size_bytes
-      - recorded_at
-      - recorded_by
-    metering_grid_area_response:
-      summary: Response - Metering Grid Area
-      description: Response schema - Metering grid area to which accounting points belong.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 3
-        business_id:
-          description: The business identifier of the metering grid area. Format depends on `business_id_type`.
-          format: text
-          type: string
-          readOnly: true
-          example: 24YAOER9FNW34FNN
-        business_id_type:
-          $ref: '#/components/schemas/metering_grid_area_business_id_type'
-          readOnly: true
-        name:
-          description: The name of the metering grid area.
-          format: text
-          type: string
-          maxLength: 128
-          readOnly: true
-          example: VN04VESTNORGEDX12
-        status:
-          $ref: '#/components/schemas/metering_grid_area_status'
-          readOnly: true
-        accounting_point_metering_grid_area:
-          description: Embedded accounting_point_metering_grid_area
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/accounting_point_metering_grid_area_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - business_id_type
-      - name
-      - status
-    accounting_point_grid_location_update_request:
-      summary: Update - Accounting Point Grid Location
-      description: Request schema for update operations - The electrical (topological) location of an accounting point in the common grid model (Nemo).
-      type: object
-      properties:
-        object_type:
-          $ref: '#/components/schemas/accounting_point_grid_location_object_type'
-        business_id:
-          description: Business identifier (mRID) referencing the object in the common grid model (NEMO).
-          format: text
-          type: string
-          nullable: false
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-          example: 53919b79-876f-4dad-8bde-b29368367604
-        name:
-          description: Name of the grid model object at the location.
-          format: text
-          type: string
-          maxLength: 512
-          example: Snilldal 1 KRA
-        nominal_voltage:
-          description: Nominal voltage level at the grid location, in kilovolt (kV).
-          format: decimal
-          type: number
-          minimum: 0
-          maximum: 999999.999
-          multipleOf: 0.001
-          example: 22
-        additional_information:
-          description: Free text field for extra information about the grid location if needed.
-          format: text
-          type: string
-          nullable: true
-        quality:
-          $ref: '#/components/schemas/accounting_point_grid_location_quality'
-    controllable_unit_status:
-      description: The status of the controllable unit.
-      format: text
-      type: string
-      default: new
-      enum:
-      - new
-      - active
-      - inactive
-      - terminated
-      example: active
-    metering_grid_area_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      readOnly: true
-      enum:
-      - eic_y
-      example: eic_y
-    empty_object:
-      description: An empty object
-      type: object
-      properties: {}
-      additionalProperties: false
-    entity_type:
-      description: The type of the entity, e.g Person, Organisation
-      format: text
-      type: string
-      example: person
-      enum:
-      - person
-      - organisation
+      - substations
     service_providing_group_product_application_response:
       summary: Response - Service Providing Group Product Application
       description: Response schema - Relation between a service providing group and a system operator for a product type, for the SPG to deliver a product to the SO later.
@@ -2510,28 +3538,17 @@ components:
       - created_at
       - recorded_at
       - recorded_by
-    technical_resource_business_id_type:
-      description: The type of business identifier used for the device.
+    accounting_point_bidding_zone_bidding_zone:
+      description: The bidding zone of the accounting point.
       format: text
       type: string
-      nullable: true
       enum:
-      - serial_number
-      - mac
-      - other
-      example: serial_number
-    party_status:
-      description: The status of the party.
-      format: text
-      type: string
-      default: new
-      enum:
-      - new
-      - active
-      - inactive
-      - suspended
-      - terminated
-      example: active
+      - NO1
+      - NO2
+      - NO3
+      - NO4
+      - NO5
+      example: NO3
     controllable_unit_service_provider_response:
       summary: Response - Relation between controllable unit and service provider
       description: Response schema - Relation between controllable unit and service provider
@@ -2614,1049 +3631,32 @@ components:
       - contract_reference
       - recorded_at
       - recorded_by
-    party_type:
-      description: The type of the party, e.g SystemOperator, ServiceProvider
+    controllable_unit_regulation_direction:
+      description: The regulation direction of the controllable unit. `up` means it can be used to increase production or decrease consumption, while `down` means to decrease production or increase consumption.
       format: text
       type: string
-      example: energy_supplier
       enum:
-      - balance_responsible_party
-      - end_user
-      - energy_supplier
-      - flexibility_information_system_operator
-      - market_operator
-      - organisation
-      - service_provider
-      - system_operator
-      - third_party
-    entity_client_response:
-      summary: Response - Entity client
-      description: Response schema - Client linked to an entity for client credentials and JWT grant authentication methods.
+      - up
+      - down
+      - both
+      example: up
+    geojson_point:
       type: object
       properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 14
-        entity_id:
-          description: Reference to the entity that this client is attached to.
-          format: bigint
-          type: integer
-          example: 30
-        name:
-          description: Name of the client.
-          format: text
+        type:
           type: string
-          maxLength: 256
-          nullable: true
-          example: Laptop
-        client_id:
-          description: The identifier of the entity. For use with client credentials authentication method.
-          format: text
-          type: string
-          readOnly: true
-          example: addr@flex.test
-        party_id:
-          description: Reference to the party this client allows to assume. A null value means the client cannot assume any party.
-          format: bigint
-          type: integer
-          nullable: true
-          example: 30
-        scopes:
-          description: 'List of scopes granted to the user when it logs in as an entity or when it acts as the party. When assuming a party through party membership, the least privileged set of scopes will be kept.
-
-            Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.'
+          enum:
+          - Point
+        coordinates:
           type: array
+          description: '[longitude, latitude] in decimal degrees (WGS84)'
           items:
-            $ref: '#/components/schemas/auth_scope'
-          nullable: false
-          example:
-          - read:data
-        client_secret:
-          description: The secret of the entity. For use with client credentials authentication method. Input as plain text but stored encrypted.
-          format: text
-          type: string
-          minLength: 12
-          nullable: true
-          example: mysupersecretpassword
-        public_key:
-          description: The public key of the entity (X.509 SubjectPublicKeyInfo). For use with JWT grant authentication method.
-          format: text
-          type: string
-          nullable: true
-          pattern: ^-----BEGIN PUBLIC KEY-----\nMIIB[-A-Za-z0-9+/\n]*={0,3}\n-----END PUBLIC KEY-----$
-          example: '-----BEGIN PUBLIC KEY-----
-
-            MIIBojANBgkqhkiG9w0BAQEFAAOCAY8AMIIBigKCAYEAq3DnhgYgLVJknvDA3clA
-
-            TozPtjI7yauqD/ZuqgZn4KzzzkQ4BzJar4jRygpzbghlFn0Luk1mdVKzPUgYj0V
-
-            kbRlHyYfxahbgOHixOOnXkKXrtZW7yWGjXPqy/ZJ/+kFBNPAzxy7fDuAzKfU3Rn5
-
-            0sBakg95pua14W1oE4rtd4/U+sg2maCq6HgGdCLLxRWwXA8IBtvHZ48i6kxiz9tu
-
-            -----END PUBLIC KEY-----'
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-        party:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
+            type: number
+          minItems: 2
+          maxItems: 2
       required:
-      - id
-      - entity_id
-      - client_id
-      - scopes
-      - recorded_at
-      - recorded_by
-    controllable_unit_suspension_response:
-      summary: Response - Controllable Unit Suspension
-      description: Response schema - The relation allowing an impacted system operator to temporarily suspend a controllable unit.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 74
-        controllable_unit_id:
-          description: Reference to the suspended controllable unit.
-          format: bigint
-          type: integer
-          example: 2
-        impacted_system_operator_id:
-          description: Reference to the impacted system operator suspending the controllable unit.
-          format: bigint
-          type: integer
-          example: 7
-        reason:
-          $ref: '#/components/schemas/controllable_unit_suspension_reason'
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        controllable_unit:
-          description: Embedded controllable_unit
-          oneOf:
-          - $ref: '#/components/schemas/controllable_unit_response'
-          - type: 'null'
-          nullable: true
-        impacted_system_operator:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-        comment:
-          description: Embedded controllable_unit_suspension_comment
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/controllable_unit_suspension_comment_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - controllable_unit_id
-      - impacted_system_operator_id
-      - reason
-      - recorded_at
-      - recorded_by
-    service_providing_group_product_application_comment_response:
-      summary: Response - Service Providing Group Product Application Comment
-      description: Response schema - Comment made by a party involved in a service providing group product application.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 9
-        service_providing_group_product_application_id:
-          description: Reference to the service providing group product application.
-          format: bigint
-          type: integer
-          example: 7
-        created_by:
-          description: Reference to the identity that created the comment.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 94
-        created_at:
-          description: When the comment was added to the SPGPA.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2022-08-08 12:00:00+02:00'
-        visibility:
-          $ref: '#/components/schemas/service_providing_group_product_application_comment_visibility'
-          default: same_party
-        content:
-          description: Free text content of the comment.
-          format: text
-          type: string
-          maxLength: 2048
-          example: Missing document.
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        service_providing_group_product_application:
-          description: Embedded service_providing_group_product_application
-          oneOf:
-          - $ref: '#/components/schemas/service_providing_group_product_application_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - service_providing_group_product_application_id
-      - created_by
-      - created_at
-      - visibility
-      - content
-      - recorded_at
-      - recorded_by
-    entity_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      example: pid
-      enum:
-      - pid
-      - org
-      - email
-    service_providing_group_response:
-      summary: Response - Service providing group
-      description: Response schema - Group of controllable units
-      type: object
-      properties:
-        id:
-          description: Unique surrogate key.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 4
-        name:
-          description: Free text name of the service providing group.
-          format: text
-          type: string
-          maxLength: 128
-          example: 'Batteries #09'
-        service_provider_id:
-          description: Reference to the `party` (service provider) managing the group.
-          format: bigint
-          type: integer
-          example: 17
-        bidding_zone:
-          $ref: '#/components/schemas/service_providing_group_bidding_zone'
-        status:
-          $ref: '#/components/schemas/service_providing_group_status'
-          default: new
-        additional_information:
-          description: Free text field for extra information about the service providing group if needed.
-          format: text
-          type: string
-          nullable: true
-        created_at:
-          description: When the service providing group was first created.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2022-01-08T12:00:00+02'
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        power_per_substation:
-          description: Embedded service_providing_group_power_per_substation
-          oneOf:
-          - $ref: '#/components/schemas/service_providing_group_power_per_substation_response'
-          - type: 'null'
-          nullable: true
-        summary:
-          description: Embedded service_providing_group_summary
-          oneOf:
-          - $ref: '#/components/schemas/service_providing_group_summary_response'
-          - type: 'null'
-          nullable: true
-        service_provider:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-        membership:
-          description: Embedded service_providing_group_membership
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/service_providing_group_membership_response'
-          - type: 'null'
-          nullable: true
-        grid_prequalification:
-          description: Embedded service_providing_group_grid_prequalification
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/service_providing_group_grid_prequalification_response'
-          - type: 'null'
-          nullable: true
-        grid_suspension:
-          description: Embedded service_providing_group_grid_suspension
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/service_providing_group_grid_suspension_response'
-          - type: 'null'
-          nullable: true
-        product_application:
-          description: Embedded service_providing_group_product_application
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/service_providing_group_product_application_response'
-          - type: 'null'
-          nullable: true
-        product_suspension:
-          description: Embedded service_providing_group_product_suspension
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/service_providing_group_product_suspension_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - name
-      - service_provider_id
-      - bidding_zone
-      - status
-      - created_at
-      - recorded_at
-      - recorded_by
-    service_providing_group_grid_suspension_response:
-      summary: Response - Service Providing Group Grid Suspension
-      description: Response schema - The relation allowing an impacted system operator to temporarily suspend a service providing group from delivering services.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 49
-        impacted_system_operator_id:
-          description: Reference to the impacted system operator suspending the service providing group.
-          format: bigint
-          type: integer
-          example: 7
-        service_providing_group_id:
-          description: Reference to the service providing group being suspended.
-          format: bigint
-          type: integer
-          example: 13
-        reason:
-          $ref: '#/components/schemas/service_providing_group_grid_suspension_reason'
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        impacted_system_operator:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-        service_providing_group:
-          description: Embedded service_providing_group
-          oneOf:
-          - $ref: '#/components/schemas/service_providing_group_response'
-          - type: 'null'
-          nullable: true
-        comment:
-          description: Embedded service_providing_group_grid_suspension_comment
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/service_providing_group_grid_suspension_comment_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - impacted_system_operator_id
-      - service_providing_group_id
-      - reason
-      - recorded_at
-      - recorded_by
-    service_providing_group_grid_prequalification_comment_visibility:
-      description: The level of visibility of the comment.
-      format: text
-      type: string
-      default: same_party
-      enum:
-      - same_party
-      - any_involved_party
-      example: same_party
-    service_providing_group_product_application_comment_visibility:
-      description: The level of visibility of the comment.
-      format: text
-      type: string
-      default: same_party
-      enum:
-      - same_party
-      - any_involved_party
-      example: same_party
-    accounting_point_grid_location_create_request:
-      summary: Create - Accounting Point Grid Location
-      description: Request schema for create operations - The electrical (topological) location of an accounting point in the common grid model (Nemo).
-      type: object
-      properties:
-        accounting_point_id:
-          description: The accounting point this grid location belongs to.
-          format: bigint
-          type: integer
-          example: 45
-        object_type:
-          $ref: '#/components/schemas/accounting_point_grid_location_object_type'
-        business_id:
-          description: Business identifier (mRID) referencing the object in the common grid model (NEMO).
-          format: text
-          type: string
-          nullable: false
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-          example: 53919b79-876f-4dad-8bde-b29368367604
-        name:
-          description: Name of the grid model object at the location.
-          format: text
-          type: string
-          maxLength: 512
-          example: Snilldal 1 KRA
-        nominal_voltage:
-          description: Nominal voltage level at the grid location, in kilovolt (kV).
-          format: decimal
-          type: number
-          minimum: 0
-          maximum: 999999.999
-          multipleOf: 0.001
-          example: 22
-        additional_information:
-          description: Free text field for extra information about the grid location if needed.
-          format: text
-          type: string
-          nullable: true
-        quality:
-          $ref: '#/components/schemas/accounting_point_grid_location_quality'
-      required:
-      - accounting_point_id
-      - object_type
-      - business_id
-      - name
-      - nominal_voltage
-      - quality
-    accounting_point_metering_grid_area_response:
-      summary: Response - Accounting Point Metering Grid Area
-      description: Response schema - Relation telling which metering grid area an accounting point belongs to.
-      type: object
-      properties:
-        accounting_point_id:
-          description: The ID of the accounting point.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 45
-        metering_grid_area_id:
-          description: The metering grid area of the accounting point.
-          format: bigint
-          type: integer
-          example: 3
-          readOnly: true
-        valid_from:
-          description: The date from which the accounting point belongs to the metering grid area. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-09-09T00:00:00+02'
-        valid_to:
-          description: The date until which the accounting point belongs to the metering grid area. Midnight aligned on Norwegian timezone.
-          format: date-time
-          type: string
-          readOnly: true
-          nullable: true
-        accounting_point:
-          description: Embedded accounting_point
-          oneOf:
-          - $ref: '#/components/schemas/accounting_point_response'
-          - type: 'null'
-          nullable: true
-        metering_grid_area:
-          description: Embedded metering_grid_area
-          oneOf:
-          - $ref: '#/components/schemas/metering_grid_area_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - accounting_point_id
-      - metering_grid_area_id
-      - valid_from
-    party_business_id_type:
-      description: The type of the business identifier.
-      format: text
-      type: string
-      default: uuid
-      enum:
-      - gln
-      - uuid
-      - eic_x
-      - org
-      example: gln
-    technology:
-      description: Technology classification using ltree path notation. Technologies are hierarchical (e.g., hydropower.pumped, hvac.heat_pump). Use the most specific technology applicable to the technical resource.
-      format: text
-      type: string
-      enum:
-      - hydropower
-      - hydropower.pumped
-      - hydropower.run_of_river
-      - heat_power_plant
-      - heat_power_plant.chp
-      - solar
-      - wind
-      - backup_generator
-      - hvac
-      - hvac.heat
-      - hvac.heat_pump
-      - lighting
-      - water_heater
-      - boiler
-      - ev_charging_device
-      - ev_charging_device.v2g
-      - battery
-      - other.consumption
-      - other.production
-      - other.energy_storage
-    controllable_unit_response:
-      summary: Response - Controllable unit
-      description: Response schema - Controllable unit
-      type: object
-      properties:
-        id:
-          description: Unique surrogate key.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 12
-        business_id:
-          description: Unique business identifier for the controllable unit.
-          format: text
-          type: string
-          pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$
-          readOnly: true
-          example: 53919b79-876f-4dad-8bde-b29368367604
-        name:
-          description: Free text name of the controllable unit.
-          format: text
-          type: string
-          maxLength: 512
-          example: 'Car Charger #34'
-        start_date:
-          description: The usage date when the controllable unit is first active.
-          format: date
-          type: string
-          nullable: true
-          example: '2024-05-17'
-        status:
-          $ref: '#/components/schemas/controllable_unit_status'
-          default: new
-        regulation_direction:
-          $ref: '#/components/schemas/controllable_unit_regulation_direction'
-        maximum_active_power:
-          description: Maximum continuous active power (flexible power) that the controllable unit can produce or consume, i.e. deliver for balancing and congestion services, in kilowatts.
-          format: decimal
-          type: number
-          minimum: 0
-          maximum: 999999.999
-          multipleOf: 0.001
-          example: 3.5
-        is_small:
-          description: Whether the controllable unit is small or not, following NCDR. Current threshold for this to be true is <= 50 kW of flexible power.
-          format: boolean
-          type: boolean
-          readOnly: true
-          example: true
-        accounting_point_id:
-          description: Reference to the accounting point that the controllable unit is connected to.
-          format: bigint
-          type: integer
-          nullable: false
-          example: 10289
-        additional_information:
-          description: Free text field for extra information about the controllable unit if needed.
-          format: text
-          type: string
-          nullable: true
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        accounting_point:
-          description: Embedded accounting_point
-          oneOf:
-          - $ref: '#/components/schemas/accounting_point_response'
-          - type: 'null'
-          nullable: true
-        suspension:
-          description: Embedded controllable_unit_suspension
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/controllable_unit_suspension_response'
-          - type: 'null'
-          nullable: true
-        service_provider:
-          description: Embedded controllable_unit_service_provider
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/controllable_unit_service_provider_response'
-          - type: 'null'
-          nullable: true
-        summary:
-          description: Embedded controllable_unit_summary
-          oneOf:
-          - $ref: '#/components/schemas/controllable_unit_summary_response'
-          - type: 'null'
-          nullable: true
-        service_providing_group_membership:
-          description: Embedded service_providing_group_membership
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/service_providing_group_membership_response'
-          - type: 'null'
-          nullable: true
-        technical_resource:
-          description: Embedded technical_resource
-          oneOf:
-          - type: array
-            items:
-              $ref: '#/components/schemas/technical_resource_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - business_id
-      - name
-      - status
-      - regulation_direction
-      - maximum_active_power
-      - is_small
-      - accounting_point_id
-      - recorded_at
-      - recorded_by
-    accounting_point_grid_location_history_response:
-      summary: Accounting Point Grid Location - history
-      description: Accounting Point Grid Location - history
-      properties:
-        id:
-          description: Unique surrogate key.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 1
-        accounting_point_id:
-          description: The accounting point this grid location belongs to.
-          format: bigint
-          type: integer
-          example: 45
-        object_type:
-          $ref: '#/components/schemas/accounting_point_grid_location_object_type'
-        business_id:
-          description: Business identifier (mRID) referencing the object in the common grid model (NEMO).
-          format: text
-          type: string
-          nullable: false
-          pattern: ^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$
-          example: 53919b79-876f-4dad-8bde-b29368367604
-        name:
-          description: Name of the grid model object at the location.
-          format: text
-          type: string
-          maxLength: 512
-          example: Snilldal 1 KRA
-        nominal_voltage:
-          description: Nominal voltage level at the grid location, in kilovolt (kV).
-          format: decimal
-          type: number
-          minimum: 0
-          maximum: 999999.999
-          multipleOf: 0.001
-          example: 22
-        additional_information:
-          description: Free text field for extra information about the grid location if needed.
-          format: text
-          type: string
-          nullable: true
-        source:
-          $ref: '#/components/schemas/accounting_point_grid_location_source'
-          readOnly: true
-        quality:
-          $ref: '#/components/schemas/accounting_point_grid_location_quality'
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        accounting_point_grid_location_id:
-          description: Reference to the resource that was updated.
-          format: bigint
-          type: integer
-          example: 48
-        replaced_by:
-          description: The identity that updated the resource when it was replaced.
-          format: bigint
-          type: integer
-          nullable: true
-          example: 90
-        replaced_at:
-          description: When the resource was replaced in the system.
-          format: date-time
-          type: string
-          nullable: true
-          example: '2024-07-07T10:00:00+00:00'
-      required:
-      - id
-      - accounting_point_id
-      - object_type
-      - business_id
-      - name
-      - nominal_voltage
-      - source
-      - quality
-      - recorded_at
-      - recorded_by
-      - accounting_point_grid_location_id
-    party_role:
-      description: The role of the party. Currently maps to 1:1 to `type`. E.g. system_operator, service_provider.
-      format: text
-      type: string
-      example: flex_energy_supplier
-      enum:
-      - flex_balance_responsible_party
-      - flex_end_user
-      - flex_energy_supplier
-      - flex_flexibility_information_system_operator
-      - flex_market_operator
-      - flex_organisation
-      - flex_service_provider
-      - flex_system_operator
-      - flex_third_party
-    service_providing_group_grid_suspension_comment_visibility:
-      description: The level of visibility of the comment.
-      format: text
-      type: string
-      default: same_party
-      enum:
-      - same_party
-      - any_involved_party
-      example: same_party
-    service_providing_group_summary_response:
-      summary: Response - Service Providing Group Summary
-      description: Response schema - Aggregated summary of controllable units and technical resources belonging to a service providing group.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate key (service providing group ID).
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 4
-        service_providing_group_id:
-          description: The ID of the service providing group this resource is a summary of.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 4
-        controllable_unit:
-          description: Aggregated statistics on controllable units currently in the service providing group, including count and maximum active power information (sum, average, min, max).
-          type: object
-          readOnly: true
-          properties:
-            count:
-              type: integer
-            maximum_active_power:
-              $ref: '#/components/schemas/numeric_aggregation'
-            maximum_active_power_up:
-              description: Maximum active power aggregated over controllable units with regulation_direction equal to up or both.
-              $ref: '#/components/schemas/numeric_aggregation'
-            maximum_active_power_down:
-              description: Maximum active power aggregated over controllable units with regulation_direction equal to down or both.
-              $ref: '#/components/schemas/numeric_aggregation'
-          example:
-            count: 3
-            maximum_active_power:
-              sum: 200
-              average: 66.67
-              min: 40
-              max: 100
-            maximum_active_power_up:
-              sum: 150
-              average: 75
-              min: 50
-              max: 100
-            maximum_active_power_down:
-              sum: 100
-              average: 50
-              min: 40
-              max: 60
-        technical_resource:
-          description: Aggregated statistics on technical resources belonging to controllable units with active membership in the service providing group, including counts and maximum active power breakdowns (sum, average, min, max) by category and technology.
-          type: object
-          readOnly: true
-          properties:
-            count:
-              type: integer
-            maximum_active_power:
-              $ref: '#/components/schemas/numeric_aggregation'
-            by_category:
-              type: object
-              propertyNames:
-                $ref: '#/components/schemas/category'
-              additionalProperties:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                  maximum_active_power:
-                    $ref: '#/components/schemas/numeric_aggregation'
-            by_technology:
-              type: object
-              propertyNames:
-                $ref: '#/components/schemas/technology'
-              additionalProperties:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                  maximum_active_power:
-                    $ref: '#/components/schemas/numeric_aggregation'
-          example:
-            count: 8
-            maximum_active_power:
-              sum: 250
-              average: 31.25
-              min: 10
-              max: 80
-            by_category:
-              production:
-                count: 5
-                maximum_active_power:
-                  sum: 180
-                  average: 36
-                  min: 10
-                  max: 80
-              consumption:
-                count: 3
-                maximum_active_power:
-                  sum: 70
-                  average: 23.33
-                  min: 15
-                  max: 30
-            by_technology:
-              solar:
-                count: 3
-                maximum_active_power:
-                  sum: 130
-                  average: 43.33
-                  min: 20
-                  max: 80
-              battery:
-                count: 2
-                maximum_active_power:
-                  sum: 50
-                  average: 25
-                  min: 20
-                  max: 30
-        service_providing_group:
-          description: Embedded service_providing_group
-          oneOf:
-          - $ref: '#/components/schemas/service_providing_group_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - service_providing_group_id
-      - controllable_unit
-      - technical_resource
-    device_type:
-      description: Type of device for technical resources.
-      format: text
-      type: string
-      enum:
-      - inverter
-      - boiler
-      - water_heater
-      - socket
-      - hvac
-      - ev_charging_device
-      - energy_management_system
-      - other
-    accounting_point_grid_location_source:
-      description: 'How the grid location was determined. When a system operator creates or updates a grid location, this field is set automatically: `cso` if the SO is the connecting system operator, `so` otherwise.'
-      format: text
-      type: string
-      readOnly: true
-      enum:
-      - cso
-      - so
-      - grid_model
-      - system
-      example: cso
-    controllable_unit_suspension_reason:
-      description: The reason for the suspension.
-      format: text
-      type: string
-      enum:
-      - compromises_safe_operation
-      - other
-      example: compromises_safe_operation
-    party_membership_response:
-      summary: Response - Party Membership
-      description: Response schema - The relation between a party and entity.
-      type: object
-      properties:
-        id:
-          description: Unique surrogate identifier.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 44
-        party_id:
-          description: Reference to the party that the membership links to an entity.
-          format: bigint
-          type: integer
-          example: 379
-        entity_id:
-          description: Reference to the entity that the party represents.
-          format: bigint
-          type: integer
-          example: 30
-        scopes:
-          description: List of scopes granted to the entity when it acts as the party. Scopes are inspired from OAuth 2.0 and allow refinement of access control and privilege delegation mechanisms.
-          type: array
-          items:
-            $ref: '#/components/schemas/auth_scope'
-          nullable: false
-          example:
-          - read:data
-        recorded_at:
-          description: When the resource was recorded (created or updated) in the system.
-          format: date-time
-          type: string
-          readOnly: true
-          example: '2023-12-31T23:59:00+00:00'
-        recorded_by:
-          description: The identity that recorded the resource.
-          format: bigint
-          type: integer
-          readOnly: true
-          example: 145
-        party:
-          description: Embedded party
-          oneOf:
-          - $ref: '#/components/schemas/party_response'
-          - type: 'null'
-          nullable: true
-        entity:
-          description: Embedded entity
-          oneOf:
-          - $ref: '#/components/schemas/entity_response'
-          - type: 'null'
-          nullable: true
-      required:
-      - id
-      - party_id
-      - entity_id
-      - scopes
-      - recorded_at
-      - recorded_by
-    service_providing_group_product_suspension_reason:
-      description: The reason for the suspension.
-      format: text
-      type: string
-      enum:
-      - failed_verification
-      - other
-      example: failed_verification
+      - type
+      - coordinates
   parameters:
     ApiVersion:
       name: Api-Version
